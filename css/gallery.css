@@ -1,0 +1,1081 @@
+/* =========================================================
+
+   CHARACTER GALLERY PAGE
+
+   This file controls only pages/character-gallery.html.
+
+========================================================= */
+
+
+
+:root {
+
+  --bg: #05050f;
+
+  --panel: rgba(8, 8, 25, 0.9);
+
+  --panel-soft: rgba(18, 10, 42, 0.82);
+
+  --purple: #7c3aed;
+
+  --purple-light: #a855f7;
+
+  --purple-soft: #d8b4fe;
+
+  --text: #ffffff;
+
+  --muted: #bbb6c9;
+
+  --line: rgba(184, 112, 255, 0.5);
+
+}
+
+
+
+* {
+
+  box-sizing: border-box;
+
+  margin: 0;
+
+  padding: 0;
+
+}
+
+
+
+html {
+
+  scroll-behavior: smooth;
+
+}
+
+
+
+body {
+
+  min-height: 100vh;
+
+  overflow-x: hidden;
+
+  font-family: "Inter", sans-serif;
+
+  color: var(--text);
+
+  background:
+
+    linear-gradient(rgba(4, 3, 15, 0.72), rgba(4, 3, 15, 0.94)),
+
+    url("../assets/backgrounds/gallery-galaxy.png") center/cover fixed;
+
+}
+
+
+
+a {
+
+  color: inherit;
+
+  text-decoration: none;
+
+}
+
+
+
+.gallery-navbar {
+
+  position: absolute;
+
+  inset: 0 0 auto 0;
+
+  z-index: 20;
+
+  height: 76px;
+
+  padding: 0 5%;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  border-bottom: 1px solid rgba(216, 180, 254, 0.18);
+
+  background: rgba(5, 5, 18, 0.6);
+
+  backdrop-filter: blur(12px);
+
+}
+
+
+
+.brand,
+
+.footer-brand {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 11px;
+
+  font-family: "Cinzel", serif;
+
+  letter-spacing: 0.03em;
+
+}
+
+
+
+.brand {
+
+  font-size: 23px;
+
+}
+
+
+
+.brand-mark {
+
+  color: var(--purple-soft);
+
+  font-size: 31px;
+
+  text-shadow: 0 0 10px #a855f7, 0 0 24px #7c3aed;
+
+}
+
+
+
+.nav-links {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 50px;
+
+}
+
+
+
+.nav-links a {
+
+  font-size: 19px;
+
+  color: #f8f4ff;
+
+}
+
+
+
+.nav-links .active {
+
+  color: var(--purple-soft);
+
+}
+
+
+
+.nav-register {
+
+  padding: 10px 20px;
+
+  border: 1px solid rgba(233, 213, 255, 0.82);
+
+  border-radius: 999px;
+
+  background: linear-gradient(135deg, #6d28d9, #a855f7);
+
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.35);
+
+}
+
+
+
+/* Different hero/background from the home page. */
+
+.gallery-hero {
+
+  min-height: 360px;
+
+  padding: 130px 5% 70px;
+
+  display: flex;
+
+  align-items: flex-end;
+
+  position: relative;
+
+  background:
+
+    linear-gradient(180deg, rgba(5, 4, 18, 0.22), rgba(5, 4, 18, 0.92)),
+
+    url("../assets/backgrounds/gallery-galaxy.png") center 42%/cover no-repeat;
+
+  border-bottom: 1px solid rgba(168, 85, 247, 0.2);
+
+}
+
+
+
+.gallery-hero::after {
+
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  background: radial-gradient(circle at 78% 18%, rgba(168, 85, 247, 0.24), transparent 30%);
+
+  pointer-events: none;
+
+}
+
+
+
+.gallery-hero-copy {
+
+  position: relative;
+
+  z-index: 2;
+
+  width: min(740px, 100%);
+
+}
+
+
+
+.eyebrow {
+
+  margin-bottom: 10px;
+
+  color: var(--purple-soft);
+
+  font-size: 10px;
+
+  letter-spacing: 0.32em;
+
+}
+
+
+
+.gallery-hero h1,
+
+.gallery-topbar h2,
+
+.character-info h3 {
+
+  font-family: "Cinzel", serif;
+
+}
+
+
+
+.gallery-hero h1 {
+
+  font-size: clamp(48px, 6vw, 82px);
+
+  line-height: 1;
+
+  text-shadow: 0 0 30px rgba(168, 85, 247, 0.4);
+
+}
+
+
+
+.gallery-hero-copy > p:last-child {
+
+  margin-top: 16px;
+
+  color: #d0cbd9;
+
+  font-size: 16px;
+
+}
+
+
+
+.gallery-shell {
+
+  width: min(1600px, 94%);
+
+  margin: -28px auto 70px;
+
+  position: relative;
+
+  z-index: 5;
+
+  padding: 30px;
+
+  border: 1px solid rgba(168, 85, 247, 0.45);
+
+  border-radius: 22px;
+
+  background: linear-gradient(145deg, rgba(5, 6, 20, 0.96), rgba(11, 7, 30, 0.92));
+
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.34);
+
+}
+
+
+
+.gallery-topbar {
+
+  margin-bottom: 28px;
+
+  display: flex;
+
+  align-items: end;
+
+  justify-content: space-between;
+
+  gap: 24px;
+
+}
+
+
+
+.gallery-topbar h2 {
+
+  font-size: 31px;
+
+}
+
+
+
+.gallery-controls {
+
+  display: flex;
+
+  align-items: end;
+
+  justify-content: flex-end;
+
+  gap: 14px;
+
+  flex-wrap: wrap;
+
+}
+
+
+
+.control-field {
+
+  display: grid;
+
+  gap: 7px;
+
+}
+
+
+
+.control-field span {
+
+  color: #aea9bc;
+
+  font-size: 11px;
+
+}
+
+
+
+.control-field select,
+
+.control-field input {
+
+  height: 46px;
+
+  border: 1px solid rgba(168, 85, 247, 0.5);
+
+  border-radius: 10px;
+
+  outline: none;
+
+  background: rgba(11, 9, 31, 0.88);
+
+  color: white;
+
+  font: inherit;
+
+}
+
+
+
+.control-field select {
+
+  min-width: 190px;
+
+  padding: 0 38px 0 14px;
+
+}
+
+
+
+.control-field input {
+
+  min-width: 270px;
+
+  padding: 0 14px;
+
+}
+
+
+
+.control-field input::placeholder {
+
+  color: #777186;
+
+}
+
+
+
+/*
+
+  Desktop rule: exactly 6 columns.
+
+  CSS automatically starts a new row after every sixth card.
+
+  We do NOT create empty cards, so fewer characters simply stop naturally.
+
+*/
+
+.gallery-grid {
+
+  display: grid;
+
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+
+  gap: 16px;
+
+}
+
+
+
+.character-card {
+
+  min-width: 0;
+
+  overflow: hidden;
+
+  position: relative;
+
+  border: 1px solid rgba(168, 85, 247, 0.55);
+
+  border-radius: 16px;
+
+  background: linear-gradient(155deg, rgba(14, 12, 37, 0.98), rgba(6, 7, 22, 0.98));
+
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+
+  transform-style: preserve-3d;
+
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+
+}
+
+
+
+.character-card:hover {
+
+  transform: perspective(1000px) translateY(-7px) rotateX(1.5deg);
+
+  border-color: rgba(216, 180, 254, 0.9);
+
+  box-shadow: 0 20px 45px rgba(39, 14, 76, 0.55);
+
+}
+
+
+
+/* 3D-looking stage without JavaScript or a real 3D engine. */
+
+.character-stage {
+
+  height: 290px;
+
+  overflow: hidden;
+
+  position: relative;
+
+  display: grid;
+
+  place-items: end center;
+
+  background:
+
+    radial-gradient(ellipse at 50% 84%, rgba(168, 85, 247, 0.32), transparent 30%),
+
+    linear-gradient(180deg, rgba(41, 25, 66, 0.15), rgba(8, 7, 24, 0.85));
+
+}
+
+
+
+.character-stage::before {
+
+  content: "";
+
+  width: 72%;
+
+  height: 12%;
+
+  position: absolute;
+
+  left: 14%;
+
+  bottom: 11px;
+
+  border: 1px solid rgba(216, 180, 254, 0.55);
+
+  border-radius: 50%;
+
+  background: radial-gradient(ellipse, rgba(168, 85, 247, 0.28), rgba(85, 30, 150, 0.04) 65%, transparent 70%);
+
+  box-shadow: 0 0 26px rgba(168, 85, 247, 0.28);
+
+}
+
+
+
+.character-stage img {
+
+  width: 100%;
+
+  height: 100%;
+
+  position: relative;
+
+  z-index: 2;
+
+  object-fit: cover;
+
+  object-position: center top;
+
+  filter: drop-shadow(0 16px 18px rgba(0, 0, 0, 0.45));
+
+}
+
+
+
+.character-stage::after {
+
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  z-index: 3;
+
+  background: linear-gradient(180deg, transparent 48%, rgba(7, 7, 23, 0.94) 100%);
+
+  pointer-events: none;
+
+}
+
+
+
+.stage-ring {
+
+  position: absolute;
+
+  left: 20%;
+
+  bottom: 18px;
+
+  width: 60%;
+
+  height: 8px;
+
+  z-index: 4;
+
+  border-radius: 50%;
+
+  background: #b46aff;
+
+  filter: blur(8px);
+
+  opacity: 0.38;
+
+}
+
+
+
+.character-info {
+
+  padding: 16px;
+
+}
+
+
+
+.character-type {
+
+  color: #c7a7ef;
+
+  font-size: 9px;
+
+  letter-spacing: 0.13em;
+
+}
+
+
+
+.character-info h3 {
+
+  margin-top: 6px;
+
+  font-size: 20px;
+
+}
+
+
+
+.creator,
+
+.created-date {
+
+  color: #aaa5b8;
+
+  font-size: 11px;
+
+  line-height: 1.55;
+
+}
+
+
+
+.creator {
+
+  margin-top: 8px;
+
+}
+
+
+
+.view-button {
+
+  width: 100%;
+
+  margin-top: 13px;
+
+  padding: 9px 10px;
+
+  display: inline-flex;
+
+  justify-content: center;
+
+  border: 1px solid rgba(168, 85, 247, 0.7);
+
+  border-radius: 999px;
+
+  background: linear-gradient(135deg, rgba(109, 40, 217, 0.84), rgba(168, 85, 247, 0.88));
+
+  font-size: 11px;
+
+}
+
+
+
+.pagination {
+
+  margin-top: 30px;
+
+  display: flex;
+
+  justify-content: center;
+
+  gap: 8px;
+
+}
+
+
+
+.pagination a {
+
+  width: 38px;
+
+  height: 38px;
+
+  display: grid;
+
+  place-items: center;
+
+  border: 1px solid rgba(168, 85, 247, 0.4);
+
+  border-radius: 9px;
+
+  background: rgba(9, 8, 27, 0.86);
+
+  color: #cbc6d3;
+
+  font-size: 12px;
+
+}
+
+
+
+.pagination .active {
+
+  border-color: rgba(216, 180, 254, 0.9);
+
+  background: linear-gradient(135deg, #6d28d9, #a855f7);
+
+  color: white;
+
+}
+
+
+
+.frontend-note {
+
+  margin-top: 16px;
+
+  text-align: center;
+
+  color: #777185;
+
+  font-size: 10px;
+
+}
+
+
+
+.footer {
+
+  min-height: 90px;
+
+  padding: 24px 5%;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 20px;
+
+  border-top: 1px solid rgba(168, 85, 247, 0.2);
+
+  background: rgba(4, 4, 14, 0.94);
+
+  color: #9690a3;
+
+  font-size: 11px;
+
+}
+
+
+
+.footer-brand {
+
+  color: white;
+
+  font-size: 18px;
+
+}
+
+
+
+.footer-links {
+
+  display: flex;
+
+  gap: 22px;
+
+}
+
+
+
+/* =========================================================
+
+   GALLERY RESPONSIVE RULES
+
+========================================================= */
+
+
+
+@media (max-width: 1280px) {
+
+  .gallery-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+}
+
+
+
+@media (max-width: 960px) {
+
+  .gallery-topbar { align-items: stretch; flex-direction: column; }
+
+  .gallery-controls { justify-content: flex-start; }
+
+  .gallery-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+}
+
+
+
+@media (max-width: 680px) {
+
+
+
+  body {
+
+    background-attachment: scroll;
+
+  }
+
+
+
+  .gallery-navbar {
+
+    height: auto;
+
+    min-height: 68px;
+
+
+
+    padding: 10px 14px;
+
+
+
+    flex-direction: column;
+
+
+
+    justify-content: center;
+
+
+
+    gap: 8px;
+
+  }
+
+
+
+  .brand {
+
+    font-size: 17px;
+
+  }
+
+
+
+  .brand-mark {
+
+    font-size: 24px;
+
+  }
+
+
+
+  .nav-links {
+
+    display: flex;
+
+
+
+    flex-wrap: wrap;
+
+
+
+    justify-content: center;
+
+
+
+    gap: 8px 14px;
+
+  }
+
+
+
+  .nav-links a {
+
+    display: inline-flex;
+
+
+
+    font-size: 12px;
+
+  }
+
+
+
+  .nav-register {
+
+    padding: 8px 14px;
+
+
+
+    font-size: 11px;
+
+  }
+
+
+
+
+
+  .gallery-hero {
+
+    min-height: 300px;
+
+
+
+    padding: 120px 18px 56px;
+
+
+
+    background-position: 62% center;
+
+  }
+
+
+
+  .gallery-hero h1 {
+
+    font-size: clamp(38px, 12vw, 58px);
+
+  }
+
+
+
+  .gallery-hero-copy > p:last-child {
+
+    font-size: 13px;
+
+  }
+
+
+
+
+
+  .gallery-shell {
+
+    width: calc(100% - 20px);
+
+
+
+    margin-top: -22px;
+
+
+
+    padding: 18px 14px;
+
+
+
+    border-radius: 17px;
+
+  }
+
+
+
+  .gallery-topbar h2 {
+
+    font-size: 25px;
+
+  }
+
+
+
+  .gallery-controls {
+
+    display: grid;
+
+
+
+    grid-template-columns: 1fr;
+
+  }
+
+
+
+  .control-field select,
+
+  .control-field input {
+
+    width: 100%;
+
+
+
+    min-width: 0;
+
+  }
+
+
+
+
+
+  .gallery-grid {
+
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+
+
+    gap: 11px;
+
+  }
+
+
+
+  .character-stage {
+
+    height: 220px;
+
+  }
+
+
+
+  .character-info {
+
+    padding: 12px;
+
+  }
+
+
+
+  .character-info h3 {
+
+    font-size: 17px;
+
+  }
+
+
+
+
+
+  .footer {
+
+    flex-direction: column;
+
+
+
+    text-align: center;
+
+  }
+
+
+
+  .footer-links {
+
+    flex-wrap: wrap;
+
+
+
+    justify-content: center;
+
+  }
+
+}
+
+
+
+@media (max-width: 390px) {
+
+  .gallery-grid { grid-template-columns: 1fr; }
+
+  .character-stage { height: 330px; }
+
+}
