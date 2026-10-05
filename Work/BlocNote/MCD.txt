@@ -1,0 +1,65 @@
+USER
+- email [UNIQUE]
+- username [UNIQUE]
+- password_hash
+- suspended
+- created_at
+
+ROLE
+- name  ROLE (0,N) ---- HAS ---- USER (1,1)
+
+CHARACTER
+- name
+- gender
+- status
+- shared
+- created_at
+
+USER (0,N) ---- CREATES ---- CHARACTER (1,1)
+
+APPEARANCE
+- eye_shape
+- nose_shape
+- mouth_shape
+- skin_color
+- hair_color
+- eye_color
+
+CHARACTER (1,1) ---- HAS ---- APPEARANCE (1,1)
+
+ACCESSORY
+- name
+- type
+- active
+
+CHARACTER (0,N) ---- USES ---- ACCESSORY (0,N)
+
+REVIEW
+- rating
+- comment
+- status
+- created_at
+
+USER (0,N) ---- WRITES ---- REVIEW (1,1)
+
+CHARACTER (0,N) ---- RECEIVES ---- REVIEW (1,1)
+
+RELATIONSHIPS
+
+ROLE -> USER
+A role is assigned to users.
+
+USER -> CHARACTER
+A user creates characters.
+
+CHARACTER -> APPEARANCE
+A character has an appearance.
+
+USER -> REVIEW
+A user writes reviews.
+
+CHARACTER -> REVIEW
+A character receives reviews.
+
+CHARACTER -> ACCESSORY
+A character uses accessories.

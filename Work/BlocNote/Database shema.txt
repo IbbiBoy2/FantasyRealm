@@ -1,0 +1,51 @@
+ROLES
+- id [PRIMARY KEY]
+- name [UNIQUE]
+
+USERS
+- id [PRIMARY KEY]
+- role_id [FOREIGN KEY -> ROLES.id]
+- email [UNIQUE]
+- username [UNIQUE]
+- password_hash
+- suspended
+- created_at
+
+CHARACTERS
+- id [PRIMARY KEY]
+- user_id [FOREIGN KEY -> USERS.id]
+- name [UNIQUE]
+- gender
+- status
+- shared
+- created_at
+
+APPEARANCES
+- id [PRIMARY KEY]
+- character_id [FOREIGN KEY -> CHARACTERS.id] [UNIQUE]
+- eye_shape
+- nose_shape
+- mouth_shape
+- skin_color
+- hair_color
+- eye_color
+
+ACCESSORIES
+- id [PRIMARY KEY]
+- name
+- type
+- active
+
+REVIEWS
+- id [PRIMARY KEY]
+- user_id [FOREIGN KEY -> USERS.id]
+- character_id [FOREIGN KEY -> CHARACTERS.id]
+- rating
+- comment
+- status
+- created_at
+
+CHARACTER_ACCESSORIES
+- character_id [FOREIGN KEY -> CHARACTERS.id]
+- accessory_id [FOREIGN KEY -> ACCESSORIES.id]
+- [PRIMARY KEY = character_id + accessory_id]
