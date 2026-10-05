@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Character | FantasyRealm</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../css/create-character.css" />
+</head>
+<body>
+  <header class="creator-navbar">
+    <a class="brand" href="../index.html">
+      <span class="brand-mark">✦</span>
+      <span>FantasyRealm</span>
+    </a>
+
+    <nav class="nav-links">
+      <a href="../index.php">Home</a>
+      <a href="character-gallery.php">Characters</a>
+      <a class="active" href="create-character.php">Create</a>
+      <a href="login.php">Login</a>
+      <a class="nav-register" href="register.php">Register</a>
+    </nav>
+  </header>
+
+  <main class="creator-page">
+    <section class="creator-heading">
+      <p class="eyebrow">FORGE YOUR LEGEND</p>
+      <h1>Create Your Character</h1>
+      <p>Build the look, identity and equipment of your next FantasyRealm character.</p>
+    </section>
+
+    <section class="creator-shell">
+      <aside class="preview-panel">
+        <div class="preview-copy">
+          <p class="eyebrow">CHARACTER PREVIEW</p>
+          <h2>Your Legend</h2>
+        </div>
+
+        <div class="preview-stage">
+          <span class="preview-glow"></span>
+          <img src="../assets/gallery-characters/seraphina.png" alt="Fantasy character preview" />
+        </div>
+
+        <div class="preview-thumbnails" aria-label="Character preview examples">
+          <button class="preview-thumb selected" type="button">
+            <img src="../assets/gallery-characters/seraphina.png" alt="Preview one" />
+          </button>
+          <button class="preview-thumb" type="button">
+            <img src="../assets/gallery-characters/lunaria.png" alt="Preview two" />
+          </button>
+          <button class="preview-thumb" type="button">
+            <img src="../assets/gallery-characters/nyxelle.png" alt="Preview three" />
+          </button>
+          <button class="preview-thumb" type="button">
+            <img src="../assets/gallery-characters/kaelthar.png" alt="Preview four" />
+          </button>
+        </div>
+
+        <p class="preview-note">Front-end preview only. Live character changes come later.</p>
+      </aside>
+
+      <section class="editor-panel">
+        <form action="#" class="creator-form">
+          <div class="form-section">
+            <label class="field-label" for="character-name">Character name</label>
+            <input id="character-name" name="character-name" type="text" placeholder="Enter a character name..." />
+          </div>
+
+          <fieldset class="form-section">
+            <legend>Gender</legend>
+            <div class="gender-grid">
+              <label class="gender-card">
+                <input type="radio" name="gender" value="male" />
+                <span class="gender-symbol">♂</span>
+                <span>
+                  <strong>Male</strong>
+                  <small>Masculine character base</small>
+                </span>
+              </label>
+
+              <label class="gender-card selected-card">
+                <input type="radio" name="gender" value="female" checked />
+                <span class="gender-symbol">♀</span>
+                <span>
+                  <strong>Female</strong>
+                  <small>Feminine character base</small>
+                </span>
+              </label>
+            </div>
+          </fieldset>
+
+          <fieldset class="form-section">
+            <legend>Appearance</legend>
+
+            <div class="option-row">
+              <span class="option-title">Hair style</span>
+              <div class="image-options">
+                <label class="image-choice selected-choice">
+                  <input type="radio" name="hair-style" checked />
+                  <img src="../assets/gallery-characters/seraphina.png" alt="Hair style one" />
+                </label>
+                <label class="image-choice">
+                  <input type="radio" name="hair-style" />
+                  <img src="../assets/gallery-characters/lunaria.png" alt="Hair style two" />
+                </label>
+                <label class="image-choice">
+                  <input type="radio" name="hair-style" />
+                  <img src="../assets/gallery-characters/nyxelle.png" alt="Hair style three" />
+                </label>
+                <label class="image-choice">
+                  <input type="radio" name="hair-style" />
+                  <img src="../assets/gallery-characters/aurelian.png" alt="Hair style four" />
+                </label>
+              </div>
+            </div>
+
+            <div class="option-row">
+              <span class="option-title">Hair color</span>
+              <div class="color-options" aria-label="Hair color preview options">
+                <label class="color-choice silver selected-color" style="--swatch:#e9e2ff;"><input type="radio" name="hair-color" checked /><span></span></label>
+                <label class="color-choice black" style="--swatch:#17131d;"><input type="radio" name="hair-color" /><span></span></label>
+                <label class="color-choice brown" style="--swatch:#6c4430;"><input type="radio" name="hair-color" /><span></span></label>
+                <label class="color-choice red" style="--swatch:#a9463f;"><input type="radio" name="hair-color" /><span></span></label>
+                <label class="color-choice purple" style="--swatch:#9c4cff;"><input type="radio" name="hair-color" /><span></span></label>
+              </div>
+            </div>
+
+            <div class="option-row">
+              <span class="option-title">Skin tone</span>
+              <div class="color-options" aria-label="Skin tone preview options">
+                <label class="color-choice selected-color" style="--swatch:#f6d2bd;"><input type="radio" name="skin-tone" checked /><span></span></label>
+                <label class="color-choice" style="--swatch:#dfb095;"><input type="radio" name="skin-tone" /><span></span></label>
+                <label class="color-choice" style="--swatch:#bc8568;"><input type="radio" name="skin-tone" /><span></span></label>
+                <label class="color-choice" style="--swatch:#8d5d48;"><input type="radio" name="skin-tone" /><span></span></label>
+                <label class="color-choice" style="--swatch:#5c382f;"><input type="radio" name="skin-tone" /><span></span></label>
+              </div>
+            </div>
+
+            <div class="option-row">
+              <span class="option-title">Eye style</span>
+              <div class="eye-options">
+                <label class="eye-choice selected-choice"><input type="radio" name="eye-style" checked /><span>◉</span></label>
+                <label class="eye-choice"><input type="radio" name="eye-style" /><span>◍</span></label>
+                <label class="eye-choice"><input type="radio" name="eye-style" /><span>◉</span></label>
+                <label class="eye-choice"><input type="radio" name="eye-style" /><span>◌</span></label>
+              </div>
+            </div>
+
+            <div class="option-row">
+              <span class="option-title">Eye color</span>
+              <div class="color-options" aria-label="Eye color preview options">
+                <label class="color-choice selected-color" style="--swatch:#48cfff;"><input type="radio" name="eye-color" checked /><span></span></label>
+                <label class="color-choice" style="--swatch:#9e4cff;"><input type="radio" name="eye-color" /><span></span></label>
+                <label class="color-choice" style="--swatch:#c84052;"><input type="radio" name="eye-color" /><span></span></label>
+                <label class="color-choice" style="--swatch:#5f9e63;"><input type="radio" name="eye-color" /><span></span></label>
+                <label class="color-choice" style="--swatch:#c98946;"><input type="radio" name="eye-color" /><span></span></label>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset class="form-section">
+            <legend>Equipment</legend>
+            <div class="equipment-grid">
+              <button type="button" class="equipment-slot"><span class="equipment-icon">⚔</span><span>Weapon</span></button>
+              <button type="button" class="equipment-slot"><span class="equipment-icon">◈</span><span>Armor</span></button>
+              <button type="button" class="equipment-slot"><span class="equipment-icon">♜</span><span>Boots</span></button>
+              <button type="button" class="equipment-slot"><span class="equipment-icon">✧</span><span>Gloves</span></button>
+              <button type="button" class="equipment-slot"><span class="equipment-icon">◇</span><span>Accessory</span></button>
+            </div>
+          </fieldset>
+
+          <div class="form-actions">
+            <a href="../index.php" class="cancel-button">Cancel</a>
+            <button type="button" class="create-button">✦ Create Character</button>
+          </div>
+
+          <p class="frontend-note">Visual front-end only. Saving and database validation will be added later.</p>
+        </form>
+      </section>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-brand">✦ FantasyRealm</div>
+    <p>© 2026 FantasyRealm. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="#">Legal Notice</a>
+      <a href="#">Terms</a>
+      <a href="contact.php">Contact</a>
+    </div>
+  </footer>
+</body>
+</html>
