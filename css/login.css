@@ -274,3 +274,15 @@ a {
     font-size: 30px;
   }
 }
+.forgot-link {
+  margin-top: 18px;
+  text-align: center;
+}
+
+.forgot-link a {
+  color: var(--purple-soft);
+}
+
+.forgot-link a:hover {
+  color: white;
+}

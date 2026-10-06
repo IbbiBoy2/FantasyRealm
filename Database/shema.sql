@@ -28,6 +28,7 @@ CREATE TABLE characters (
     gender VARCHAR(50) NOT NULL,
     status VARCHAR(20) NOT NULL DEFAULT 'PENDING',
     shared BOOLEAN NOT NULL DEFAULT FALSE,
+    image_path VARCHAR(255) NULL,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
@@ -35,6 +36,7 @@ CREATE TABLE characters (
 CREATE TABLE appearances (
     id INT AUTO_INCREMENT PRIMARY KEY,
     character_id INT NOT NULL UNIQUE,
+    hair_style VARCHAR(50) NOT NULL,
     eye_shape VARCHAR(50) NOT NULL,
     nose_shape VARCHAR(50) NOT NULL,
     mouth_shape VARCHAR(50) NOT NULL,

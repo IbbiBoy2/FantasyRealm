@@ -117,6 +117,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </p>
       <?php endif; ?>
 
+      <?php if ($devResetLink !== ''): ?>
+  <p class="dev-reset-link">
+    Development reset link:
+    <a href="<?= htmlspecialchars($devResetLink) ?>">
+      Reset Password
+    </a>
+  </p>
+<?php endif; ?>
+
       <form class="forgot-form" method="post">
 
         <label for="email">Email</label>
