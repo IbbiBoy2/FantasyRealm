@@ -1,66 +1,53 @@
 <?php
 
+session_start();
 
 require_once __DIR__ . '/../config/database.php';
 
-$message = '';
+$email = $_SESSION['email'] ?? '';
+$username = $_SESSION['username'] ?? '';
+$messageText = '';
+$formMessage = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $username = trim($_POST['username'] ?? '');
     $email = trim($_POST['email'] ?? '');
-    $password = $_POST['password'] ?? '';
-    $passwordConfirm = $_POST['password_confirm'] ?? '';
+    $messageText = trim($_POST['message'] ?? '');
 
     if (
         $username === '' ||
         $email === '' ||
-        $password === '' ||
-        $passwordConfirm === ''
+        $messageText === ''
     ) {
-        $message = 'Please fill in all fields.';
+        $formMessage = 'Please fill in all fields.';
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $message = 'Please enter a valid email address.';
-    } elseif ($password !== $passwordConfirm) {
-        $message = 'Passwords do not match.';
+        $formMessage = 'Please enter a valid email address.';
     } else {
 
-        $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+        $stmt = $pdo->prepare(
+            'INSERT INTO contact_messages (
+                user_id,
+                username,
+                email,
+                message
+            ) VALUES (
+                :user_id,
+                :username,
+                :email,
+                :message
+            )'
+        );
 
-        try {
-            $stmt = $pdo->prepare(
-                'INSERT INTO users (
-                    role_id,
-                    email,
-                    username,
-                    password_hash,
-                    suspended
-                ) VALUES (
-                    :role_id,
-                    :email,
-                    :username,
-                    :password_hash,
-                    FALSE
-                )'
-            );
+        $stmt->execute([
+            'user_id' => $_SESSION['user_id'] ?? null,
+            'username' => $username,
+            'email' => $email,
+            'message' => $messageText
+        ]);
 
-            $stmt->execute([
-                'role_id' => 1,
-                'email' => $email,
-                'username' => $username,
-                'password_hash' => $passwordHash
-            ]);
-
-            $message = 'Account created successfully.';
-
-        } catch (PDOException $e) {
-
-            if ($e->getCode() === '23000') {
-                $message = 'This email or username is already in use.';
-            } else {
-                $message = 'Registration failed. Please try again.';
-            }
-        }
+        $formMessage = 'Your message has been sent successfully.';
+        $messageText = '';
     }
 }
 
@@ -72,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Register | FantasyRealm</title>
+  <title>Contact | FantasyRealm</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -82,12 +69,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     rel="stylesheet"
   >
 
-  <link rel="stylesheet" href="../css/register.css">
+  <link rel="stylesheet" href="../css/contact.css">
 </head>
 
 <body>
 
-  <header class="register-navbar">
+  <header class="contact-navbar">
     <a class="brand" href="../index.php">
       <span class="brand-mark">✦</span>
       <span>FantasyRealm</span>
@@ -96,77 +83,80 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <nav class="nav-links">
       <a href="../index.php">Home</a>
       <a href="character-gallery.php">Characters</a>
-      <a href="#">Login</a>
-      <a class="nav-register active" href="register.php">Register</a>
+
+      <?php if (isset($_SESSION['user_id'])): ?>
+        <span class="nav-username">
+          <?= htmlspecialchars($_SESSION['username']) ?>
+        </span>
+
+        <a href="logout.php">Logout</a>
+      <?php else: ?>
+        <a href="login.php">Login</a>
+        <a class="nav-register" href="register.php">Register</a>
+      <?php endif; ?>
     </nav>
   </header>
 
-  <main class="register-page">
+  <main class="contact-page">
 
-    <section class="register-panel">
+  <section class="contact-panel">
 
-      <p class="section-label">JOIN THE REALM</p>
+    <p class="section-label">CONTACT</p>
 
-      <h1>Create Your Account</h1>
+    <h1>Contact FantasyRealm</h1>
 
-      <p class="register-intro">
-        Begin your journey and create your own FantasyRealm characters.
+    <p class="contact-intro">
+      Have a question or need help? Send us a message.
+    </p>
+
+    <?php if ($formMessage !== ''): ?>
+      <p class="form-message">
+        <?= htmlspecialchars($formMessage) ?>
       </p>
+    <?php endif; ?>
 
-      <?php if ($message !== ''): ?>
-        <p class="form-message">
-          <?= htmlspecialchars($message) ?>
-        </p>
-      <?php endif; ?>
+    <form class="contact-form" method="post">
 
-      <form class="register-form" method="post">
+      <label for="username">Username</label>
+      <input
+        type="text"
+        id="username"
+        name="username"
+        value="<?= htmlspecialchars($username) ?>"
+        required
+      >
 
-        <label for="username">Username</label>
-        <input
-          type="text"
-          id="username"
-          name="username"
-          required
-        >
+      <label for="email">Email</label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        value="<?= htmlspecialchars($email) ?>"
+        required
+      >
 
-        <label for="email">Email</label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          required
-        >
+      <label for="message">Message</label>
+      <textarea
+        id="message"
+        name="message"
+        rows="6"
+        required
+      ><?= htmlspecialchars($messageText) ?></textarea>
 
-        <label for="password">Password</label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          required
-        >
+      <button type="submit">
+        Send Message
+      </button>
 
-        <label for="password-confirm">Confirm Password</label>
-        <input
-          type="password"
-          id="password-confirm"
-          name="password_confirm"
-          required
-        >
+    </form>
 
-        <button type="submit">
-          Create Account
-        </button>
+    <div class="contact-actions">
+      <a href="../index.php" class="back-link">Back to Home</a>
+      <a href="character-gallery.php" class="back-link">View Characters</a>
+    </div>
 
-      </form>
+  </section>
 
-      <p class="login-link">
-        Already have an account?
-        <a href="#">Login</a>
-      </p>
-
-    </section>
-
-  </main>
+</main>
 
 </body>
 </html>

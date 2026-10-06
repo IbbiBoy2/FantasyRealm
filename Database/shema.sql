@@ -14,8 +14,11 @@ CREATE TABLE users (
     username VARCHAR(100) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
     suspended BOOLEAN NOT NULL DEFAULT FALSE,
+    reset_token_hash VARCHAR(255) NULL,
+    reset_token_expires_at DATETIME NULL,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (role_id) REFERENCES roles(id)
+    
 );
 
 CREATE TABLE characters (

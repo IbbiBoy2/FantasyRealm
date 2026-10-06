@@ -1,3 +1,8 @@
+
+<?php
+session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,18 +16,27 @@
 </head>
 <body>
   <header class="navbar">
-    <a class="brand" href="#home">
-      <span class="brand-mark">✦</span>
-      <span>FantasyRealm</span>
-    </a>
+  <a class="brand" href="#home">
+    <span class="brand-mark">✦</span>
+    <span>FantasyRealm</span>
+  </a>
 
-    <nav class="nav-links">
-      <a href="#home">Home</a>
-      <a href="pages/character-gallery.html">Characters</a>
-      <a href="#">Login</a>
-      <a class="nav-register" href="#">Register</a>
-    </nav>
-  </header>
+  <nav class="nav-links">
+    <a href="#home">Home</a>
+    <a href="pages/character-gallery.php">Characters</a>
+
+    <?php if (isset($_SESSION['user_id'])): ?>
+      <span class="nav-username">
+        <?= htmlspecialchars($_SESSION['username']) ?>
+      </span>
+
+      <a href="pages/logout.php">Logout</a>
+    <?php else: ?>
+      <a href="pages/login.php">Login</a>
+      <a class="nav-register" href="pages/register.php">Register</a>
+    <?php endif; ?>
+  </nav>
+</header>
 
   <main>
     <section class="hero" id="home">
@@ -133,8 +147,7 @@
     <div class="footer-links">
       <a href="#">Legal Notice</a>
       <a href="#">Terms</a>
-      <a href="#">Contact</a>
-    </div>
+      <a href="pages/contact.php">Contact</a>    </div>
   </footer>
 </body>
 </html>

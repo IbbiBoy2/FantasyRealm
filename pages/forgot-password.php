@@ -1,24 +1,22 @@
 <?php
 
-session_start();
-
 require_once __DIR__ . '/../config/database.php';
 
 $message = '';
+$devResetLink = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $email = trim($_POST['email'] ?? '');
-    $password = $_POST['password'] ?? '';
 
-    if ($email === '' || $password === '') {
-        $message = 'Please fill in all fields.';
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+
         $message = 'Please enter a valid email address.';
+
     } else {
 
         $stmt = $pdo->prepare(
-            'SELECT id, role_id, email, username, password_hash, suspended
+            'SELECT id
              FROM users
              WHERE email = :email
              LIMIT 1'
@@ -30,31 +28,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $user = $stmt->fetch();
 
-        if (!$user || !password_verify($password, $user['password_hash'])) {
+        if ($user) {
 
-            $message = 'Invalid email or password.';
+            $token = bin2hex(random_bytes(32));
 
-        } elseif ($user['suspended']) {
+            $tokenHash = hash('sha256', $token);
 
-            $message = 'Your account is suspended.';
+            $expiresAt = date(
+                'Y-m-d H:i:s',
+                time() + 1800
+            );
 
-        } else {
+            $stmt = $pdo->prepare(
+                'UPDATE users
+                 SET reset_token_hash = :token_hash,
+                     reset_token_expires_at = :expires_at
+                 WHERE id = :user_id'
+            );
 
-            session_regenerate_id(true);
+            $stmt->execute([
+                'token_hash' => $tokenHash,
+                'expires_at' => $expiresAt,
+                'user_id' => $user['id']
+            ]);
 
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['role_id'] = $user['role_id'];
-            $_SESSION['username'] = $user['username'];
-            $_SESSION['email'] = $user['email'];
-
-            header('Location: ../index.php');
-            exit;
+            $devResetLink =
+                'http://localhost/FantasyRealm/pages/reset-password.php?token='
+                . urlencode($token);
         }
+
+        $message =
+            'If an account exists for this email, a password reset link has been created.';
     }
 }
 
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -62,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Login | FantasyRealm</title>
+  <title>Forgot Password | FantasyRealm</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -72,12 +80,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     rel="stylesheet"
   >
 
-  <link rel="stylesheet" href="../css/login.css">
+  <link rel="stylesheet" href="../css/forgot-password.css">
 </head>
 
 <body>
 
-  <header class="login-navbar">
+  <header class="forgot-navbar">
     <a class="brand" href="../index.php">
       <span class="brand-mark">✦</span>
       <span>FantasyRealm</span>
@@ -86,21 +94,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <nav class="nav-links">
       <a href="../index.php">Home</a>
       <a href="character-gallery.php">Characters</a>
-      <a class="active" href="login.php">Login</a>
+      <a href="login.php">Login</a>
       <a class="nav-register" href="register.php">Register</a>
     </nav>
   </header>
 
-  <main class="login-page">
+  <main class="forgot-page">
 
-    <section class="login-panel">
+    <section class="forgot-panel">
 
-      <p class="section-label">WELCOME BACK</p>
+      <p class="section-label">ACCOUNT RECOVERY</p>
 
-      <h1>Login</h1>
+      <h1>Forgot Password?</h1>
 
-      <p class="login-intro">
-        Enter your account details to continue your journey.
+      <p class="forgot-intro">
+        Enter your email address and we will create a secure password reset link.
       </p>
 
       <?php if ($message !== ''): ?>
@@ -109,9 +117,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </p>
       <?php endif; ?>
 
-      <form class="login-form" method="post">
+      <form class="forgot-form" method="post">
 
         <label for="email">Email</label>
+
         <input
           type="email"
           id="email"
@@ -119,23 +128,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           required
         >
 
-        <label for="password">Password</label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          required
-        >
-
         <button type="submit">
-          Login
+          Send Reset Link
         </button>
 
       </form>
 
-      <p class="register-link">
-        Don't have an account?
-        <a href="register.php">Create one</a>
+      <p class="login-link">
+        Remember your password?
+        <a href="login.php">Back to Login</a>
       </p>
 
     </section>
