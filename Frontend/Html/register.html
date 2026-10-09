@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Register | FantasyRealm</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="../Css/register.css">
+
+    <script src="../js/register.js" defer></script>
+</head>
+
+<body>
+
+<header class="register-navbar">
+
+    <a class="brand" href="index.html">
+        <span class="brand-mark">✦</span>
+        <span>FantasyRealm</span>
+    </a>
+
+    <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="character-gallery.html">Characters</a>
+        <a href="login.html">Login</a>
+        <a class="nav-register active" href="register.html">Register</a>
+    </nav>
+
+</header>
+
+<main class="register-page">
+
+    <section class="register-panel">
+
+        <p class="section-label">JOIN THE REALM</p>
+
+        <h1>Create Your Account</h1>
+
+        <p class="register-intro">
+            Begin your journey and create your own FantasyRealm characters.
+        </p>
+
+        <p
+            id="form-message"
+            class="form-message"
+            hidden
+        ></p>
+
+        <form id="register-form" class="register-form">
+
+            <label for="username">Username</label>
+
+            <input
+                type="text"
+                id="username"
+                name="username"
+                autocomplete="username"
+                required
+            >
+
+            <label for="email">Email</label>
+
+            <input
+                type="email"
+                id="email"
+                name="email"
+                autocomplete="email"
+                required
+            >
+
+            <label for="password">Password</label>
+
+            <input
+                type="password"
+                id="password"
+                name="password"
+                autocomplete="new-password"
+                required
+            >
+
+            <label for="password-confirm">Confirm Password</label>
+
+            <input
+                type="password"
+                id="password-confirm"
+                name="password_confirm"
+                autocomplete="new-password"
+                required
+            >
+
+            <button type="submit" id="register-button">
+                Create Account
+            </button>
+
+        </form>
+
+        <p class="login-link">
+            Already have an account?
+            <a href="login.html">Login</a>
+        </p>
+
+    </section>
+
+</main>
+
+</body>
+</html>
