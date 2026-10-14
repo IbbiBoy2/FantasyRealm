@@ -1,3 +1,7 @@
+// =========================
+// DOM REFERENCES
+// =========================
+
 const creatorForm = document.getElementById('creator-form');
 const formMessage = document.getElementById('form-message');
 const createButton = document.getElementById('create-button');
@@ -22,6 +26,11 @@ const eyeChoices = document.querySelectorAll('.eye-choice');
 const colorChoices = document.querySelectorAll('.color-choice');
 const weaponChoices = document.querySelectorAll('.weapon-choice');
 
+// =========================
+// SESSION CHECK
+// =========================
+
+// Character creation is restricted to authenticated users.
 
 async function loadSession() {
     try {
@@ -53,6 +62,11 @@ async function loadSession() {
     }
 }
 
+// =========================
+// CHARACTER CUSTOMIZATION
+// =========================
+
+// Returns the selected value from a radio-button group.
 
 function getSelectedValue(name) {
     const selected = document.querySelector(
@@ -62,6 +76,7 @@ function getSelectedValue(name) {
     return selected ? selected.value : '';
 }
 
+// Builds the live character preview from the selected appearance options.
 
 function updatePreview() {
     const gender = getSelectedValue('gender');
@@ -109,6 +124,7 @@ function updatePreview() {
         characterName || 'Your Legend';
 }
 
+// Updates the visual state of the selected customization controls.
 
 function updateSelectedStyles() {
     genderCards.forEach((card) => {
@@ -174,7 +190,9 @@ function handleAppearanceChange() {
     updatePreview();
 }
 
-
+// =========================
+// EVENT LISTENERS
+// =========================
 document
     .querySelectorAll(
         'input[name="gender"], ' +
@@ -208,6 +226,11 @@ weaponChoices.forEach((button) => {
     });
 });
 
+// =========================
+// CREATE CHARACTER
+// =========================
+
+// Sends the selected character data as JSON to the REST API.
 
 creatorForm.addEventListener(
     'submit',
@@ -327,6 +350,9 @@ creatorForm.addEventListener(
     }
 );
 
+// =========================
+// LOGOUT
+// =========================
 
 logoutLink.addEventListener(
     'click',
@@ -356,6 +382,9 @@ logoutLink.addEventListener(
     }
 );
 
+// =========================
+// FORM FEEDBACK
+// =========================
 
 function showMessage(message) {
     formMessage.textContent = message;
@@ -368,6 +397,9 @@ function hideMessage() {
     formMessage.hidden = true;
 }
 
+// =========================
+// INITIALIZATION
+// =========================
 
 loadSession();
 

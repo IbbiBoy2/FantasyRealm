@@ -1,3 +1,7 @@
+// =========================
+// DOM REFERENCES
+// =========================
+
 const characterMessage = document.getElementById('character-message');
 const characterContent = document.getElementById('character-content');
 
@@ -19,10 +23,20 @@ const registerLink = document.getElementById('register-link');
 const usernameDisplay = document.getElementById('nav-username');
 const logoutLink = document.getElementById('logout-link');
 
+// =========================
+// CHARACTER ID FROM URL
+// =========================
+
+// Reads ?id= from character.html?id=...
 
 const params = new URLSearchParams(window.location.search);
 const characterId = params.get('id');
 
+// =========================
+// SESSION / NAVBAR
+// =========================
+
+// Checks whether the visitor is logged in and updates the navbar.
 
 async function loadSession() {
     try {
@@ -53,6 +67,11 @@ async function loadSession() {
     }
 }
 
+// =========================
+// LOAD CHARACTER FROM API
+// =========================
+
+// Requests one approved and shared character from the REST API.
 
 async function loadCharacter() {
     if (!characterId) {
@@ -83,6 +102,11 @@ async function loadCharacter() {
     }
 }
 
+// =========================
+// DISPLAY CHARACTER DATA
+// =========================
+
+// Inserts the JSON returned by the API into the page using the DOM.
 
 function renderCharacter(character) {
     characterName.textContent = character.name;
@@ -145,6 +169,7 @@ function renderCharacter(character) {
     characterContent.hidden = false;
 }
 
+// Displays loading/error messages and hides the character content.
 
 function showMessage(message) {
     characterMessage.textContent = message;
@@ -152,6 +177,9 @@ function showMessage(message) {
     characterContent.hidden = true;
 }
 
+// =========================
+// LOGOUT
+// =========================
 
 logoutLink.addEventListener('click', async (event) => {
     event.preventDefault();
@@ -181,6 +209,9 @@ logoutLink.addEventListener('click', async (event) => {
     }
 });
 
+// =========================
+// INITIALIZATION
+// =========================
 
 loadSession();
 loadCharacter();
