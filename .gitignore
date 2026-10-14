@@ -1,0 +1,22 @@
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# PHP Composer dependencies
+vendor/
+
+# Node.js dependencies
+node_modules/
+
+# Work folder
+/Work/
+
+# Logs
+*.log
+
+# IDE and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

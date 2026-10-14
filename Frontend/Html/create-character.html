@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Create Character | FantasyRealm</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="../Css/create-character.css">
+
+    <script src="../js/create-character.js" defer></script>
+</head>
+
+<body>
+
+<header class="creator-navbar">
+
+    <a class="brand" href="index.html">
+        <span class="brand-mark">✦</span>
+        <span>FantasyRealm</span>
+    </a>
+
+    <nav class="nav-links">
+
+        <a href="index.html">
+            Home
+        </a>
+
+        <a href="character-gallery.html">
+            Characters
+        </a>
+
+        <a
+            class="active"
+            href="create-character.html"
+        >
+            Create
+        </a>
+
+        <a
+            id="login-link"
+            href="login.html"
+        >
+            Login
+        </a>
+
+        <a
+            id="register-link"
+            class="nav-register"
+            href="register.html"
+        >
+            Register
+        </a>
+
+        <span
+            id="nav-username"
+            class="nav-username"
+            hidden
+        ></span>
+
+        <a
+            id="logout-link"
+            href="#"
+            hidden
+        >
+            Logout
+        </a>
+
+    </nav>
+
+</header>
+
+
+<main class="creator-page">
+
+    <section class="creator-heading">
+
+        <p class="eyebrow">
+            FORGE YOUR LEGEND
+        </p>
+
+        <h1>
+            Create Your Character
+        </h1>
+
+        <p>
+            Build the look, identity and equipment of your next FantasyRealm character.
+        </p>
+
+    </section>
+
+
+    <section class="creator-shell">
+
+        <!-- PREVIEW -->
+
+        <aside class="preview-panel">
+
+            <div class="preview-copy">
+
+                <p class="eyebrow">
+                    CHARACTER PREVIEW
+                </p>
+
+                <h2 id="preview-name">
+                    Your Legend
+                </h2>
+
+            </div>
+
+
+            <div class="preview-stage">
+
+                <span class="preview-glow"></span>
+
+                <div class="character-layer-stack">
+
+                    <img
+                        id="base-layer"
+                        class="character-layer"
+                        src="../assets/character-parts/base/female-light.png"
+                        alt="Character preview"
+                    >
+
+                    <img
+                        id="hair-layer"
+                        class="character-layer"
+                        src="../assets/character-parts/hair/short-silver.png"
+                        alt=""
+                    >
+
+                    <img
+                        id="eyes-layer"
+                        class="character-layer"
+                        src="../assets/character-parts/eyes/blue.png"
+                        alt=""
+                    >
+
+                    <img
+                        id="weapon-layer"
+                        class="character-layer"
+                        src=""
+                        alt=""
+                        hidden
+                    >
+
+                </div>
+
+            </div>
+
+
+            <p class="preview-note">
+                Character preview updates while you customize your character.
+            </p>
+
+        </aside>
+
+
+        <!-- EDITOR -->
+
+        <section class="editor-panel">
+
+            <form
+                id="creator-form"
+                class="creator-form"
+            >
+
+                <p
+                    id="form-message"
+                    class="form-message"
+                    hidden
+                ></p>
+
+
+                <!-- CHARACTER NAME -->
+
+                <div class="form-section">
+
+                    <label
+                        class="field-label"
+                        for="character-name"
+                    >
+                        Character name
+                    </label>
+
+                    <input
+                        id="character-name"
+                        type="text"
+                        maxlength="50"
+                        placeholder="Enter a character name..."
+                        required
+                    >
+
+                </div>
+
+
+                <!-- GENDER -->
+
+                <fieldset class="form-section">
+
+                    <legend>
+                        Gender
+                    </legend>
+
+                    <div class="gender-grid">
+
+                        <label class="gender-card">
+
+                            <input
+                                type="radio"
+                                name="gender"
+                                value="male"
+                            >
+
+                            <span class="gender-symbol">
+                                ♂
+                            </span>
+
+                            <span>
+                                <strong>Male</strong>
+                                <small>Masculine character base</small>
+                            </span>
+
+                        </label>
+
+
+                        <label class="gender-card selected-card">
+
+                            <input
+                                type="radio"
+                                name="gender"
+                                value="female"
+                                checked
+                            >
+
+                            <span class="gender-symbol">
+                                ♀
+                            </span>
+
+                            <span>
+                                <strong>Female</strong>
+                                <small>Feminine character base</small>
+                            </span>
+
+                        </label>
+
+                    </div>
+
+                </fieldset>
+
+
+                <!-- APPEARANCE -->
+
+                <fieldset class="form-section">
+
+                    <legend>
+                        Appearance
+                    </legend>
+
+
+                    <!-- HAIR STYLE -->
+
+                    <div class="option-row">
+
+                        <span class="option-title">
+                            Hair style
+                        </span>
+
+                        <div class="image-options">
+
+                            <label class="image-choice selected-choice">
+
+                                <input
+                                    type="radio"
+                                    name="hair-style"
+                                    value="short"
+                                    checked
+                                >
+
+                                <img
+                                    src="../assets/gallery-characters/seraphina.png"
+                                    alt="Short hair"
+                                >
+
+                            </label>
+
+
+                            <label class="image-choice">
+
+                                <input
+                                    type="radio"
+                                    name="hair-style"
+                                    value="long"
+                                >
+
+                                <img
+                                    src="../assets/gallery-characters/lunaria.png"
+                                    alt="Long hair"
+                                >
+
+                            </label>
+
+
+                            <label class="image-choice">
+
+                                <input
+                                    type="radio"
+                                    name="hair-style"
+                                    value="braided"
+                                >
+
+                                <img
+                                    src="../assets/gallery-characters/nyxelle.png"
+                                    alt="Braided hair"
+                                >
+
+                            </label>
+
+
+                            <label class="image-choice">
+
+                                <input
+                                    type="radio"
+                                    name="hair-style"
+                                    value="ponytail"
+                                >
+
+                                <img
+                                    src="../assets/gallery-characters/aurelian.png"
+                                    alt="Ponytail hair"
+                                >
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- HAIR COLOR -->
+
+                    <div class="option-row">
+
+                        <span class="option-title">
+                            Hair color
+                        </span>
+
+                        <div class="color-options">
+
+                            <label
+                                class="color-choice selected-color"
+                                style="--swatch:#e9e2ff"
+                            >
+
+                                <input
+                                    type="radio"
+                                    name="hair-color"
+                                    value="silver"
+                                    checked
+                                >
+
+                                <span></span>
+
+                            </label>
+
+
+                            <label
+                                class="color-choice"
+                                style="--swatch:#17131d"
+                            >
+
+                                <input
+                                    type="radio"
+                                    name="hair-color"
+                                    value="black"
+                                >
+
+                                <span></span>
+
+                            </label>
+
+
+                            <label
+                                class="color-choice"
+                                style="--swatch:#6c4430"
+                            >
+
+                                <input
+                                    type="radio"
+                                    name="hair-color"
+                                    value="brown"
+                                >
+
+                                <span></span>
+
+                            </label>
+
+
+                            <label
+                                class="color-choice"
+                                style="--swatch:#a9463f"
+                            >
+
+                                <input
+                                    type="radio"
+                                    name="hair-color"
+                                    value="red"
+                                >
+
+                                <span></span>
+
+                            </label>
+
+
+                            <label
+                                class="color-choice"
+                                style="--swatch:#9c4cff"
+                            >
+
+                                <input
+                                    type="radio"
+                                    name="hair-color"
+                                    value="purple"
+                                >
+
+                                <span></span>
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- SKIN TONE -->
+
+                    <div class="option-row">
+
+                        <span class="option-title">
+                            Skin tone
+                        </span>
+
+                        <div class="color-options">
+
+                            <label
+                                class="color-choice selected-color"
+                                style="--swatch:#f6d2bd"
+                            >
+
+                                <input
+                                    type="radio"
+                                    name="skin-tone"
+                                    value="light"
+                                    checked
+                                >
+
+                                <span></span>
+
+                            </label>
+
+
+                            <label
+                                class="color-choice"
+                                style="--swatch:#dfb095"
+                            >
+
+                                <input
+                                    type="radio"
+                                    name="skin-tone"
+                                    value="fair"
+                                >
+
+                                <span></span>
+
+                            </label>
+
+
+                            <label
+                                class="color-choice"
+                                style="--swatch:#bc8568"
+                            >
+
+                                <input
+                                    type="radio"
+                                    name="skin-tone"
+                                    value="medium"
+                                >
+
+                                <span></span>
+
+                            </label>
+
+
+                            <label
+                                class="color-choice"
+                                style="--swatch:#8d5d48"
+                            >
+
+                                <input
+                                    type="radio"
+                                    name="skin-tone"
+                                    value="tan"
+                                >
+
+                                <span></span>
+
+                            </label>
+
+
+                            <label
+                                class="color-choice"
+                                style="--swatch:#5c382f"
+                            >
+
+                                <input
+                                    type="radio"
+                                    name="skin-tone"
+                                    value="dark"
+                                >
+
+                                <span></span>
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- EYE STYLE -->
+
+                    <div class="option-row">
+
+                        <span class="option-title">
+                            Eye style
+                        </span>
+
+                        <div class="eye-options">
+
+                            <label class="eye-choice selected-choice">
+
+                                <input
+                                    type="radio"
+                                    name="eye-style"
+                                    value="round"
+                                    checked
+                                >
+
+                                <span>◉</span>
+
+                            </label>
+
+
+                            <label class="eye-choice">
+
+                                <input
+                                    type="radio"
+                                    name="eye-style"
+                                    value="soft"
+                                >
+
+                                <span>◍</span>
+
+                            </label>
+
+
+                            <label class="eye-choice">
+
+                                <input
+                                    type="radio"
+                                    name="eye-style"
+                                    value="sharp"
+                                >
+
+                                <span>◉</span>
+
+                            </label>
+
+
+                            <label class="eye-choice">
+
+                                <input
+                                    type="radio"
+                                    name="eye-style"
+                                    value="narrow"
+                                >
+
+                                <span>◌</span>
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- EYE COLOR -->
+
+                    <div class="option-row">
+
+                        <span class="option-title">
+                            Eye color
+                        </span>
+
+                        <div class="color-options">
+
+                            <label
+                                class="color-choice selected-color"
+                                style="--swatch:#48cfff"
+                            >
+
+                                <input
+                                    type="radio"
+                                    name="eye-color"
+                                    value="blue"
+                                    checked
+                                >
+
+                                <span></span>
+
+                            </label>
+
+
+                            <label
+                                class="color-choice"
+                                style="--swatch:#9e4cff"
+                            >
+
+                                <input
+                                    type="radio"
+                                    name="eye-color"
+                                    value="purple"
+                                >
+
+                                <span></span>
+
+                            </label>
+
+
+                            <label
+                                class="color-choice"
+                                style="--swatch:#c84052"
+                            >
+
+                                <input
+                                    type="radio"
+                                    name="eye-color"
+                                    value="red"
+                                >
+
+                                <span></span>
+
+                            </label>
+
+
+                            <label
+                                class="color-choice"
+                                style="--swatch:#5f9e63"
+                            >
+
+                                <input
+                                    type="radio"
+                                    name="eye-color"
+                                    value="green"
+                                >
+
+                                <span></span>
+
+                            </label>
+
+
+                            <label
+                                class="color-choice"
+                                style="--swatch:#c98946"
+                            >
+
+                                <input
+                                    type="radio"
+                                    name="eye-color"
+                                    value="amber"
+                                >
+
+                                <span></span>
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+                </fieldset>
+
+
+                <!-- EQUIPMENT -->
+
+                <fieldset class="form-section">
+
+                    <legend>
+                        Weapon
+                    </legend>
+
+                    <input
+                        type="hidden"
+                        id="selected-weapon"
+                        value=""
+                    >
+
+                    <div class="weapon-options">
+
+                        <button
+                            type="button"
+                            class="weapon-choice"
+                            data-weapon="iron-sword"
+                        >
+                            Iron Sword
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="weapon-choice"
+                            data-weapon="steel-sword"
+                        >
+                            Steel Sword
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="weapon-choice"
+                            data-weapon="magic-staff"
+                        >
+                            Magic Staff
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="weapon-choice"
+                            data-weapon=""
+                        >
+                            None
+                        </button>
+
+                    </div>
+
+                </fieldset>
+
+
+                <!-- BUTTONS -->
+
+                <div class="form-actions">
+
+                    <a
+                        href="index.html"
+                        class="cancel-button"
+                    >
+                        Cancel
+                    </a>
+
+                    <button
+                        id="create-button"
+                        type="submit"
+                        class="create-button"
+                    >
+                        ✦ Create Character
+                    </button>
+
+                </div>
+
+
+                <p class="frontend-note">
+                    New characters must be approved before appearing in the public gallery.
+                </p>
+
+            </form>
+
+        </section>
+
+    </section>
+
+</main>
+
+
+<footer class="footer">
+
+    <div class="footer-brand">
+        ✦ FantasyRealm
+    </div>
+
+    <p>
+        © 2026 FantasyRealm. All rights reserved.
+    </p>
+
+    <div class="footer-links">
+
+        <a href="#">
+            Legal Notice
+        </a>
+
+        <a href="#">
+            Terms
+        </a>
+
+        <a href="contact.html">
+            Contact
+        </a>
+
+    </div>
+
+</footer>
+
+</body>
+</html>

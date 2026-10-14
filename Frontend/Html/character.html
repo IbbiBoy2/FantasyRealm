@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Character | FantasyRealm</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="../Css/character.css">
+
+    <script src="../js/character.js" defer></script>
+</head>
+
+<body>
+
+<header class="character-navbar">
+
+    <a class="brand" href="index.html">
+        <span class="brand-mark">✦</span>
+        <span>FantasyRealm</span>
+    </a>
+
+    <nav class="nav-links">
+
+        <a href="index.html">
+            Home
+        </a>
+
+        <a href="character-gallery.html">
+            Characters
+        </a>
+
+        <a href="create-character.html">
+            Create
+        </a>
+
+        <a
+            id="login-link"
+            href="login.html"
+        >
+            Login
+        </a>
+
+        <a
+            id="register-link"
+            class="nav-register"
+            href="register.html"
+        >
+            Register
+        </a>
+
+        <span
+            id="nav-username"
+            class="nav-username"
+            hidden
+        ></span>
+
+        <a
+            id="logout-link"
+            href="#"
+            hidden
+        >
+            Logout
+        </a>
+
+    </nav>
+
+</header>
+
+
+<main class="character-page">
+
+    <a
+        href="character-gallery.html"
+        class="back-link"
+    >
+        ← Back to Gallery
+    </a>
+
+
+    <p
+        id="character-message"
+        class="character-message"
+    >
+        Loading character...
+    </p>
+
+
+    <section
+        id="character-content"
+        class="character-content"
+        hidden
+    >
+
+        <div class="character-visual">
+
+            <div class="character-stage">
+
+                <img
+                    id="character-image"
+                    src=""
+                    alt=""
+                    hidden
+                >
+
+                <span class="stage-ring"></span>
+
+            </div>
+
+        </div>
+
+
+        <div class="character-details">
+
+            <p class="eyebrow">
+                FANTASYREALM CHARACTER
+            </p>
+
+            <h1 id="character-name">
+                Character Name
+            </h1>
+
+            <p class="character-meta">
+                Created by
+                <strong id="character-creator">
+                    Unknown
+                </strong>
+            </p>
+
+            <p
+                id="character-created-date"
+                class="character-date"
+            ></p>
+
+
+            <section class="detail-section">
+
+                <h2>
+                    Appearance
+                </h2>
+
+                <div class="detail-grid">
+
+                    <div class="detail-item">
+                        <span>Gender</span>
+                        <strong id="character-gender">—</strong>
+                    </div>
+
+                    <div class="detail-item">
+                        <span>Skin Tone</span>
+                        <strong id="character-skin">—</strong>
+                    </div>
+
+                    <div class="detail-item">
+                        <span>Hair Style</span>
+                        <strong id="character-hair-style">—</strong>
+                    </div>
+
+                    <div class="detail-item">
+                        <span>Hair Color</span>
+                        <strong id="character-hair-color">—</strong>
+                    </div>
+
+                    <div class="detail-item">
+                        <span>Eye Color</span>
+                        <strong id="character-eye-color">—</strong>
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <section class="detail-section">
+
+                <h2>
+                    Equipment
+                </h2>
+
+                <div
+                    id="character-equipment"
+                    class="equipment-list"
+                >
+                    <p>No equipment.</p>
+                </div>
+
+            </section>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<footer class="footer">
+
+    <div class="footer-brand">
+        ✦ FantasyRealm
+    </div>
+
+    <p>
+        © 2026 FantasyRealm. All rights reserved.
+    </p>
+
+    <div class="footer-links">
+
+        <a href="#">
+            Legal Notice
+        </a>
+
+        <a href="#">
+            Terms
+        </a>
+
+        <a href="contact.html">
+            Contact
+        </a>
+
+    </div>
+
+</footer>
+
+</body>
+</html>
