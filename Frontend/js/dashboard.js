@@ -29,6 +29,11 @@ const approvedCount =
 const rejectedCount =
     document.getElementById('rejected-count');
 
+const deletedCharacterList =
+document.getElementById('deleted-character-list');
+
+const deletedMessage =
+    document.getElementById('deleted-message');
 
 // =========================
 // SESSION
@@ -110,6 +115,40 @@ async function loadCharacters() {
     }
 }
 
+// =========================
+// LOAD DELETED CHARACTERS
+// =========================
+
+async function loadDeletedCharacters() {
+    try {
+        const response = await fetch(
+            '/FantasyRealm/Backend/api/deleted-characters.php'
+        );
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+            showDeletedMessage(
+                data.message ||
+                'Unable to load deleted characters.'
+            );
+
+            return;
+        }
+
+        renderDeletedCharacters(data.characters);
+
+    } catch (error) {
+        console.error(
+            'Unable to load deleted characters:',
+            error
+        );
+
+        showDeletedMessage(
+            'Unable to load deleted characters.'
+        );
+    }
+}
 
 // =========================
 // STATISTICS
@@ -408,6 +447,274 @@ async function deleteCharacter(character) {
 }
 
 // =========================
+// DELETED CHARACTER CARDS
+// =========================
+
+function renderDeletedCharacters(characters) {
+    deletedCharacterList.innerHTML = '';
+
+    if (characters.length === 0) {
+        showDeletedMessage(
+            'No deleted characters.'
+        );
+
+        return;
+    }
+
+    deletedMessage.hidden = true;
+
+    characters.forEach(character => {
+        const card =
+            createDeletedCharacterCard(character);
+            
+
+            
+
+        deletedCharacterList.appendChild(card);
+    });
+}
+
+
+function createDeletedCharacterCard(character) {
+    const card =
+        document.createElement('article');
+
+    card.className =
+        'dashboard-character-card';
+
+
+    const preview =
+        document.createElement('div');
+
+    preview.className =
+        'character-preview';
+
+
+    const placeholder =
+        document.createElement('span');
+
+    placeholder.className =
+        'character-placeholder';
+
+    placeholder.textContent =
+        '✦';
+
+    preview.appendChild(placeholder);
+
+
+    const body =
+        document.createElement('div');
+
+    body.className =
+        'character-card-body';
+
+
+    const name =
+        document.createElement('h3');
+
+    name.textContent =
+        character.name;
+
+
+    const details =
+        document.createElement('p');
+
+    details.className =
+        'character-meta';
+
+    details.textContent =
+        `${character.gender} • ${character.hair_style} hair • ${character.eye_color} eyes`;
+
+
+    const deletedDate =
+        document.createElement('p');
+
+    deletedDate.className =
+        'character-meta';
+
+    deletedDate.textContent =
+        `Deleted: ${character.deleted_at}`;
+
+
+    body.appendChild(name);
+    body.appendChild(details);
+    body.appendChild(deletedDate);
+
+
+    const actions =
+        document.createElement('div');
+
+    actions.className =
+        'character-actions';
+
+
+    const restoreButton =
+        document.createElement('button');
+
+    restoreButton.type =
+        'button';
+
+    restoreButton.className =
+        'character-action';
+
+    restoreButton.textContent =
+        'Restore';
+
+    restoreButton.addEventListener(
+        'click',
+        () => restoreCharacter(character)
+    );
+
+    actions.appendChild(restoreButton);
+
+
+    const permanentDeleteButton =
+        document.createElement('button');
+
+    permanentDeleteButton.type =
+        'button';
+
+    permanentDeleteButton.className =
+        'character-action';
+
+    permanentDeleteButton.textContent =
+        'Permanently Delete';
+
+    permanentDeleteButton.addEventListener(
+        'click',
+        () => permanentlyDeleteCharacter(character)
+    );
+
+    actions.appendChild(permanentDeleteButton);
+
+
+    body.appendChild(actions);
+
+    card.appendChild(preview);
+    card.appendChild(body);
+
+    return card;
+}
+
+function showDeletedMessage(message) {
+    deletedMessage.textContent =
+        message;
+
+    deletedMessage.hidden =
+        false;
+}
+
+// =========================
+// RESTORE CHARACTER
+// =========================
+
+async function restoreCharacter(character) {
+    try {
+        const response = await fetch(
+            '/FantasyRealm/Backend/api/restore-character.php',
+            {
+                method: 'POST',
+
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+
+                body: JSON.stringify({
+                    character_id: character.id
+                })
+            }
+        );
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok || !data.success) {
+
+            alert(
+                data.message ||
+                'Unable to restore character.'
+            );
+
+            return;
+        }
+
+
+        await loadCharacters();
+        await loadDeletedCharacters();
+
+
+    } catch (error) {
+
+        console.error(
+            'Unable to restore character:',
+            error
+        );
+
+        alert(
+            'Unable to restore character.'
+        );
+    }
+}
+
+// =========================
+// PERMANENT DELETE
+// =========================
+
+async function permanentlyDeleteCharacter(character) {
+
+    const confirmed = window.confirm(
+        `Permanently delete "${character.name}"? This cannot be undone.`
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    try {
+        const response = await fetch(
+            '/FantasyRealm/Backend/api/permanent-delete-character.php',
+            {
+                method: 'POST',
+
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+
+                body: JSON.stringify({
+                    character_id: character.id
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+            alert(
+                data.message ||
+                'Unable to permanently delete character.'
+            );
+
+            return;
+        }
+
+        await loadDeletedCharacters();
+
+    } catch (error) {
+        console.error(
+            'Unable to permanently delete character:',
+            error
+        );
+
+        alert(
+            'Unable to permanently delete character.'
+        );
+    }
+}
+
+// =========================
 // FEEDBACK
 // =========================
 
@@ -467,6 +774,7 @@ async function initializeDashboard() {
     }
 
     await loadCharacters();
+    await loadDeletedCharacters();
 }
 
 initializeDashboard();
