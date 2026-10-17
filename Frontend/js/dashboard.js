@@ -271,37 +271,59 @@ function createCharacterCard(character) {
     body.appendChild(status);
 
 
-    // Public characters can already use
-    // the existing character detail page.
+    // Character management actions
 
-    if (
-        character.status === 'APPROVED' &&
-        character.shared
-    ) {
-        const actions =
-            document.createElement('div');
+const actions =
+    document.createElement('div');
 
-        actions.className =
-            'character-actions';
+actions.className =
+    'character-actions';
 
 
-        const viewLink =
-            document.createElement('a');
+// View is available for approved + shared characters.
 
-        viewLink.className =
-            'character-action';
+if (
+    character.status === 'APPROVED' &&
+    character.shared
+) {
+    const viewLink =
+        document.createElement('a');
 
-        viewLink.href =
-            `character.html?id=${encodeURIComponent(character.id)}`;
+    viewLink.className =
+        'character-action';
 
-        viewLink.textContent =
-            'View';
+    viewLink.href =
+        `character.html?id=${encodeURIComponent(character.id)}`;
+
+    viewLink.textContent =
+        'View';
+
+    actions.appendChild(viewLink);
+}
 
 
-        actions.appendChild(viewLink);
+// Delete button
 
-        body.appendChild(actions);
-    }
+const deleteButton =
+    document.createElement('button');
+
+deleteButton.type =
+    'button';
+
+deleteButton.className =
+    'character-action';
+
+deleteButton.textContent =
+    'Delete';
+
+deleteButton.addEventListener(
+    'click',
+    () => deleteCharacter(character)
+);
+
+actions.appendChild(deleteButton);
+
+body.appendChild(actions);
 
 
     card.appendChild(preview);
@@ -323,6 +345,67 @@ function getStatusClass(status) {
     return 'status-pending';
 }
 
+// =========================
+// DELETE CHARACTER
+// =========================
+
+async function deleteCharacter(character) {
+
+    const confirmed = window.confirm(
+        `Delete "${character.name}"?`
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    try {
+        const response = await fetch(
+            '/FantasyRealm/Backend/api/delete-character.php',
+            {
+                method: 'POST',
+
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+
+                body: JSON.stringify({
+                    character_id: character.id
+                })
+            }
+        );
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok || !data.success) {
+
+            alert(
+                data.message ||
+                'Unable to delete character.'
+            );
+
+            return;
+        }
+
+
+        await loadCharacters();
+
+
+    } catch (error) {
+
+        console.error(
+            'Unable to delete character:',
+            error
+        );
+
+        alert(
+            'Unable to delete character.'
+        );
+    }
+}
 
 // =========================
 // FEEDBACK

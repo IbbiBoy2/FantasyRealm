@@ -75,6 +75,7 @@ try {
             ON appearances.character_id = characters.id
 
          WHERE characters.user_id = :user_id
+           AND characters.deleted_at IS NULL
 
          ORDER BY characters.created_at DESC'
     );
