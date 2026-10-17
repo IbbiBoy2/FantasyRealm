@@ -6,6 +6,11 @@ header('Content-Type: application/json; charset=utf-8');
 
 require_once __DIR__ . '/../config/database.php';
 
+// =========================
+// REQUEST VALIDATION
+// =========================
+
+// The gallery endpoint only accepts GET requests.
 
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     http_response_code(405);
@@ -18,6 +23,11 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     exit;
 }
 
+// =========================
+// LOAD PUBLIC CHARACTERS
+// =========================
+
+// Only approved and shared characters are returned to the public gallery.
 
 try {
 
@@ -42,6 +52,7 @@ try {
 
     $characters = $stmt->fetchAll();
 
+// Converts character IDs from database strings to integers for cleaner JSON.
 
     foreach ($characters as &$character) {
         $character['id'] = (int) $character['id'];
@@ -54,6 +65,8 @@ try {
         'success' => true,
         'characters' => $characters
     ]);
+
+// Returns a generic error without exposing database details.
 
 } catch (Throwable $e) {
 

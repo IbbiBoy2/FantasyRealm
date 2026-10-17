@@ -1,3 +1,8 @@
+
+// =========================
+// DOM REFERENCES
+// =========================
+
 const contactForm = document.getElementById('contact-form');
 
 const usernameInput = document.getElementById('username');
@@ -12,6 +17,11 @@ const registerLink = document.getElementById('register-link');
 const usernameDisplay = document.getElementById('nav-username');
 const logoutLink = document.getElementById('logout-link');
 
+// =========================
+// SESSION / NAVBAR
+// =========================
+
+// Logged-in users get their username and email prefilled automatically.
 
 async function loadSession() {
     try {
@@ -49,6 +59,11 @@ async function loadSession() {
     }
 }
 
+// =========================
+// CONTACT FORM SUBMISSION
+// =========================
+
+// Sends the contact form data as JSON to the REST API.
 
 contactForm.addEventListener(
     'submit',
@@ -61,6 +76,7 @@ contactForm.addEventListener(
             message: messageInput.value.trim()
         };
 
+// Basic client-side validation before sending the request.
 
         if (
             contactData.username === '' ||
@@ -80,6 +96,7 @@ contactForm.addEventListener(
 
         hideMessage();
 
+// The backend performs the final validation and stores the message with PDO.
 
         try {
             const response = await fetch(
@@ -136,6 +153,9 @@ contactForm.addEventListener(
     }
 );
 
+// =========================
+// LOGOUT
+// =========================
 
 logoutLink.addEventListener(
     'click',
@@ -164,6 +184,9 @@ logoutLink.addEventListener(
     }
 );
 
+// =========================
+// FORM FEEDBACK
+// =========================
 
 function showMessage(message) {
     formMessage.textContent = message;
@@ -176,5 +199,8 @@ function hideMessage() {
     formMessage.hidden = true;
 }
 
+// =========================
+// INITIALIZATION
+// =========================
 
 loadSession();

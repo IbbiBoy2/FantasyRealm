@@ -1,3 +1,8 @@
+
+// =========================
+// DOM REFERENCES
+// =========================
+
 const galleryGrid = document.getElementById('gallery-grid');
 const galleryMessage = document.getElementById('gallery-message');
 const galleryPagination = document.getElementById('gallery-pagination');
@@ -11,6 +16,11 @@ const registerLink = document.getElementById('register-link');
 const usernameDisplay = document.getElementById('nav-username');
 const logoutLink = document.getElementById('logout-link');
 
+// =========================
+// GALLERY STATE
+// =========================
+
+// Stores the full API result, the filtered result, and the current page.
 
 const charactersPerPage = 60;
 
@@ -18,6 +28,9 @@ let allCharacters = [];
 let filteredCharacters = [];
 let currentPage = 1;
 
+// =========================
+// SESSION / NAVBAR
+// =========================
 
 async function loadSession() {
     try {
@@ -48,6 +61,11 @@ async function loadSession() {
     }
 }
 
+// =========================
+// LOAD GALLERY DATA
+// =========================
+
+// Fetches approved and shared characters from the REST API.
 
 async function loadCharacters() {
     try {
@@ -77,6 +95,11 @@ async function loadCharacters() {
     }
 }
 
+// =========================
+// CLIENT-SIDE FILTERING
+// =========================
+
+// Filters the already-loaded characters by creator and creation date.
 
 function applyFilters() {
     const creatorValue = creatorFilter.value
@@ -115,6 +138,11 @@ function applyFilters() {
     renderCharacters();
 }
 
+// =========================
+// CHARACTER RENDERING
+// =========================
+
+// Displays only the characters belonging to the current pagination page.
 
 function renderCharacters() {
     galleryGrid.innerHTML = '';
@@ -156,6 +184,7 @@ function renderCharacters() {
     renderPagination();
 }
 
+// Builds one gallery card using DOM methods and textContent.
 
 function createCharacterCard(character) {
     const card = document.createElement('article');
@@ -219,6 +248,11 @@ function createCharacterCard(character) {
     return card;
 }
 
+// =========================
+// PAGINATION
+// =========================
+
+// Creates one pagination button for each required page.
 
 function renderPagination() {
     galleryPagination.innerHTML = '';
@@ -273,6 +307,9 @@ function showGalleryMessage(message) {
     galleryMessage.hidden = false;
 }
 
+// =========================
+// EVENT LISTENERS
+// =========================
 
 creatorFilter.addEventListener(
     'input',
@@ -329,6 +366,9 @@ logoutLink.addEventListener('click', async (event) => {
     }
 });
 
+// =========================
+// INITIALIZATION
+// =========================
 
 loadSession();
 loadCharacters();
