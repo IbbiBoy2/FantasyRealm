@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>My Dashboard | FantasyRealm</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../Css/dashboard.css"
+    >
+
+    <script
+        src="../js/dashboard.js"
+        defer
+    ></script>
+</head>
+
+
+<body>
+
+<header class="dashboard-navbar">
+
+    <a
+        class="brand"
+        href="index.html"
+    >
+        <span class="brand-mark">✦</span>
+        <span>FantasyRealm</span>
+    </a>
+
+
+    <nav class="nav-links">
+
+        <a href="index.html">
+            Home
+        </a>
+
+        <a href="character-gallery.html">
+            Characters
+        </a>
+
+        <a href="create-character.html">
+            Create
+        </a>
+
+        <span
+            id="nav-username"
+            class="nav-username"
+        ></span>
+
+        <a
+            id="logout-link"
+            href="#"
+        >
+            Logout
+        </a>
+
+    </nav>
+
+</header>
+
+
+<main class="dashboard-page">
+
+    <!-- =========================
+         DASHBOARD HEADER
+    ========================== -->
+
+    <section class="dashboard-header">
+
+        <div>
+
+            <p class="section-label">
+                MY REALM
+            </p>
+
+            <h1>
+                Welcome,
+                <span id="dashboard-username">
+                    Adventurer
+                </span>
+            </h1>
+
+            <p class="dashboard-intro">
+                Manage your FantasyRealm characters,
+                their visibility and their current approval status.
+            </p>
+
+        </div>
+
+
+        <a
+            href="create-character.html"
+            class="create-character-button"
+        >
+            ✦ Create Character
+        </a>
+
+    </section>
+
+
+    <!-- =========================
+         CHARACTER STATISTICS
+    ========================== -->
+
+    <section class="dashboard-stats">
+
+        <article class="stat-card">
+            <span>Total Characters</span>
+
+            <strong id="total-count">
+                0
+            </strong>
+        </article>
+
+
+        <article class="stat-card">
+            <span>Pending</span>
+
+            <strong id="pending-count">
+                0
+            </strong>
+        </article>
+
+
+        <article class="stat-card">
+            <span>Approved</span>
+
+            <strong id="approved-count">
+                0
+            </strong>
+        </article>
+
+
+        <article class="stat-card">
+            <span>Rejected</span>
+
+            <strong id="rejected-count">
+                0
+            </strong>
+        </article>
+
+    </section>
+
+
+    <!-- =========================
+         USER CHARACTERS
+    ========================== -->
+
+    <section class="characters-section">
+
+        <div class="section-heading">
+
+            <div>
+                <p class="section-label">
+                    CHARACTER COLLECTION
+                </p>
+
+                <h2>
+                    My Characters
+                </h2>
+            </div>
+
+        </div>
+
+
+        <p
+            id="dashboard-message"
+            class="dashboard-message"
+        >
+            Loading your characters...
+        </p>
+
+
+        <div
+            id="character-list"
+            class="dashboard-character-grid"
+        ></div>
+
+    </section>
+
+</main>
+
+
+<footer class="footer">
+
+    <div class="footer-brand">
+        ✦ FantasyRealm
+    </div>
+
+    <p>
+        © 2026 FantasyRealm. All rights reserved.
+    </p>
+
+    <div class="footer-links">
+
+        <a href="#">
+            Legal Notice
+        </a>
+
+        <a href="#">
+            Terms
+        </a>
+
+        <a href="contact.html">
+            Contact
+        </a>
+
+    </div>
+
+</footer>
+
+</body>
+
+</html>
