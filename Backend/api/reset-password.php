@@ -6,6 +6,11 @@ header('Content-Type: application/json; charset=utf-8');
 
 require_once __DIR__ . '/../config/database.php';
 
+// =========================
+// REQUEST VALIDATION
+// =========================
+
+// Password resets only accept POST requests.
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
@@ -69,6 +74,11 @@ if ($password !== $passwordConfirm) {
     exit;
 }
 
+// =========================
+// TOKEN VERIFICATION
+// =========================
+
+// Hashes the submitted token so it can be compared with the hash stored in the database.
 
 try {
 
@@ -77,6 +87,7 @@ try {
         $token
     );
 
+// The reset token must exist and still be within its expiration time.
 
     $stmt = $pdo->prepare(
         'SELECT id
@@ -104,12 +115,14 @@ try {
         exit;
     }
 
+// Hashes the new password before saving it.
 
     $passwordHash = password_hash(
         $password,
         PASSWORD_DEFAULT
     );
 
+    // Updates the password and immediately invalidates the reset token.
 
     $stmt = $pdo->prepare(
         'UPDATE users

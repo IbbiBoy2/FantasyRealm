@@ -8,6 +8,11 @@ header('Content-Type: application/json; charset=utf-8');
 
 require_once __DIR__ . '/../config/database.php';
 
+// =========================
+// REQUEST VALIDATION
+// =========================
+
+// Contact messages are submitted with POST requests.
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
@@ -62,6 +67,11 @@ if (
     exit;
 }
 
+// =========================
+// INPUT VALIDATION
+// =========================
+
+// Validates required fields, email format, and maximum lengths on the server.
 
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
@@ -114,6 +124,11 @@ if (mb_strlen($message) > 2000) {
     exit;
 }
 
+// =========================
+// SAVE MESSAGE
+// =========================
+
+// Uses a prepared statement to safely store the contact message.
 
 try {
 
@@ -131,6 +146,7 @@ try {
         )'
     );
 
+// Logged-in users are linked to their account; visitors are stored with a NULL user_id.
 
     $stmt->execute([
         'user_id' => $_SESSION['user_id'] ?? null,
@@ -147,6 +163,7 @@ try {
         'message' => 'Your message has been sent successfully.'
     ]);
 
+// Returns a generic server error without exposing database details.
 
 } catch (Throwable $e) {
 

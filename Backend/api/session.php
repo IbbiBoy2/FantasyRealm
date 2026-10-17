@@ -6,6 +6,8 @@ session_start();
 
 header('Content-Type: application/json; charset=utf-8');
 
+// Returns whether the current visitor has an authenticated PHP session.
+
 if (!isset($_SESSION['user_id'])) {
     echo json_encode([
         'authenticated' => false,
@@ -14,6 +16,8 @@ if (!isset($_SESSION['user_id'])) {
 
     exit;
 }
+
+// Only expose the session data needed by the frontend.
 
 echo json_encode([
     'authenticated' => true,

@@ -6,6 +6,11 @@ header('Content-Type: application/json; charset=utf-8');
 
 require_once __DIR__ . '/../config/database.php';
 
+// =========================
+// REQUEST VALIDATION
+// =========================
+
+// Registration only accepts POST requests.
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
@@ -84,6 +89,12 @@ if ($password !== $passwordConfirm) {
 }
 
 
+// =========================
+// DUPLICATE ACCOUNT CHECK
+// =========================
+
+// Prevents duplicate email addresses and usernames.
+
 try {
 
     $stmt = $pdo->prepare(
@@ -113,6 +124,11 @@ try {
         exit;
     }
 
+// =========================
+// DEFAULT ROLE
+// =========================
+
+// New accounts are assigned the standard USER role.
 
     $stmt = $pdo->prepare(
         'SELECT id
@@ -134,6 +150,7 @@ try {
         );
     }
 
+// Prepared statements keep user input separate from SQL.
 
     $passwordHash = password_hash(
         $password,
@@ -177,6 +194,8 @@ try {
             'email' => $email
         ]
     ]);
+
+// Database constraint errors are converted into safe API responses.
 
 } catch (PDOException $e) {
 

@@ -6,6 +6,11 @@ header('Content-Type: application/json; charset=utf-8');
 
 require_once __DIR__ . '/../config/database.php';
 
+// =========================
+// REQUEST VALIDATION
+// =========================
+
+// This endpoint only accepts GET requests.
 
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     http_response_code(405);
@@ -18,6 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     exit;
 }
 
+// Validates the character ID received from the URL query string.
 
 $characterId = filter_input(
     INPUT_GET,
@@ -37,6 +43,11 @@ if (!$characterId) {
     exit;
 }
 
+// =========================
+// CHARACTER LOOKUP
+// =========================
+
+// Loads one approved, shared character together with its creator and appearance.
 
 try {
 
@@ -91,6 +102,11 @@ try {
         exit;
     }
 
+// =========================
+// EQUIPMENT LOOKUP
+// =========================
+
+// Equipment is loaded separately because one character can have multiple accessories.
 
     $equipmentStmt = $pdo->prepare(
         'SELECT
@@ -124,6 +140,7 @@ try {
 
     unset($item);
 
+    // Adds the equipment array to the character before returning JSON.
 
     $character['equipment'] = $equipment;
 
