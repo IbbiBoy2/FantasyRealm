@@ -33,9 +33,38 @@
 
         <span id="nav-username" hidden></span>
 
-        <a id="logout-link" href="#" hidden>
-            Logout
+<div
+    id="settings-menu"
+    class="settings-menu"
+    hidden
+>
+    <button
+        id="settings-button"
+        class="settings-button"
+        type="button"
+        aria-label="Open settings"
+        aria-expanded="false"
+    >
+        ⚙
+    </button>
+
+    <div
+        id="settings-dropdown"
+        class="settings-dropdown"
+        hidden
+    >
+        <a href="dashboard.html">
+            Character Settings
         </a>
+
+        <button
+            id="logout-link"
+            type="button"
+        >
+            Logout
+        </button>
+    </div>
+</div>
     </nav>
 </header>
 
