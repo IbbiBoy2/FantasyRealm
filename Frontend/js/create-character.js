@@ -20,6 +20,10 @@ const registerLink = document.getElementById('register-link');
 const usernameDisplay = document.getElementById('nav-username');
 const logoutLink = document.getElementById('logout-link');
 
+const settingsMenu = document.getElementById('settings-menu');
+const settingsButton = document.getElementById('settings-button');
+const settingsDropdown = document.getElementById('settings-dropdown');
+
 const genderCards = document.querySelectorAll('.gender-card');
 const imageChoices = document.querySelectorAll('.image-choice');
 const eyeChoices = document.querySelectorAll('.eye-choice');
@@ -27,10 +31,49 @@ const colorChoices = document.querySelectorAll('.color-choice');
 const weaponChoices = document.querySelectorAll('.weapon-choice');
 
 // =========================
+// SETTINGS MENU
+// =========================
+
+// Keeps dropdown visibility and its accessibility state synchronized.
+
+function setSettingsOpen(isOpen) {
+    settingsDropdown.hidden = !isOpen;
+
+    settingsButton.setAttribute(
+        'aria-expanded',
+        String(isOpen)
+    );
+}
+
+settingsButton.addEventListener('click', () => {
+    setSettingsOpen(settingsDropdown.hidden);
+});
+
+// Closes the dropdown when clicking outside the settings container.
+
+document.addEventListener('click', (event) => {
+    if (!settingsMenu.contains(event.target)) {
+        setSettingsOpen(false);
+    }
+});
+
+// Returns keyboard focus to the gear when Escape closes the dropdown.
+
+document.addEventListener('keydown', (event) => {
+    if (
+        event.key === 'Escape' &&
+        !settingsDropdown.hidden
+    ) {
+        setSettingsOpen(false);
+        settingsButton.focus();
+    }
+});
+
+// =========================
 // SESSION CHECK
 // =========================
 
-// Character creation is restricted to authenticated users.
+// Checks the PHP session and redirects unauthenticated visitors to Login.
 
 async function loadSession() {
     try {
@@ -39,6 +82,10 @@ async function loadSession() {
         );
 
         const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error('Unable to verify session.');
+        }
 
         if (!data.authenticated) {
             window.location.href = 'login.html';
@@ -51,7 +98,7 @@ async function loadSession() {
         usernameDisplay.textContent = data.user.username;
         usernameDisplay.hidden = false;
 
-        logoutLink.hidden = false;
+        settingsMenu.hidden = false;
 
     } catch (error) {
         console.error('Unable to load session:', error);
@@ -354,33 +401,39 @@ creatorForm.addEventListener(
 // LOGOUT
 // =========================
 
-logoutLink.addEventListener(
-    'click',
-    async (event) => {
-        event.preventDefault();
+// Redirects only after the REST API confirms the PHP session has ended.
 
-        try {
-            await fetch(
-                '/FantasyRealm/Backend/api/logout.php',
-                {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json'
-                    }
+logoutLink.addEventListener('click', async () => {
+    try {
+        const response = await fetch(
+            '/FantasyRealm/Backend/api/logout.php',
+            {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json'
                 }
-            );
+            }
+        );
 
-            window.location.href =
-                'index.html';
+        const data = await response.json();
 
-        } catch (error) {
-            console.error(
-                'Unable to logout:',
-                error
+        if (!response.ok || !data.success) {
+            showMessage(
+                data.message || 'Unable to log out. Please try again.'
             );
+            return;
         }
+
+        window.location.href = 'index.html';
+
+    } catch (error) {
+        console.error('Unable to logout:', error);
+
+        showMessage(
+            'Unable to log out. Please try again.'
+        );
     }
-);
+});
 
 // =========================
 // FORM FEEDBACK

@@ -7,6 +7,10 @@
 
     <title>Create Character | FantasyRealm</title>
 
+<!-- =========================
+     FONTS AND PAGE ASSETS
+========================= -->
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
@@ -22,15 +26,17 @@
 
 <body>
 
-<header class="creator-navbar">
+<<!-- =========================
+     MAIN NAVIGATION
+========================= -->
 
+<header class="creator-navbar">
     <a class="brand" href="index.html">
         <span class="brand-mark">✦</span>
         <span>FantasyRealm</span>
     </a>
 
     <nav class="nav-links">
-
         <a href="index.html">
             Home
         </a>
@@ -39,17 +45,11 @@
             Characters
         </a>
 
-        <a
-            class="active"
-            href="create-character.html"
-        >
+        <a class="active" href="create-character.html">
             Create
         </a>
 
-        <a
-            id="login-link"
-            href="login.html"
-        >
+        <a id="login-link" href="login.html">
             Login
         </a>
 
@@ -67,20 +67,45 @@
             hidden
         ></span>
 
-        <a
-            id="logout-link"
-            href="#"
-            hidden
-        >
-            Logout
-        </a>
+        <!-- =========================
+             ACCOUNT SETTINGS
+        ========================= -->
 
+        <div id="settings-menu" class="settings-menu" hidden>
+            <button
+                id="settings-button"
+                class="settings-button"
+                type="button"
+                aria-label="Open settings"
+                aria-controls="settings-dropdown"
+                aria-expanded="false"
+            >
+                ⚙
+            </button>
+
+            <div
+                id="settings-dropdown"
+                class="settings-dropdown"
+                hidden
+            >
+                <a href="dashboard.html">
+                    Character Settings
+                </a>
+
+                <button id="logout-link" type="button">
+                    Logout
+                </button>
+            </div>
+        </div>
     </nav>
-
 </header>
 
 
 <main class="creator-page">
+
+<!-- =========================
+    CHARACTER CREATOR INTRODUCTION
+========================= -->
 
     <section class="creator-heading">
 
@@ -98,10 +123,15 @@
 
     </section>
 
+ <!-- =========================
+    CHARACTER PREVIEW AND EDITOR
+========================= -->
 
     <section class="creator-shell">
 
-        <!-- PREVIEW -->
+<!-- =========================
+     LIVE CHARACTER PREVIEW
+========================= -->
 
         <aside class="preview-panel">
 
@@ -121,6 +151,8 @@
             <div class="preview-stage">
 
                 <span class="preview-glow"></span>
+
+                <!-- Selected appearance images are layered to build the preview. -->
 
                 <div class="character-layer-stack">
 
@@ -165,24 +197,29 @@
         </aside>
 
 
-        <!-- EDITOR -->
+<!-- =========================
+     CHARACTER CREATION FORM
+========================= -->
 
         <section class="editor-panel">
 
             <form
                 id="creator-form"
                 class="creator-form"
-            >
+                >
 
-                <p
-                    id="form-message"
-                    class="form-message"
-                    hidden
-                ></p>
+                <!-- Displays validation messages and responses from the PHP REST API. -->
+
+<p
+    id="form-message"
+    class="form-message"
+    hidden
+></p>
 
 
-                <!-- CHARACTER NAME -->
-
+<!-- =========================
+     CHARACTER NAME
+========================= -->
                 <div class="form-section">
 
                     <label
@@ -203,7 +240,9 @@
                 </div>
 
 
-                <!-- GENDER -->
+<!-- =========================
+     GENDER
+========================= -->
 
                 <fieldset class="form-section">
 
@@ -258,7 +297,9 @@
                 </fieldset>
 
 
-                <!-- APPEARANCE -->
+<!-- =========================
+     APPEARANCE
+========================= -->
 
                 <fieldset class="form-section">
 
@@ -267,7 +308,9 @@
                     </legend>
 
 
-                    <!-- HAIR STYLE -->
+<!-- =========================
+     HAIR STYLE
+========================= -->
 
                     <div class="option-row">
 
@@ -346,7 +389,9 @@
                     </div>
 
 
-                    <!-- HAIR COLOR -->
+<!-- =========================
+     HAIR COLOR
+========================= -->
 
                     <div class="option-row">
 
@@ -441,7 +486,9 @@
                     </div>
 
 
-                    <!-- SKIN TONE -->
+<!-- =========================
+     SKIN TONE
+========================= -->
 
                     <div class="option-row">
 
@@ -536,7 +583,9 @@
                     </div>
 
 
-                    <!-- EYE STYLE -->
+<!-- =========================
+     EYE STYLE
+========================= -->
 
                     <div class="option-row">
 
@@ -603,7 +652,9 @@
                     </div>
 
 
-                    <!-- EYE COLOR -->
+<!-- =========================
+     EYE COLOR
+========================= -->
 
                     <div class="option-row">
 
@@ -700,7 +751,9 @@
                 </fieldset>
 
 
-                <!-- EQUIPMENT -->
+<!-- =========================
+     WEAPON SELECTION
+========================= -->
 
                 <fieldset class="form-section">
 
@@ -756,7 +809,9 @@
                 </fieldset>
 
 
-                <!-- BUTTONS -->
+<!-- =========================
+     CANCEL AND CREATE ACTIONS
+========================= -->
 
                 <div class="form-actions">
 
@@ -790,6 +845,9 @@
 
 </main>
 
+<!-- =========================
+     SITE FOOTER
+========================= -->
 
 <footer class="footer">
 
