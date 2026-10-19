@@ -1,285 +1,425 @@
+/* =========================
+   COLOR VARIABLES
+========================= */
+
 :root {
-  --bg: #060612;
-  --panel: rgba(10, 9, 28, 0.88);
-  --purple: #7c3aed;
-  --purple-light: #a855f7;
-  --purple-soft: #d8b4fe;
-  --text: #ffffff;
-  --muted: #c9c7d8;
-  --line: rgba(196, 131, 255, 0.42);
+    --bg: #060612;
+    --panel: rgba(10, 9, 28, 0.88);
+
+    --purple: #7c3aed;
+    --purple-light: #a855f7;
+    --purple-soft: #d8b4fe;
+
+    --text: #ffffff;
+    --muted: #c9c7d8;
+    --line: rgba(196, 131, 255, 0.42);
 }
 
+/* =========================
+   RESET AND BASE STYLES
+========================= */
+
 * {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 body {
-  min-height: 100vh;
+    min-height: 100vh;
 
-  font-family: "Inter", sans-serif;
-  color: var(--text);
+    font-family: "Inter", sans-serif;
+    color: var(--text);
 
-  background:
-    linear-gradient(
-      rgba(4, 3, 15, 0.55),
-      rgba(4, 3, 15, 0.9)
-    ),
-    url("../assets/backgrounds/site-galaxy.png");
+    background:
+        linear-gradient(
+            rgba(4, 3, 15, 0.55),
+            rgba(4, 3, 15, 0.9)
+        ),
+        url("../assets/backgrounds/site-galaxy.png");
 
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
 }
 
 a {
-  color: inherit;
-  text-decoration: none;
+    color: inherit;
+    text-decoration: none;
 }
 
+/* =========================
+   MAIN NAVIGATION
+========================= */
+
+/* Keeps the settings dropdown above the contact panel. */
+
 .contact-navbar {
-  height: 76px;
-  padding: 0 8%;
+    position: relative;
+    z-index: 20;
 
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+    height: 76px;
+    padding: 0 8%;
 
-  border-bottom: 1px solid rgba(216, 180, 254, 0.18);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 
-  background: rgba(6, 6, 18, 0.6);
-  backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(216, 180, 254, 0.18);
+
+    background: rgba(6, 6, 18, 0.6);
+    backdrop-filter: blur(10px);
 }
 
 .brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
 
-  font-family: "Cinzel", serif;
-  font-size: 24px;
+    font-family: "Cinzel", serif;
+    font-size: 24px;
 }
 
 .brand-mark {
-  color: var(--purple-soft);
-  font-size: 32px;
+    color: var(--purple-soft);
+    font-size: 32px;
 
-  text-shadow:
-    0 0 10px #a855f7,
-    0 0 24px #7c3aed;
+    text-shadow:
+        0 0 10px #a855f7,
+        0 0 24px #7c3aed;
 }
 
 .nav-links {
-  display: flex;
-  align-items: center;
-  gap: 40px;
+    display: flex;
+    align-items: center;
+    gap: 40px;
 }
 
 .nav-links a:hover {
-  color: var(--purple-soft);
+    color: var(--purple-soft);
 }
 
 .nav-register {
-  padding: 10px 22px;
+    padding: 10px 22px;
 
-  border: 1px solid rgba(233, 213, 255, 0.85);
-  border-radius: 999px;
+    border: 1px solid rgba(233, 213, 255, 0.85);
+    border-radius: 999px;
 
-  background:
-    linear-gradient(
-      135deg,
-      #6d28d9,
-      #a855f7
-    );
+    background:
+        linear-gradient(
+            135deg,
+            #6d28d9,
+            #a855f7
+        );
 }
 
+/* =========================
+   CONTACT PAGE AND PANEL
+========================= */
+
 .contact-page {
-  min-height: calc(100vh - 76px);
+    min-height: calc(100vh - 76px);
+    padding: 80px 20px;
 
-  padding: 80px 20px;
-
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
 }
 
 .contact-panel {
-  width: min(700px, 100%);
+    width: min(700px, 100%);
+    padding: 46px;
 
-  padding: 46px;
+    border: 1px solid var(--line);
+    border-radius: 22px;
 
-  border: 1px solid var(--line);
-  border-radius: 22px;
+    background: var(--panel);
+    backdrop-filter: blur(16px);
 
-  background: var(--panel);
-
-  backdrop-filter: blur(16px);
-
-  box-shadow:
-    0 0 40px rgba(124, 58, 237, 0.25);
+    box-shadow: 0 0 40px rgba(124, 58, 237, 0.25);
 }
 
+/* =========================
+   CONTACT INTRODUCTION
+========================= */
+
 .section-label {
-  color: var(--purple-soft);
+    margin-bottom: 12px;
 
-  font-size: 11px;
-  letter-spacing: 0.35em;
-
-  margin-bottom: 12px;
+    color: var(--purple-soft);
+    font-size: 11px;
+    letter-spacing: 0.35em;
 }
 
 .contact-panel h1 {
-  font-family: "Cinzel", serif;
+    margin-bottom: 12px;
 
-  font-size: 38px;
-
-  margin-bottom: 12px;
+    font-family: "Cinzel", serif;
+    font-size: 38px;
 }
 
 .contact-intro {
-  color: var(--muted);
+    margin-bottom: 32px;
 
-  line-height: 1.7;
-
-  margin-bottom: 32px;
+    color: var(--muted);
+    line-height: 1.7;
 }
 
+/* =========================
+   CONTACT FORM FIELDS
+========================= */
+
 .contact-form {
-  display: grid;
-  gap: 12px;
+    display: grid;
+    gap: 12px;
 }
 
 .contact-form label {
-  margin-top: 10px;
+    margin-top: 10px;
 
-  font-size: 14px;
-  color: #eee8f8;
+    font-size: 14px;
+    color: #eee8f8;
 }
 
 .contact-form input,
 .contact-form textarea {
-  width: 100%;
+    width: 100%;
+    padding: 14px 16px;
 
-  padding: 14px 16px;
+    border: 1px solid rgba(168, 85, 247, 0.45);
+    border-radius: 12px;
 
-  border: 1px solid rgba(168, 85, 247, 0.45);
-  border-radius: 12px;
+    background: rgba(6, 6, 18, 0.7);
+    color: white;
 
-  background: rgba(6, 6, 18, 0.7);
+    font-family: "Inter", sans-serif;
+    font-size: 14px;
 
-  color: white;
-
-  font-family: "Inter", sans-serif;
-  font-size: 14px;
-
-  outline: none;
+    outline: none;
 }
 
 .contact-form textarea {
-  resize: vertical;
+    resize: vertical;
 }
 
 .contact-form input:focus,
 .contact-form textarea:focus {
-  border-color: var(--purple-light);
-
-  box-shadow:
-    0 0 16px rgba(168, 85, 247, 0.22);
+    border-color: var(--purple-light);
+    box-shadow: 0 0 16px rgba(168, 85, 247, 0.22);
 }
 
+/* =========================
+   SEND MESSAGE BUTTON
+========================= */
+
 .contact-form button {
-  margin-top: 18px;
+    margin-top: 18px;
+    padding: 14px 24px;
 
-  padding: 14px 24px;
+    border: 1px solid rgba(233, 213, 255, 0.9);
+    border-radius: 999px;
 
-  border: 1px solid rgba(233, 213, 255, 0.9);
-  border-radius: 999px;
+    background:
+        linear-gradient(
+            135deg,
+            #6d28d9,
+            #a855f7
+        );
 
-  background:
-    linear-gradient(
-      135deg,
-      #6d28d9,
-      #a855f7
-    );
+    color: white;
 
-  color: white;
+    font-family: "Inter", sans-serif;
+    font-size: 14px;
 
-  font-family: "Inter", sans-serif;
-  font-size: 14px;
-
-  cursor: pointer;
-
-  transition: 0.2s ease;
+    cursor: pointer;
+    transition: 0.2s ease;
 }
 
 .contact-form button:hover {
-  transform: translateY(-2px);
-
-  box-shadow:
-    0 0 24px rgba(168, 85, 247, 0.45);
+    transform: translateY(-2px);
+    box-shadow: 0 0 24px rgba(168, 85, 247, 0.45);
 }
+
+/* =========================
+   MOBILE LAYOUT
+========================= */
 
 @media (max-width: 680px) {
+    .contact-navbar {
+        height: auto;
+        padding: 16px;
 
-  .contact-navbar {
-    height: auto;
+        flex-direction: column;
+        gap: 14px;
+    }
 
-    padding: 16px;
+    .nav-links {
+        gap: 14px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
 
-    flex-direction: column;
+    .nav-links a {
+        font-size: 13px;
+    }
 
-    gap: 14px;
-  }
+    .contact-page {
+        padding: 45px 16px;
+    }
 
-  .nav-links {
-    gap: 14px;
+    .contact-panel {
+        padding: 30px 20px;
+    }
 
-    flex-wrap: wrap;
-
-    justify-content: center;
-  }
-
-  .nav-links a {
-    font-size: 13px;
-  }
-
-  .contact-page {
-    padding: 45px 16px;
-  }
-
-  .contact-panel {
-    padding: 30px 20px;
-  }
-
-  .contact-panel h1 {
-    font-size: 30px;
-  }
+    .contact-panel h1 {
+        font-size: 30px;
+    }
 }
 
+/* =========================
+   PAGE NAVIGATION LINKS
+========================= */
+
 .contact-actions {
-  display: flex;
-  justify-content: center;
-  gap: 16px;
-  margin-top: 24px;
-  flex-wrap: wrap;
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+
+    margin-top: 24px;
 }
 
 .back-link {
-  padding: 11px 20px;
+    padding: 11px 20px;
 
-  border: 1px solid rgba(168, 85, 247, 0.55);
-  border-radius: 999px;
+    border: 1px solid rgba(168, 85, 247, 0.55);
+    border-radius: 999px;
 
-  background: rgba(10, 8, 28, 0.65);
+    background: rgba(10, 8, 28, 0.65);
+    color: var(--text);
 
-  color: var(--text);
-
-  transition: 0.2s ease;
+    transition: 0.2s ease;
 }
 
 .back-link:hover {
-  border-color: var(--purple-light);
-  color: var(--purple-soft);
-  transform: translateY(-2px);
+    border-color: var(--purple-light);
+    color: var(--purple-soft);
+
+    transform: translateY(-2px);
+}
+
+/* =========================
+   ACCOUNT SETTINGS
+========================= */
+
+.settings-menu {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+}
+
+.settings-button {
+    width: 42px;
+    height: 42px;
+
+    display: grid;
+    place-items: center;
+
+    border: 1px solid rgba(216, 180, 254, 0.45);
+    border-radius: 50%;
+
+    background: rgba(17, 12, 40, 0.9);
+    color: var(--purple-soft);
+
+    font-size: 20px;
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.settings-button:hover {
+    border-color: var(--purple-light);
+    background: rgba(124, 58, 237, 0.28);
+}
+
+/* Positions the dropdown below the gear without moving the page content. */
+
+.settings-dropdown {
+    position: absolute;
+    top: 52px;
+    right: 0;
+    z-index: 50;
+
+    min-width: 220px;
+    padding: 10px;
+
+    border: 1px solid rgba(196, 131, 255, 0.38);
+    border-radius: 14px;
+
+    background: rgba(10, 9, 28, 0.98);
+    backdrop-filter: blur(14px);
+
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.45);
+}
+
+/* Keeps dropdown typography consistent despite mobile navigation rules. */
+
+.nav-links .settings-dropdown a,
+.settings-dropdown button {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
+    padding: 12px 14px;
+
+    border: 0;
+    border-radius: 9px;
+
+    background: transparent;
+    color: var(--text);
+
+    font-family: "Inter", sans-serif;
+    font-size: 14px;
+    text-align: left;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease;
+}
+
+.nav-links .settings-dropdown a:hover,
+.settings-dropdown button:hover {
+    background: rgba(124, 58, 237, 0.24);
+    color: var(--purple-soft);
+}
+
+.settings-dropdown button {
+    margin-top: 6px;
+
+    border-top: 1px solid rgba(196, 131, 255, 0.18);
+    border-radius: 0 0 9px 9px;
+
+    color: #f0c7ff;
+}
+
+/* Keeps the hidden attribute effective when JavaScript updates account controls. */
+
+.nav-links [hidden] {
+    display: none;
+}
+
+/* Makes keyboard focus visible on the settings controls. */
+
+.settings-button:focus-visible,
+.settings-dropdown a:focus-visible,
+.settings-dropdown button:focus-visible {
+    outline: 2px solid var(--purple-soft);
+    outline-offset: 3px;
 }
