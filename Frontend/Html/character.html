@@ -7,6 +7,10 @@
 
     <title>Character | FantasyRealm</title>
 
+    <!-- =========================
+         FONTS AND PAGE ASSETS
+    ========================= -->
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
@@ -22,213 +26,217 @@
 
 <body>
 
-<header class="character-navbar">
+    <!-- =========================
+         MAIN NAVIGATION
+    ========================= -->
 
-    <a class="brand" href="index.html">
-        <span class="brand-mark">✦</span>
-        <span>FantasyRealm</span>
-    </a>
-
-    <nav class="nav-links">
-
-        <a href="index.html">
-            Home
+    <header class="character-navbar">
+        <a class="brand" href="index.html">
+            <span class="brand-mark">✦</span>
+            <span>FantasyRealm</span>
         </a>
 
-        <a href="character-gallery.html">
-            Characters
-        </a>
+        <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="character-gallery.html">Characters</a>
+            <a href="create-character.html">Create</a>
 
-        <a href="create-character.html">
-            Create
-        </a>
+            <a id="login-link" href="login.html">
+                Login
+            </a>
 
-        <a
-            id="login-link"
-            href="login.html"
-        >
-            Login
-        </a>
+            <a
+                id="register-link"
+                class="nav-register"
+                href="register.html"
+            >
+                Register
+            </a>
 
-        <a
-            id="register-link"
-            class="nav-register"
-            href="register.html"
-        >
-            Register
-        </a>
+            <span
+                id="nav-username"
+                class="nav-username"
+                hidden
+            ></span>
 
-        <span
-            id="nav-username"
-            class="nav-username"
-            hidden
-        ></span>
+            <!-- =========================
+                 ACCOUNT SETTINGS
+            ========================= -->
 
-        <a
-            id="logout-link"
-            href="#"
-            hidden
-        >
-            Logout
-        </a>
-
-    </nav>
-
-</header>
-
-
-<main class="character-page">
-
-    <a
-        href="character-gallery.html"
-        class="back-link"
-    >
-        ← Back to Gallery
-    </a>
-
-
-    <p
-        id="character-message"
-        class="character-message"
-    >
-        Loading character...
-    </p>
-
-
-    <section
-        id="character-content"
-        class="character-content"
-        hidden
-    >
-
-        <div class="character-visual">
-
-            <div class="character-stage">
-
-                <img
-                    id="character-image"
-                    src=""
-                    alt=""
-                    hidden
+            <div id="settings-menu" class="settings-menu" hidden>
+                <button
+                    id="settings-button"
+                    class="settings-button"
+                    type="button"
+                    aria-label="Open settings"
+                    aria-controls="settings-dropdown"
+                    aria-expanded="false"
                 >
-
-                <span class="stage-ring"></span>
-
-            </div>
-
-        </div>
-
-
-        <div class="character-details">
-
-            <p class="eyebrow">
-                FANTASYREALM CHARACTER
-            </p>
-
-            <h1 id="character-name">
-                Character Name
-            </h1>
-
-            <p class="character-meta">
-                Created by
-                <strong id="character-creator">
-                    Unknown
-                </strong>
-            </p>
-
-            <p
-                id="character-created-date"
-                class="character-date"
-            ></p>
-
-
-            <section class="detail-section">
-
-                <h2>
-                    Appearance
-                </h2>
-
-                <div class="detail-grid">
-
-                    <div class="detail-item">
-                        <span>Gender</span>
-                        <strong id="character-gender">—</strong>
-                    </div>
-
-                    <div class="detail-item">
-                        <span>Skin Tone</span>
-                        <strong id="character-skin">—</strong>
-                    </div>
-
-                    <div class="detail-item">
-                        <span>Hair Style</span>
-                        <strong id="character-hair-style">—</strong>
-                    </div>
-
-                    <div class="detail-item">
-                        <span>Hair Color</span>
-                        <strong id="character-hair-color">—</strong>
-                    </div>
-
-                    <div class="detail-item">
-                        <span>Eye Color</span>
-                        <strong id="character-eye-color">—</strong>
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            <section class="detail-section">
-
-                <h2>
-                    Equipment
-                </h2>
+                    ⚙
+                </button>
 
                 <div
-                    id="character-equipment"
-                    class="equipment-list"
+                    id="settings-dropdown"
+                    class="settings-dropdown"
+                    hidden
                 >
-                    <p>No equipment.</p>
+                    <a href="dashboard.html">
+                        Character Settings
+                    </a>
+
+                    <button id="logout-link" type="button">
+                        Logout
+                    </button>
                 </div>
+            </div>
+        </nav>
+    </header>
 
-            </section>
+    <main class="character-page">
 
+        <!-- =========================
+             GALLERY RETURN LINK
+        ========================= -->
+
+        <a href="character-gallery.html" class="back-link">
+            ← Back to Gallery
+        </a>
+
+        <!-- =========================
+             CHARACTER STATUS MESSAGE
+        ========================= -->
+
+        <p
+            id="character-message"
+            class="character-message"
+        >
+            Loading character...
+        </p>
+
+        <!-- =========================
+             CHARACTER CONTENT
+        ========================= -->
+
+        <!-- JavaScript displays this section after loading the character. -->
+
+        <section
+            id="character-content"
+            class="character-content"
+            hidden
+        >
+
+            <!-- =========================
+                 CHARACTER IMAGE
+            ========================= -->
+
+            <div class="character-visual">
+                <div class="character-stage">
+                    <img
+                        id="character-image"
+                        src=""
+                        alt=""
+                        hidden
+                    >
+
+                    <span class="stage-ring"></span>
+                </div>
+            </div>
+
+            <!-- =========================
+                 CHARACTER IDENTITY
+            ========================= -->
+
+            <div class="character-details">
+                <p class="eyebrow">
+                    FANTASYREALM CHARACTER
+                </p>
+
+                <h1 id="character-name">
+                    Character Name
+                </h1>
+
+                <p class="character-meta">
+                    Created by
+                    <strong id="character-creator">
+                        Unknown
+                    </strong>
+                </p>
+
+                <p
+                    id="character-created-date"
+                    class="character-date"
+                ></p>
+
+                <!-- =========================
+                     CHARACTER APPEARANCE
+                ========================= -->
+
+                <section class="detail-section">
+                    <h2>Appearance</h2>
+
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <span>Gender</span>
+                            <strong id="character-gender">—</strong>
+                        </div>
+
+                        <div class="detail-item">
+                            <span>Skin Tone</span>
+                            <strong id="character-skin">—</strong>
+                        </div>
+
+                        <div class="detail-item">
+                            <span>Hair Style</span>
+                            <strong id="character-hair-style">—</strong>
+                        </div>
+
+                        <div class="detail-item">
+                            <span>Hair Color</span>
+                            <strong id="character-hair-color">—</strong>
+                        </div>
+
+                        <div class="detail-item">
+                            <span>Eye Color</span>
+                            <strong id="character-eye-color">—</strong>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- =========================
+                     CHARACTER EQUIPMENT
+                ========================= -->
+
+                <section class="detail-section">
+                    <h2>Equipment</h2>
+
+                    <div
+                        id="character-equipment"
+                        class="equipment-list"
+                    >
+                        <p>No equipment.</p>
+                    </div>
+                </section>
+            </div>
+        </section>
+    </main>
+
+    <!-- =========================
+         SITE FOOTER
+    ========================= -->
+
+    <footer class="footer">
+        <div class="footer-brand">
+            ✦ FantasyRealm
         </div>
 
-    </section>
+        <p>© 2026 FantasyRealm. All rights reserved.</p>
 
-</main>
-
-
-<footer class="footer">
-
-    <div class="footer-brand">
-        ✦ FantasyRealm
-    </div>
-
-    <p>
-        © 2026 FantasyRealm. All rights reserved.
-    </p>
-
-    <div class="footer-links">
-
-        <a href="#">
-            Legal Notice
-        </a>
-
-        <a href="#">
-            Terms
-        </a>
-
-        <a href="contact.html">
-            Contact
-        </a>
-
-    </div>
-
-</footer>
+        <div class="footer-links">
+            <a href="#">Legal Notice</a>
+            <a href="#">Terms</a>
+            <a href="contact.html">Contact</a>
+        </div>
+    </footer>
 
 </body>
 </html>

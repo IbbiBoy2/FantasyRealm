@@ -44,9 +44,11 @@ body {
 .character-navbar {
     min-height: 78px;
 
+    z-index: 20;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: relative;
 
     padding: 0 6%;
 
@@ -498,4 +500,122 @@ body {
 
         text-align: center;
     }
+}
+
+/* =========================
+   ACCOUNT SETTINGS
+========================= */
+
+.settings-menu {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+}
+
+.settings-button {
+    width: 42px;
+    height: 42px;
+
+    display: grid;
+    place-items: center;
+
+    border: 1px solid rgba(216, 180, 254, 0.45);
+    border-radius: 50%;
+
+    background: rgba(17, 12, 40, 0.9);
+    color: var(--purple-soft);
+
+    font-size: 20px;
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.settings-button:hover {
+    border-color: var(--purple-light);
+    background: rgba(124, 58, 237, 0.28);
+}
+
+/* Positions the dropdown below the gear without moving page content. */
+
+.settings-dropdown {
+    position: absolute;
+    top: 52px;
+    right: 0;
+    z-index: 50;
+
+    min-width: 220px;
+    padding: 10px;
+
+    border: 1px solid rgba(196, 131, 255, 0.38);
+    border-radius: 14px;
+
+    background: rgba(10, 9, 28, 0.98);
+    backdrop-filter: blur(14px);
+
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.45);
+}
+
+/* Keeps dropdown text consistent with the other main pages. */
+
+.nav-links .settings-dropdown a,
+.settings-dropdown button {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
+    padding: 12px 14px;
+
+    border: 0;
+    border-radius: 9px;
+
+    background: transparent;
+    color: var(--text);
+
+    font-family: "Inter", sans-serif;
+    font-size: 14px;
+    text-align: left;
+    text-decoration: none;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease;
+}
+
+.nav-links .settings-dropdown a:hover,
+.settings-dropdown button:hover {
+    background: rgba(124, 58, 237, 0.24);
+    color: var(--purple-soft);
+}
+
+.settings-dropdown button {
+    margin-top: 6px;
+
+    border-top: 1px solid rgba(196, 131, 255, 0.18);
+    border-radius: 0 0 9px 9px;
+
+    color: #f0c7ff;
+}
+
+/* Preserves hidden account controls and hides character content until loaded. */
+
+.nav-links [hidden],
+.character-content[hidden] {
+    display: none;
+}
+
+/* Makes keyboard focus visible on the settings controls. */
+
+.settings-button:focus-visible,
+.settings-dropdown a:focus-visible,
+.settings-dropdown button:focus-visible {
+    outline: 2px solid var(--purple-soft);
+    outline-offset: 3px;
 }
