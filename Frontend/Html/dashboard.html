@@ -37,6 +37,10 @@
 
 <body>
 
+<!-- =========================
+    MAIN NAVIGATION
+========================= -->
+
 <header class="dashboard-navbar">
 
     <a
@@ -67,12 +71,36 @@
             class="nav-username"
         ></span>
 
-        <a
-            id="logout-link"
-            href="#"
-        >
-            Logout
-        </a>
+        <!-- =========================
+             ACCOUNT SETTINGS
+        ========================= -->
+
+        <div id="settings-menu" class="settings-menu" hidden>
+            <button
+                id="settings-button"
+                class="settings-button"
+                type="button"
+                aria-label="Open settings"
+                aria-controls="settings-dropdown"
+                aria-expanded="false"
+            >
+                ⚙
+            </button>
+
+            <div
+                id="settings-dropdown"
+                class="settings-dropdown"
+                hidden
+            >
+                <a href="dashboard.html">
+                    Character Settings
+                </a>
+
+                <button id="logout-link" type="button">
+                    Logout
+                </button>
+            </div>
+        </div>
 
     </nav>
 
@@ -232,6 +260,9 @@
 
 </main>
 
+<!-- =========================
+    SITE FOOTER
+========================= -->
 
 <footer class="footer">
 
@@ -242,6 +273,10 @@
     <p>
         © 2026 FantasyRealm. All rights reserved.
     </p>
+
+<!-- =========================
+    FONTS AND PAGE ASSETS
+========================= -->
 
     <div class="footer-links">
 
