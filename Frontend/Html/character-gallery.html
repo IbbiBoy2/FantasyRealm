@@ -22,6 +22,10 @@
 
 <body>
 
+<!-- =========================
+     MAIN NAVIGATION
+========================= -->
+
 <header class="gallery-navbar">
 
     <a class="brand" href="index.html">
@@ -61,13 +65,36 @@
             hidden
         ></span>
 
-        <a
-            id="logout-link"
-            href="#"
-            hidden
-        >
-            Logout
-        </a>
+<!-- =========================
+     ACCOUNT SETTINGS
+========================= -->
+
+        <div id="settings-menu" class="settings-menu" hidden>
+            <button
+                id="settings-button"
+                class="settings-button"
+                type="button"
+                aria-label="Open settings"
+                aria-controls="settings-dropdown"
+                aria-expanded="false"
+            >
+                ⚙
+            </button>
+
+            <div
+                id="settings-dropdown"
+                class="settings-dropdown"
+                hidden
+            >
+                <a href="dashboard.html">
+                    Character Settings
+                </a>
+
+                <button id="logout-link" type="button">
+                    Logout
+                </button>
+            </div>
+        </div>
 
     </nav>
 
@@ -75,6 +102,10 @@
 
 
 <main>
+
+<!-- =========================
+     GALLERY INTRODUCTION
+========================= -->
 
     <section class="gallery-hero">
 
@@ -96,6 +127,9 @@
 
     </section>
 
+<!-- =========================
+     PUBLIC CHARACTER GALLERY
+========================= -->
 
     <section class="gallery-shell">
 
@@ -113,6 +147,9 @@
 
             </div>
 
+<!-- =========================
+     CREATOR AND DATE FILTERS
+========================= -->
 
             <div class="gallery-filters">
 
@@ -159,18 +196,25 @@
 
 
         <p
+
             id="gallery-message"
             class="empty-gallery"
         >
             Loading characters...
         </p>
 
+<!-- =========================
+ GALLERY STATUS MESSAGES
+========================= -->
 
         <div
             id="gallery-grid"
             class="gallery-grid"
         ></div>
 
+<!-- =========================
+     GALLERY PAGINATION
+========================= -->
 
         <nav
             id="gallery-pagination"
@@ -182,6 +226,9 @@
 
 </main>
 
+<!-- =========================
+     SITE FOOTER
+========================= -->
 
 <footer class="footer">
 

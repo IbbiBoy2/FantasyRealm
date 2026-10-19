@@ -16,6 +16,10 @@ const registerLink = document.getElementById('register-link');
 const usernameDisplay = document.getElementById('nav-username');
 const logoutLink = document.getElementById('logout-link');
 
+const settingsMenu = document.getElementById('settings-menu');
+const settingsButton = document.getElementById('settings-button');
+const settingsDropdown = document.getElementById('settings-dropdown');
+
 // =========================
 // GALLERY STATE
 // =========================
@@ -32,6 +36,8 @@ let currentPage = 1;
 // SESSION / NAVBAR
 // =========================
 
+// Uses the PHP session to display the appropriate account controls.
+
 async function loadSession() {
     try {
         const response = await fetch(
@@ -40,6 +46,10 @@ async function loadSession() {
 
         const data = await response.json();
 
+        if (!response.ok) {
+            throw new Error('Unable to verify session.');
+        }
+
         if (data.authenticated) {
             loginLink.hidden = true;
             registerLink.hidden = true;
@@ -47,13 +57,17 @@ async function loadSession() {
             usernameDisplay.textContent = data.user.username;
             usernameDisplay.hidden = false;
 
-            logoutLink.hidden = false;
+            settingsMenu.hidden = false;
         } else {
             loginLink.hidden = false;
             registerLink.hidden = false;
 
+            usernameDisplay.textContent = '';
             usernameDisplay.hidden = true;
-            logoutLink.hidden = true;
+
+            settingsMenu.hidden = true;
+            settingsDropdown.hidden = true;
+            settingsButton.setAttribute('aria-expanded', 'false');
         }
 
     } catch (error) {
@@ -306,6 +320,45 @@ function showGalleryMessage(message) {
     galleryMessage.textContent = message;
     galleryMessage.hidden = false;
 }
+
+// =========================
+// SETTINGS MENU
+// =========================
+
+// Keeps dropdown visibility and its accessibility state synchronized.
+
+function setSettingsOpen(isOpen) {
+    settingsDropdown.hidden = !isOpen;
+
+    settingsButton.setAttribute(
+        'aria-expanded',
+        String(isOpen)
+    );
+}
+
+settingsButton.addEventListener('click', () => {
+    setSettingsOpen(settingsDropdown.hidden);
+});
+
+// Closes the dropdown when clicking outside the settings container.
+
+document.addEventListener('click', (event) => {
+    if (!settingsMenu.contains(event.target)) {
+        setSettingsOpen(false);
+    }
+});
+
+// Returns keyboard focus to the gear when Escape closes the dropdown.
+
+document.addEventListener('keydown', (event) => {
+    if (
+        event.key === 'Escape' &&
+        !settingsDropdown.hidden
+    ) {
+        setSettingsOpen(false);
+        settingsButton.focus();
+    }
+});
 
 // =========================
 // EVENT LISTENERS
