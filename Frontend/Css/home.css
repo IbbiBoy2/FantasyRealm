@@ -1,19 +1,5 @@
 /* =========================================================
 
-   FANTASYREALM - HOME PAGE
-
-   Desktop styles first
-
-   Phone styles at the bottom
-
-========================================================= */
-
-
-
-
-
-/* =========================================================
-
    COLORS
 
 ========================================================= */
@@ -2404,4 +2390,34 @@ a {
 
   }
 
+}
+
+/* =========================
+   HIDDEN ACCOUNT CONTROLS
+========================= */
+
+/* Keeps session controls and the dropdown hidden when JavaScript sets hidden. */
+
+.nav-links [hidden] {
+    display: none;
+}
+
+/* =========================
+   SETTINGS DROPDOWN LINKS
+========================= */
+
+/* Overrides general navigation styles inside the settings dropdown. */
+
+.nav-links .settings-dropdown a {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
+    font-size: 14px;
+    color: var(--text);
+}
+
+.nav-links .settings-dropdown a:hover {
+    background: rgba(124, 58, 237, 0.24);
+    color: var(--purple-soft);
 }

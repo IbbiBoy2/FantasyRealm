@@ -1,57 +1,60 @@
+// =========================
+// DOM REFERENCES
+// =========================
+
 const loginLink = document.getElementById('login-link');
 const registerLink = document.getElementById('register-link');
 const usernameDisplay = document.getElementById('nav-username');
-const logoutButton =
-    document.getElementById('logout-link');
+const logoutButton = document.getElementById('logout-link');
 
 const settingsMenu = document.getElementById('settings-menu');
 const settingsButton = document.getElementById('settings-button');
 const settingsDropdown = document.getElementById('settings-dropdown');
 
 // =========================
-// LOGOUT
+// SETTINGS MENU
 // =========================
 
-logoutButton.addEventListener(
-    'click',
-    async () => {
-        try {
-            const response = await fetch(
-                '/FantasyRealm/Backend/api/logout.php',
-                {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json'
-                    }
-                }
-            );
+// Keeps dropdown visibility and its accessibility state synchronized.
 
-            const data = await response.json();
+function setSettingsOpen(isOpen) {
+    settingsDropdown.hidden = !isOpen;
 
-            if (!response.ok || !data.success) {
-                console.error(
-                    'Logout failed:',
-                    data.message
-                );
+    settingsButton.setAttribute(
+        'aria-expanded',
+        String(isOpen)
+    );
+}
 
-                return;
-            }
+settingsButton.addEventListener('click', () => {
+    setSettingsOpen(settingsDropdown.hidden);
+});
 
-            window.location.href =
-                'index.html';
+// Closes the dropdown when clicking outside the settings container.
 
-        } catch (error) {
-            console.error(
-                'Unable to logout:',
-                error
-            );
-        }
+document.addEventListener('click', (event) => {
+    if (!settingsMenu.contains(event.target)) {
+        setSettingsOpen(false);
     }
-);
+});
+
+// Returns keyboard focus to the gear when Escape closes the dropdown.
+
+document.addEventListener('keydown', (event) => {
+    if (
+        event.key === 'Escape' &&
+        !settingsDropdown.hidden
+    ) {
+        setSettingsOpen(false);
+        settingsButton.focus();
+    }
+});
 
 // =========================
-// SESSION
+// SESSION / NAVBAR
 // =========================
+
+// Uses the PHP session to display the appropriate account controls.
 
 async function loadSession() {
     try {
@@ -61,74 +64,65 @@ async function loadSession() {
 
         const data = await response.json();
 
+        if (!response.ok) {
+            throw new Error('Unable to verify session.');
+        }
+
         if (data.authenticated) {
             loginLink.hidden = true;
             registerLink.hidden = true;
 
-            usernameDisplay.textContent =
-                data.user.username;
-
+            usernameDisplay.textContent = data.user.username;
             usernameDisplay.hidden = false;
 
             settingsMenu.hidden = false;
-
         } else {
             loginLink.hidden = false;
             registerLink.hidden = false;
 
+            usernameDisplay.textContent = '';
             usernameDisplay.hidden = true;
 
             settingsMenu.hidden = true;
+            setSettingsOpen(false);
         }
 
     } catch (error) {
-        console.error(
-            'Unable to load session:',
-            error
-        );
+        console.error('Unable to load session:', error);
     }
 }
 
-
 // =========================
-// SETTINGS MENU
+// LOGOUT
 // =========================
 
-settingsButton.addEventListener(
-    'click',
-    () => {
-        const isOpen =
-            !settingsDropdown.hidden;
+// Ends the PHP session through the REST API before reloading the homepage.
 
-        settingsDropdown.hidden =
-            isOpen;
-
-        settingsButton.setAttribute(
-            'aria-expanded',
-            String(!isOpen)
+logoutButton.addEventListener('click', async () => {
+    try {
+        const response = await fetch(
+            '/FantasyRealm/Backend/api/logout.php',
+            {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json'
+                }
+            }
         );
-    }
-);
 
+        const data = await response.json();
 
-// Close the dropdown when clicking outside it.
-
-document.addEventListener(
-    'click',
-    (event) => {
-        if (
-            !settingsMenu.contains(event.target)
-        ) {
-            settingsDropdown.hidden = true;
-
-            settingsButton.setAttribute(
-                'aria-expanded',
-                'false'
-            );
+        if (!response.ok || !data.success) {
+            console.error('Logout failed:', data.message);
+            return;
         }
-    }
-);
 
+        window.location.href = 'index.html';
+
+    } catch (error) {
+        console.error('Unable to logout:', error);
+    }
+});
 
 // =========================
 // INITIALIZATION
