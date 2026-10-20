@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Employee Dashboard | FantasyRealm</title>
+
+    <!-- =========================
+         FONTS AND PAGE ASSETS
+    ========================= -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="../Css/dashboard.css">
+    <link rel="stylesheet" href="../Css/employee-dashboard.css">
+
+    <script src="../js/employee-dashboard.js" defer></script>
+</head>
+
+<body>
+
+    <!-- =========================
+         MAIN NAVIGATION
+    ========================= -->
+
+    <header class="dashboard-navbar">
+        <a class="brand" href="index.html">
+            <span class="brand-mark">✦</span>
+            <span>FantasyRealm</span>
+        </a>
+
+        <nav class="nav-links" aria-label="Main navigation">
+            <a href="index.html">Home</a>
+            <a href="character-gallery.html">Characters</a>
+
+            <span id="nav-username" class="nav-username"></span>
+
+            <!-- =========================
+                 ACCOUNT SETTINGS
+            ========================= -->
+
+            <div id="settings-menu" class="settings-menu" hidden>
+                <button
+                    id="settings-button"
+                    class="settings-button"
+                    type="button"
+                    aria-label="Open settings"
+                    aria-controls="settings-dropdown"
+                    aria-expanded="false"
+                >
+                    ⚙
+                </button>
+
+                <div
+                    id="settings-dropdown"
+                    class="settings-dropdown"
+                    hidden
+                >
+                    <a href="dashboard.html">
+                        Character Settings
+                    </a>
+
+                    <button id="logout-link" type="button">
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="dashboard-page">
+
+        <!-- =========================
+             ACCESS AND LOADING FEEDBACK
+        ========================= -->
+
+        <p
+            id="employee-message"
+            class="dashboard-message"
+            role="status"
+            aria-live="polite"
+        >
+            Checking employee access...
+        </p>
+
+        <!-- Content appears only after the protected API authorizes access. -->
+
+        <div id="employee-content" hidden>
+
+            <!-- =========================
+                 EMPLOYEE WELCOME
+            ========================= -->
+
+            <section class="dashboard-header">
+                <div>
+                    <p class="section-label">
+                        STAFF AREA
+                    </p>
+
+                    <h1>
+                        Welcome,
+                        <span id="employee-username">Employee</span>
+                    </h1>
+
+                    <p class="dashboard-intro">
+                        Review community activity and manage FantasyRealm.
+                    </p>
+
+                    <p id="employee-role" class="employee-role"></p>
+                </div>
+            </section>
+
+            <!-- =========================
+                 EMPLOYEE STATISTICS
+            ========================= -->
+
+            <section
+                class="dashboard-stats"
+                aria-label="Employee dashboard statistics"
+            >
+                <article class="stat-card">
+                    <span>Pending Characters</span>
+                    <strong id="pending-characters-count">0</strong>
+                </article>
+
+                <article class="stat-card">
+                    <span>Pending Reviews</span>
+                    <strong id="pending-reviews-count">0</strong>
+                </article>
+
+                <article class="stat-card">
+                    <span>Active Accessories</span>
+                    <strong id="active-accessories-count">0</strong>
+                </article>
+
+                <article class="stat-card">
+                    <span>Player Accounts</span>
+                    <strong id="player-accounts-count">0</strong>
+                </article>
+            </section>
+
+            <!-- =========================
+                 STAFF WORKSPACE
+            ========================= -->
+
+            <section class="characters-section">
+                <div class="section-heading">
+                    <p class="section-label">STAFF WORKSPACE</p>
+                    <h2>Management Tools</h2>
+                </div>
+
+                <p class="dashboard-intro">
+                    Character moderation, review moderation, accessories,
+                    and user management will be added here as we build them.
+                </p>
+            </section>
+        </div>
+    </main>
+
+    <!-- =========================
+         SITE FOOTER
+    ========================= -->
+
+    <footer class="footer">
+        <div class="footer-brand">✦ FantasyRealm</div>
+
+        <p>© 2026 FantasyRealm. All rights reserved.</p>
+
+        <div class="footer-links">
+            <a href="index.html">Home</a>
+            <a href="contact.html">Contact</a>
+        </div>
+    </footer>
+
+</body>
+</html>

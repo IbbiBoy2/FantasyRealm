@@ -1,0 +1,53 @@
+/* =========================
+   EMPLOYEE IDENTITY
+========================= */
+
+#employee-username {
+    color: var(--purple-soft);
+}
+
+.employee-role {
+    display: inline-block;
+
+    margin-top: 16px;
+    padding: 7px 12px;
+
+    border: 1px solid rgba(196, 131, 255, 0.35);
+    border-radius: 999px;
+
+    background: rgba(124, 58, 237, 0.15);
+    color: var(--purple-soft);
+
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+/* =========================
+   EMPLOYEE ACCESS VISIBILITY
+========================= */
+
+/* Keeps staff content hidden until the protected API authorizes access. */
+
+#employee-content[hidden],
+#employee-message[hidden] {
+    display: none;
+}
+
+/* =========================
+   EMPLOYEE SETTINGS CONTROLS
+========================= */
+
+#logout-link:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+/* =========================
+   EMPLOYEE DASHBOARD — MOBILE
+========================= */
+
+@media (max-width: 680px) {
+    #employee-content .dashboard-header h1 {
+        overflow-wrap: anywhere;
+    }
+}
