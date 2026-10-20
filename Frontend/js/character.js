@@ -26,6 +26,17 @@ const logoutLink = document.getElementById('logout-link');
 const settingsMenu = document.getElementById('settings-menu');
 const settingsButton = document.getElementById('settings-button');
 const settingsDropdown = document.getElementById('settings-dropdown');
+
+const reviewForm = document.getElementById('review-form');
+const reviewLoginNotice = document.getElementById('review-login-notice');
+const reviewRating = document.getElementById('review-rating');
+const reviewComment = document.getElementById('review-comment');
+const reviewSubmit = document.getElementById('review-submit');
+const reviewFeedback = document.getElementById('review-feedback');
+
+const reviewsMessage = document.getElementById('reviews-message');
+const reviewsList = document.getElementById('reviews-list');
+
 // =========================
 // CHARACTER ID FROM URL
 // =========================
@@ -61,6 +72,8 @@ async function loadSession() {
             usernameDisplay.hidden = false;
 
             settingsMenu.hidden = false;
+            reviewForm.hidden = false;
+            reviewLoginNotice.hidden = true;
         } else {
             loginLink.hidden = false;
             registerLink.hidden = false;
@@ -69,6 +82,12 @@ async function loadSession() {
             usernameDisplay.hidden = true;
 
             settingsMenu.hidden = true;
+            reviewForm.hidden = true;
+            reviewLoginNotice.hidden = false;
+
+            reviewForm.reset();
+            reviewFeedback.textContent = '';
+            reviewFeedback.hidden = true; 
             setSettingsOpen(false);
         }
 
@@ -104,6 +123,8 @@ async function loadCharacter() {
         }
 
         renderCharacter(data.character);
+
+        await loadReviews();
 
     } catch (error) {
         console.error('Unable to load character:', error);
@@ -257,6 +278,215 @@ logoutLink.addEventListener('click', async (event) => {
         console.error('Unable to logout:', error);
     }
 });
+
+// =========================
+// REVIEW FEEDBACK
+// =========================
+
+// Displays plain-text feedback without inserting user-supplied HTML.
+
+function showReviewFeedback(message, isError = false) {
+    reviewFeedback.textContent = message;
+    reviewFeedback.classList.toggle('review-feedback-error', isError);
+    reviewFeedback.hidden = false;
+}
+
+// =========================
+// SUBMIT CHARACTER REVIEW
+// =========================
+
+let reviewSubmissionInProgress = false;
+
+// Sends the rating and comment to the API; PHP determines reviewer and status.
+
+reviewForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    if (reviewSubmissionInProgress) {
+        return;
+    }
+
+    const id = Number(characterId);
+    const rating = Number(reviewRating.value);
+    const comment = reviewComment.value.trim();
+
+    if (!Number.isSafeInteger(id) || id <= 0) {
+        showReviewFeedback('Invalid character ID.', true);
+        return;
+    }
+
+    if (!Number.isInteger(rating) || rating < 1 || rating > 5) {
+        showReviewFeedback('Choose a rating from 1 to 5.', true);
+        return;
+    }
+
+    if (comment === '' || Array.from(comment).length > 2000) {
+        showReviewFeedback(
+            'Enter a comment of 1 to 2000 characters.',
+            true
+        );
+        return;
+    }
+
+    reviewSubmissionInProgress = true;
+
+    reviewSubmit.disabled = true;
+    reviewSubmit.textContent = 'Submitting...';
+
+    reviewFeedback.textContent = '';
+    reviewFeedback.hidden = true;
+
+    try {
+        const response = await fetch(
+            '/FantasyRealm/Backend/api/submit-review.php',
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    character_id: id,
+                    rating: rating,
+                    comment: comment
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (response.status === 401) {
+            await loadSession();
+
+            showReviewFeedback(
+                'Please log in to submit a review.',
+                true
+            );
+            return;
+        }
+
+        if (!response.ok || !data.success) {
+            showReviewFeedback(
+                data.message || 'Unable to submit your review.',
+                true
+            );
+            return;
+        }
+
+        reviewForm.reset();
+
+        showReviewFeedback(
+            'Your review has been submitted and is waiting for employee approval.'
+        );
+
+    } catch (error) {
+        console.error('Unable to submit review:', error);
+
+        showReviewFeedback(
+            'Unable to confirm submission. Please check before submitting again.',
+            true
+        );
+
+    } finally {
+        reviewSubmissionInProgress = false;
+
+        reviewSubmit.disabled = false;
+        reviewSubmit.textContent = 'Submit Review';
+    }
+});
+
+// =========================
+// LOAD APPROVED REVIEWS
+// =========================
+
+// The REST API returns only approved reviews for an available public character.
+
+async function loadReviews() {
+    reviewsList.replaceChildren();
+
+    reviewsMessage.textContent = 'Loading reviews...';
+    reviewsMessage.hidden = false;
+
+    try {
+        const response = await fetch(
+            `/FantasyRealm/Backend/api/reviews.php?character_id=${encodeURIComponent(characterId)}`
+        );
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+            reviewsMessage.textContent =
+                data.message || 'Unable to load reviews.';
+            return;
+        }
+
+        if (data.reviews.length === 0) {
+            reviewsMessage.textContent = 'No approved reviews yet.';
+            return;
+        }
+
+        data.reviews.forEach((review) => {
+            reviewsList.appendChild(createReviewCard(review));
+        });
+
+        reviewsMessage.hidden = true;
+
+    } catch (error) {
+        console.error('Unable to load reviews:', error);
+
+        reviewsMessage.textContent = 'Unable to load reviews.';
+    }
+}
+
+// =========================
+// REVIEW CARDS
+// =========================
+
+// Uses textContent so review comments are displayed as text, not executed as HTML.
+
+function createReviewCard(review) {
+    const card = document.createElement('article');
+    card.className = 'review-card';
+
+    const header = document.createElement('div');
+    header.className = 'review-card-header';
+
+    const username = document.createElement('h3');
+    username.className = 'review-author';
+    username.textContent = review.reviewer_username;
+
+    const rating = document.createElement('p');
+    rating.className = 'review-rating';
+
+    const stars = document.createElement('span');
+    stars.setAttribute('aria-hidden', 'true');
+    stars.textContent =
+        '★'.repeat(review.rating) +
+        '☆'.repeat(5 - review.rating);
+
+    const score = document.createElement('span');
+    score.textContent = ` ${review.rating}/5`;
+
+    rating.appendChild(stars);
+    rating.appendChild(score);
+
+    const comment = document.createElement('p');
+    comment.className = 'review-comment';
+    comment.textContent = review.comment;
+
+    const date = document.createElement('p');
+    date.className = 'review-date';
+    date.textContent = `Posted: ${review.created_at}`;
+
+    header.appendChild(username);
+    header.appendChild(rating);
+
+    card.appendChild(header);
+    card.appendChild(comment);
+    card.appendChild(date);
+
+    return card;
+}
 
 // =========================
 // INITIALIZATION

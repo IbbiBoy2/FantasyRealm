@@ -218,6 +218,101 @@
                 </section>
             </div>
         </section>
+
+        
+<!-- =========================
+    SUBMIT CHARACTER REVIEW
+========================= -->
+
+<section class="detail-section review-section">
+    <h2>Leave a Review</h2>
+
+    <p class="review-intro">
+        Share your opinion with a rating and comment.
+        Reviews stay hidden until employee approval.
+    </p>
+
+    <!-- JavaScript shows the login notice or form after checking the session. -->
+
+    <p id="review-login-notice" class="review-intro" hidden>
+        <a href="login.html">Log in</a> to submit a review.
+    </p>
+
+    <form id="review-form" class="review-form" hidden>
+        <label for="review-rating">
+            Rating
+        </label>
+
+        <select id="review-rating" name="rating" required>
+            <option value="">Choose a rating</option>
+            <option value="1">1 — Poor</option>
+            <option value="2">2 — Fair</option>
+            <option value="3">3 — Good</option>
+            <option value="4">4 — Very good</option>
+            <option value="5">5 — Excellent</option>
+        </select>
+
+        <label for="review-comment">
+            Comment
+        </label>
+
+        <textarea
+            id="review-comment"
+            name="comment"
+            rows="5"
+            maxlength="2000"
+            placeholder="What do you think of this character?"
+            required
+        ></textarea>
+
+        <button id="review-submit" type="submit">
+            Submit Review
+        </button>
+    </form>
+
+    <!-- Displays submission feedback without exposing pending review content. -->
+
+    <p
+        id="review-feedback"
+        class="review-feedback"
+        role="status"
+        aria-live="polite"
+        hidden
+    ></p>
+</section>
+
+<!-- =========================
+     APPROVED CHARACTER REVIEWS
+========================= -->
+
+<section
+    class="detail-section reviews-section"
+    aria-labelledby="reviews-title"
+>
+    <h2 id="reviews-title">
+        Community Reviews
+    </h2>
+
+    <p class="review-intro">
+        Reviews approved by the FantasyRealm team.
+    </p>
+
+    <!-- JavaScript updates loading, empty and error messages here. -->
+
+    <p
+        id="reviews-message"
+        class="review-intro"
+        role="status"
+        aria-live="polite"
+    >
+        Loading reviews...
+    </p>
+
+    <!-- Review cards are created from the approved reviews API response. -->
+
+    <div id="reviews-list" class="reviews-list"></div>
+</section>
+
     </main>
 
     <!-- =========================

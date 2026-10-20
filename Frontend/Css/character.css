@@ -619,3 +619,233 @@ body {
     outline: 2px solid var(--purple-soft);
     outline-offset: 3px;
 }
+
+/* =========================
+   CHARACTER REVIEW FORM
+========================= */
+
+.review-intro {
+    margin-bottom: 18px;
+
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 1.7;
+}
+
+.review-intro a {
+    color: var(--purple-soft);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.review-form {
+    display: grid;
+    gap: 12px;
+}
+
+.review-form label {
+    color: var(--purple-soft);
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.review-form select,
+.review-form textarea {
+    width: 100%;
+    min-width: 0;
+    padding: 13px 15px;
+
+    border: 1px solid rgba(196, 131, 255, 0.4);
+    border-radius: 11px;
+
+    background: #0a091c;
+    color: var(--text);
+
+    font-family: "Inter", sans-serif;
+    font-size: 0.9rem;
+}
+
+.review-form select {
+    color-scheme: dark;
+}
+
+.review-form textarea {
+    min-height: 130px;
+    resize: vertical;
+    line-height: 1.6;
+}
+
+.review-form textarea::placeholder {
+    color: #92889f;
+}
+
+.review-form select:focus-visible,
+.review-form textarea:focus-visible {
+    outline: 2px solid var(--purple-light);
+    outline-offset: 2px;
+}
+
+#review-submit {
+    justify-self: start;
+
+    margin-top: 6px;
+    padding: 12px 22px;
+
+    border: 1px solid rgba(216, 180, 254, 0.65);
+    border-radius: 999px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--purple),
+            var(--purple-light)
+        );
+
+    color: var(--text);
+    font-family: "Inter", sans-serif;
+    font-size: 0.9rem;
+
+    cursor: pointer;
+
+    transition: box-shadow 0.2s ease;
+}
+
+#review-submit:hover {
+    box-shadow: 0 0 22px rgba(168, 85, 247, 0.35);
+}
+
+#review-submit:focus-visible {
+    outline: 2px solid var(--purple-soft);
+    outline-offset: 3px;
+}
+
+#review-submit:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+/* =========================
+   REVIEW SUBMISSION FEEDBACK
+========================= */
+
+.review-feedback {
+    margin-top: 16px;
+    padding: 13px 15px;
+
+    border: 1px solid rgba(196, 131, 255, 0.35);
+    border-radius: 11px;
+
+    background: rgba(124, 58, 237, 0.12);
+    color: var(--purple-soft);
+
+    font-size: 0.85rem;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+.review-feedback-error {
+    border-color: rgba(248, 113, 113, 0.4);
+
+    background: rgba(127, 29, 29, 0.18);
+    color: #fecaca;
+}
+
+/* Keeps session-controlled review elements hidden despite display rules. */
+
+.review-form[hidden],
+#review-login-notice[hidden],
+.review-feedback[hidden] {
+    display: none;
+}
+
+/* =========================
+   REVIEW FORM — MOBILE
+========================= */
+
+@media (max-width: 680px) {
+    #review-submit {
+        width: 100%;
+        justify-self: stretch;
+    }
+}
+
+/* =========================
+   APPROVED REVIEW CARDS
+========================= */
+
+.reviews-list {
+    display: grid;
+    gap: 16px;
+}
+
+.review-card {
+    min-width: 0;
+    padding: 20px;
+
+    border: 1px solid rgba(196, 131, 255, 0.28);
+    border-radius: 14px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(17, 12, 40, 0.85),
+            rgba(6, 6, 18, 0.7)
+        );
+}
+
+.review-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.review-author {
+    color: var(--purple-soft);
+    font-size: 0.95rem;
+    font-weight: 600;
+
+    overflow-wrap: anywhere;
+}
+
+.review-rating {
+    color: #f5c96a;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.review-comment {
+    margin-top: 14px;
+
+    color: var(--text);
+    font-size: 0.9rem;
+    line-height: 1.7;
+
+    /* Preserves comment line breaks and wraps long text within the card. */
+
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.review-date {
+    margin-top: 14px;
+
+    color: var(--muted);
+    font-size: 0.75rem;
+}
+
+/* =========================
+   REVIEW CARDS — MOBILE
+========================= */
+
+@media (max-width: 680px) {
+    .review-card {
+        padding: 16px;
+    }
+
+    .review-card-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
