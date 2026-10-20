@@ -77,6 +77,7 @@ try {
          WHERE characters.id = :id
            AND characters.status = :status
            AND characters.shared = 1
+           AND characters.deleted_at IS NULL
 
          LIMIT 1'
     );

@@ -397,6 +397,34 @@ duplicateButton.addEventListener('click', async () => {
     }
 });
 
+// Owners can share approved characters or unshare an existing shared character.
+
+if (character.status === 'APPROVED' || character.shared) {
+    const shareButton = document.createElement('button');
+
+    shareButton.type = 'button';
+    shareButton.className = 'character-action';
+
+    shareButton.textContent = character.shared
+        ? 'Unshare'
+        : 'Share';
+
+    shareButton.addEventListener('click', async () => {
+        shareButton.disabled = true;
+
+        try {
+            await setCharacterVisibility(
+                character,
+                !character.shared
+            );
+        } finally {
+            shareButton.disabled = false;
+        }
+    });
+
+    actions.appendChild(shareButton);
+}
+
 actions.appendChild(duplicateButton);
 
 actions.appendChild(deleteButton);
@@ -421,6 +449,54 @@ function getStatusClass(status) {
     }
 
     return 'status-pending';
+}
+
+// =========================
+// CHARACTER VISIBILITY
+// =========================
+
+// Sends the desired visibility to the API, then refreshes cards and actions.
+
+async function setCharacterVisibility(character, shared) {
+    try {
+        const response = await fetch(
+            '/FantasyRealm/Backend/api/share-character.php',
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    character_id: character.id,
+                    shared: shared
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (response.status === 401) {
+            window.location.href = 'login.html';
+            return;
+        }
+
+        if (!response.ok || !data.success) {
+            alert(
+                data.message || 'Unable to update character visibility.'
+            );
+            return;
+        }
+
+        await loadCharacters();
+
+    } catch (error) {
+        console.error('Unable to update visibility:', error);
+
+        alert(
+            'Unable to confirm the change. Refresh the dashboard before trying again.'
+        );
+    }
 }
 
 // =========================
