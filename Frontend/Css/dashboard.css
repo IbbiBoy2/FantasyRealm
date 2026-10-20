@@ -673,3 +673,219 @@ a {
     outline: 2px solid var(--purple-soft);
     outline-offset: 3px;
 }
+
+/* =========================
+   DUPLICATE CHARACTER DIALOG
+========================= */
+
+.duplicate-dialog {
+    width: min(480px, calc(100% - 32px));
+    max-height: calc(100dvh - 32px);
+
+    margin: auto;
+    padding: 32px;
+    overflow-y: auto;
+
+    border: 1px solid rgba(196, 131, 255, 0.55);
+    border-radius: 22px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #17102e,
+            #0a091c
+        );
+
+    color: var(--text);
+    font-family: "Inter", sans-serif;
+
+    box-shadow:
+        0 24px 80px rgba(0, 0, 0, 0.65),
+        0 0 35px rgba(124, 58, 237, 0.2);
+}
+
+/* Dims and blurs the page behind the modal dialog. */
+
+.duplicate-dialog::backdrop {
+    background: rgba(3, 2, 12, 0.78);
+    backdrop-filter: blur(6px);
+}
+
+.duplicate-form {
+    display: grid;
+    gap: 16px;
+}
+
+.duplicate-form .section-label {
+    margin-bottom: 0;
+}
+
+.duplicate-form h2 {
+    font-family: "Cinzel", serif;
+    font-size: 1.7rem;
+}
+
+.duplicate-description {
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 1.7;
+}
+
+.duplicate-form label {
+    margin-top: 6px;
+
+    color: var(--purple-soft);
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+#duplicate-name {
+    width: 100%;
+    padding: 13px 15px;
+
+    border: 1px solid rgba(196, 131, 255, 0.4);
+    border-radius: 11px;
+
+    background: rgba(6, 6, 18, 0.8);
+    color: var(--text);
+
+    font: inherit;
+}
+
+#duplicate-name::placeholder {
+    color: #92889f;
+}
+
+#duplicate-name:focus-visible {
+    outline: 2px solid var(--purple-light);
+    outline-offset: 2px;
+}
+
+.duplicate-error {
+    padding: 12px 14px;
+
+    border: 1px solid rgba(248, 113, 113, 0.4);
+    border-radius: 10px;
+
+    background: rgba(127, 29, 29, 0.18);
+    color: #fecaca;
+
+    font-size: 0.85rem;
+    line-height: 1.5;
+}
+
+/* =========================
+   DUPLICATE DIALOG ACTIONS
+========================= */
+
+.duplicate-dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 12px;
+
+    margin-top: 8px;
+}
+
+.duplicate-cancel,
+.duplicate-submit {
+    padding: 12px 18px;
+
+    border: 1px solid rgba(196, 131, 255, 0.4);
+    border-radius: 999px;
+
+    color: var(--text);
+    font: inherit;
+    font-size: 0.85rem;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.duplicate-cancel {
+    background: rgba(17, 12, 40, 0.8);
+}
+
+.duplicate-cancel:hover {
+    background: rgba(124, 58, 237, 0.2);
+}
+
+.duplicate-submit {
+    background:
+        linear-gradient(
+            135deg,
+            var(--purple),
+            var(--purple-light)
+        );
+}
+
+.duplicate-submit:hover {
+    box-shadow: 0 0 22px rgba(168, 85, 247, 0.4);
+}
+
+.duplicate-cancel:focus-visible,
+.duplicate-submit:focus-visible {
+    outline: 2px solid var(--purple-soft);
+    outline-offset: 3px;
+}
+
+/* Indicates that a duplication request is being processed. */
+
+.duplicate-dialog button:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+/* =========================
+   DUPLICATE DIALOG — MOBILE
+========================= */
+
+@media (max-width: 480px) {
+    .duplicate-dialog {
+        padding: 24px 20px;
+    }
+
+    .duplicate-dialog-actions {
+        flex-direction: column;
+    }
+
+    .duplicate-dialog-actions button {
+        width: 100%;
+    }
+}
+
+/* =========================
+   DELETION CONFIRMATION
+========================= */
+
+.delete-dialog {
+    border-color: rgba(248, 113, 113, 0.45);
+}
+
+.delete-dialog .section-label {
+    color: #fca5a5;
+}
+
+/* Distinguishes deletion actions from the purple creation controls. */
+
+.delete-submit {
+    border-color: rgba(252, 165, 165, 0.65);
+
+    background:
+        linear-gradient(
+            135deg,
+            #991b1b,
+            #dc2626
+        );
+}
+
+.delete-submit:hover {
+    box-shadow: 0 0 22px rgba(239, 68, 68, 0.35);
+}
+
+.delete-submit:focus-visible {
+    outline-color: #fca5a5;
+}

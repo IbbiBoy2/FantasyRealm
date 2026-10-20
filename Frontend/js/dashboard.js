@@ -39,6 +39,21 @@ const settingsMenu = document.getElementById('settings-menu');
 const settingsButton = document.getElementById('settings-button');
 const settingsDropdown = document.getElementById('settings-dropdown');
 
+const duplicateDialog = document.getElementById('duplicate-dialog');
+const duplicateForm = document.getElementById('duplicate-form');
+const duplicateNameInput = document.getElementById('duplicate-name');
+const duplicateError = document.getElementById('duplicate-error');
+const duplicateCancel = document.getElementById('duplicate-cancel');
+const duplicateSubmit = document.getElementById('duplicate-submit');
+
+const deleteDialog = document.getElementById('delete-dialog');
+const deleteForm = document.getElementById('delete-form');
+const deleteDialogTitle = document.getElementById('delete-dialog-title');
+const deleteDialogDescription = document.getElementById('delete-dialog-description');
+const deleteError = document.getElementById('delete-error');
+const deleteCancel = document.getElementById('delete-cancel');
+const deleteSubmit = document.getElementById('delete-submit');
+
 // =========================
 // SESSION
 // =========================
@@ -217,7 +232,6 @@ function renderCharacters(characters) {
     });
 }
 
-
 function createCharacterCard(character) {
     const card =
         document.createElement('article');
@@ -365,6 +379,26 @@ deleteButton.addEventListener(
     () => deleteCharacter(character)
 );
 
+// Opens duplication for this character using a new name.
+
+const duplicateButton = document.createElement('button');
+
+duplicateButton.type = 'button';
+duplicateButton.className = 'character-action';
+duplicateButton.textContent = 'Duplicate';
+
+duplicateButton.addEventListener('click', async () => {
+    duplicateButton.disabled = true;
+
+    try {
+        await duplicateCharacter(character);
+    } finally {
+        duplicateButton.disabled = false;
+    }
+});
+
+actions.appendChild(duplicateButton);
+
 actions.appendChild(deleteButton);
 
 body.appendChild(actions);
@@ -390,66 +424,305 @@ function getStatusClass(status) {
 }
 
 // =========================
-// DELETE CHARACTER
+// DUPLICATE CHARACTER
 // =========================
 
-async function deleteCharacter(character) {
+// Stores the selected source character while the dialog is open.
 
-    const confirmed = window.confirm(
-        `Delete "${character.name}"?`
-    );
+let duplicateSource = null;
+let duplicationInProgress = false;
 
-    if (!confirmed) {
+// Opens the dialog instead of the browser's plain prompt.
+
+function duplicateCharacter(character) {
+    if (duplicateDialog.open || duplicationInProgress) {
         return;
     }
 
+    duplicateSource = character;
+
+    duplicateForm.reset();
+    duplicateError.textContent = '';
+    duplicateError.hidden = true;
+
+    duplicateNameInput.setCustomValidity('');
+
+    duplicateDialog.showModal();
+    duplicateNameInput.focus();
+}
+
+// =========================
+// DUPLICATE DIALOG CONTROLS
+// =========================
+
+duplicateCancel.addEventListener('click', () => {
+    if (!duplicationInProgress) {
+        duplicateDialog.close();
+    }
+});
+
+// Prevents closing with Escape while the API request is processing.
+
+duplicateDialog.addEventListener('cancel', (event) => {
+    if (duplicationInProgress) {
+        event.preventDefault();
+    }
+});
+
+duplicateDialog.addEventListener('close', () => {
+    duplicateSource = null;
+});
+
+duplicateNameInput.addEventListener('input', () => {
+    duplicateNameInput.setCustomValidity('');
+
+    duplicateError.textContent = '';
+    duplicateError.hidden = true;
+});
+
+// =========================
+// DUPLICATE FORM SUBMISSION
+// =========================
+
+duplicateForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    if (!duplicateSource || duplicationInProgress) {
+        return;
+    }
+
+    const name = duplicateNameInput.value.trim();
+
+    if (name === '' || Array.from(name).length > 50) {
+        duplicateNameInput.setCustomValidity(
+            'Enter a character name of 1 to 50 characters.'
+        );
+
+        duplicateNameInput.reportValidity();
+        return;
+    }
+
+    const sourceId = duplicateSource.id;
+
+    duplicationInProgress = true;
+
+    duplicateSubmit.disabled = true;
+    duplicateCancel.disabled = true;
+    duplicateNameInput.disabled = true;
+
+    duplicateSubmit.textContent = 'Duplicating...';
+
+    duplicateError.textContent = '';
+    duplicateError.hidden = true;
+
     try {
         const response = await fetch(
-            '/FantasyRealm/Backend/api/delete-character.php',
+            '/FantasyRealm/Backend/api/duplicate-character.php',
             {
                 method: 'POST',
-
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
                 },
-
                 body: JSON.stringify({
-                    character_id: character.id
+                    character_id: sourceId,
+                    name: name
                 })
             }
         );
 
-        const data =
-            await response.json();
+        const data = await response.json();
 
-
-        if (!response.ok || !data.success) {
-
-            alert(
-                data.message ||
-                'Unable to delete character.'
-            );
-
+        if (response.status === 401) {
+            window.location.href = 'login.html';
             return;
         }
 
+        if (!response.ok || !data.success) {
+            duplicateError.textContent =
+                data.message || 'Unable to duplicate character.';
+
+            duplicateError.hidden = false;
+            return;
+        }
+
+        duplicateDialog.close();
 
         await loadCharacters();
 
+    } catch (error) {
+        console.error('Unable to duplicate character:', error);
+
+        duplicateError.textContent =
+            'Unable to confirm duplication. Close this dialog and refresh the dashboard before trying again.';
+
+        duplicateError.hidden = false;
+
+    } finally {
+        duplicationInProgress = false;
+
+        duplicateSubmit.disabled = false;
+        duplicateCancel.disabled = false;
+        duplicateNameInput.disabled = false;
+
+        duplicateSubmit.textContent = '✦ Duplicate Character';
+
+        if (duplicateDialog.open) {
+            duplicateNameInput.focus();
+        }
+    }
+});
+
+// =========================
+// DELETION CONFIRMATION
+// =========================
+
+// Stores the selected character and deletion mode while the dialog is open.
+
+let deletionTarget = null;
+let deletionInProgress = false;
+
+function openDeleteDialog(character, permanent) {
+    if (deleteDialog.open || deletionInProgress) {
+        return;
+    }
+
+    deletionTarget = {
+        id: character.id,
+        permanent: permanent
+    };
+
+    deleteError.textContent = '';
+    deleteError.hidden = true;
+
+    deleteDialogTitle.textContent = permanent
+        ? 'Permanently Delete Character'
+        : 'Delete Character';
+
+    deleteDialogDescription.textContent = permanent
+        ? `Permanently delete "${character.name}"? This removes the character and its related data. This action cannot be undone.`
+        : `Move "${character.name}" to Deleted Characters? You can restore it later.`;
+
+    deleteSubmit.textContent = permanent
+        ? 'Permanently Delete'
+        : 'Move to Deleted Characters';
+
+    deleteDialog.showModal();
+
+    // Starts keyboard focus on the non-destructive action.
+    deleteCancel.focus();
+}
+
+// Keeps the existing card button handlers connected to the new dialog.
+
+function deleteCharacter(character) {
+    openDeleteDialog(character, false);
+}
+
+// =========================
+// DELETION DIALOG CONTROLS
+// =========================
+
+deleteCancel.addEventListener('click', () => {
+    if (!deletionInProgress) {
+        deleteDialog.close();
+    }
+});
+
+deleteDialog.addEventListener('cancel', (event) => {
+    if (deletionInProgress) {
+        event.preventDefault();
+    }
+});
+
+deleteDialog.addEventListener('close', () => {
+    deletionTarget = null;
+});
+
+// =========================
+// DELETION REQUEST
+// =========================
+
+// Calls the existing PHP endpoint for the selected deletion mode.
+
+deleteForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    if (!deletionTarget || deletionInProgress) {
+        return;
+    }
+
+    const target = deletionTarget;
+    const originalButtonText = deleteSubmit.textContent;
+
+    const endpoint = target.permanent
+        ? '/FantasyRealm/Backend/api/permanent-delete-character.php'
+        : '/FantasyRealm/Backend/api/delete-character.php';
+
+    deletionInProgress = true;
+
+    deleteSubmit.disabled = true;
+    deleteCancel.disabled = true;
+    deleteSubmit.textContent = 'Deleting...';
+
+    deleteError.textContent = '';
+    deleteError.hidden = true;
+
+    try {
+        const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                character_id: target.id
+            })
+        });
+
+        const data = await response.json();
+
+        if (response.status === 401) {
+            window.location.href = 'login.html';
+            return;
+        }
+
+        if (!response.ok || !data.success) {
+            deleteError.textContent =
+                data.message || 'Unable to delete character.';
+
+            deleteError.hidden = false;
+            return;
+        }
+
+        deleteDialog.close();
+
+        if (!target.permanent) {
+            await loadCharacters();
+        }
+
+        await loadDeletedCharacters();
 
     } catch (error) {
+        console.error('Unable to delete character:', error);
 
-        console.error(
-            'Unable to delete character:',
-            error
-        );
+        deleteError.textContent =
+            'Unable to confirm deletion. Close this dialog and refresh the dashboard before trying again.';
 
-        alert(
-            'Unable to delete character.'
-        );
+        deleteError.hidden = false;
+
+    } finally {
+        deletionInProgress = false;
+
+        deleteSubmit.disabled = false;
+        deleteCancel.disabled = false;
+        deleteSubmit.textContent = originalButtonText;
+
+        if (deleteDialog.open) {
+            deleteCancel.focus();
+        }
     }
-}
+});
 
 // =========================
 // DELETED CHARACTER CARDS
@@ -667,56 +940,10 @@ async function restoreCharacter(character) {
 // PERMANENT DELETE
 // =========================
 
-async function permanentlyDeleteCharacter(character) {
+// Opens the shared dialog with the permanent-deletion warning.
 
-    const confirmed = window.confirm(
-        `Permanently delete "${character.name}"? This cannot be undone.`
-    );
-
-    if (!confirmed) {
-        return;
-    }
-
-    try {
-        const response = await fetch(
-            '/FantasyRealm/Backend/api/permanent-delete-character.php',
-            {
-                method: 'POST',
-
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-
-                body: JSON.stringify({
-                    character_id: character.id
-                })
-            }
-        );
-
-        const data = await response.json();
-
-        if (!response.ok || !data.success) {
-            alert(
-                data.message ||
-                'Unable to permanently delete character.'
-            );
-
-            return;
-        }
-
-        await loadDeletedCharacters();
-
-    } catch (error) {
-        console.error(
-            'Unable to permanently delete character:',
-            error
-        );
-
-        alert(
-            'Unable to permanently delete character.'
-        );
-    }
+function permanentlyDeleteCharacter(character) {
+    openDeleteDialog(character, true);
 }
 
 // =========================

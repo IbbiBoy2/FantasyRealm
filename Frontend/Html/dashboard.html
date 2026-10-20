@@ -261,6 +261,128 @@
 </main>
 
 <!-- =========================
+     DUPLICATE CHARACTER DIALOG
+========================= -->
+
+<dialog
+    id="duplicate-dialog"
+    class="duplicate-dialog"
+    aria-labelledby="duplicate-dialog-title"
+    aria-describedby="duplicate-dialog-description"
+>
+    <form id="duplicate-form" class="duplicate-form">
+        <p class="section-label">
+            CREATE A COPY
+        </p>
+
+        <h2 id="duplicate-dialog-title">
+            Duplicate Character
+        </h2>
+
+        <p
+            id="duplicate-dialog-description"
+            class="duplicate-description"
+        >
+            Choose a new name. The copy will be private and waiting for approval.
+        </p>
+
+        <label for="duplicate-name">
+            New character name
+        </label>
+
+        <input
+            id="duplicate-name"
+            name="name"
+            type="text"
+            maxlength="50"
+            placeholder="Enter a new name..."
+            autocomplete="off"
+            required
+        >
+
+        <!-- Displays API errors without closing the dialog. -->
+
+        <p
+            id="duplicate-error"
+            class="duplicate-error"
+            role="alert"
+            hidden
+        ></p>
+
+        <div class="duplicate-dialog-actions">
+            <button
+                id="duplicate-cancel"
+                class="duplicate-cancel"
+                type="button"
+            >
+                Cancel
+            </button>
+
+            <button
+                id="duplicate-submit"
+                class="duplicate-submit"
+                type="submit"
+            >
+                ✦ Duplicate Character
+            </button>
+        </div>
+    </form>
+</dialog>
+
+<!-- =========================
+     CHARACTER DELETION CONFIRMATION
+========================= -->
+
+<dialog
+    id="delete-dialog"
+    class="duplicate-dialog delete-dialog"
+    aria-labelledby="delete-dialog-title"
+    aria-describedby="delete-dialog-description"
+>
+    <form id="delete-form" class="duplicate-form">
+        <p class="section-label">
+            CHARACTER MANAGEMENT
+        </p>
+
+        <h2 id="delete-dialog-title">
+            Delete Character
+        </h2>
+
+        <!-- JavaScript sets the message for soft or permanent deletion. -->
+
+        <p
+            id="delete-dialog-description"
+            class="duplicate-description"
+        ></p>
+
+        <p
+            id="delete-error"
+            class="duplicate-error"
+            role="alert"
+            hidden
+        ></p>
+
+        <div class="duplicate-dialog-actions">
+            <button
+                id="delete-cancel"
+                class="duplicate-cancel"
+                type="button"
+            >
+                Cancel
+            </button>
+
+            <button
+                id="delete-submit"
+                class="duplicate-submit delete-submit"
+                type="submit"
+            >
+                Delete Character
+            </button>
+        </div>
+    </form>
+</dialog>
+
+<!-- =========================
     SITE FOOTER
 ========================= -->
 
