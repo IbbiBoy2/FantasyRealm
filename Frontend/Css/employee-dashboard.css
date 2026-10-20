@@ -290,3 +290,42 @@
         width: 100%;
     }
 }
+
+/* =========================
+   REVIEW MODERATION
+========================= */
+
+.review-moderation-section {
+    margin-top: 30px;
+}
+
+.moderation-review-rating {
+    margin-top: 12px;
+
+    color: #f5c96a;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+/* Preserves comment line breaks and wraps long text within cards and dialogs. */
+
+.moderation-review-comment {
+    margin: 16px 0;
+    padding: 14px 16px;
+
+    border-left: 3px solid var(--purple-light);
+    border-radius: 0 10px 10px 0;
+
+    background: rgba(124, 58, 237, 0.1);
+    color: var(--text);
+
+    font-size: 0.9rem;
+    line-height: 1.7;
+
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+#review-moderation-error[hidden] {
+    display: none;
+}

@@ -51,6 +51,36 @@ const moderationError = document.getElementById('moderation-error');
 const moderationCancel = document.getElementById('moderation-cancel');
 const moderationSubmit = document.getElementById('moderation-submit');
 
+const pendingReviewsMessage =
+    document.getElementById('pending-reviews-message');
+
+const pendingReviewsList =
+    document.getElementById('pending-reviews-list');
+
+const reviewModerationDialog =
+    document.getElementById('review-moderation-dialog');
+
+const reviewModerationForm =
+    document.getElementById('review-moderation-form');
+
+const reviewModerationTitle =
+    document.getElementById('review-moderation-dialog-title');
+
+const reviewModerationDescription =
+    document.getElementById('review-moderation-dialog-description');
+
+const reviewModerationPreview =
+    document.getElementById('review-moderation-preview');
+
+const reviewModerationError =
+    document.getElementById('review-moderation-error');
+
+const reviewModerationCancel =
+    document.getElementById('review-moderation-cancel');
+
+const reviewModerationSubmit =
+    document.getElementById('review-moderation-submit');
+
 // =========================
 // SETTINGS MENU
 // =========================
@@ -96,6 +126,7 @@ async function loadEmployeeDashboard() {
     employeeContent.hidden = true;
     settingsMenu.hidden = true;
     await loadPendingCharacters();
+    await loadPendingReviews();
 
     setSettingsOpen(false);
 
@@ -506,6 +537,307 @@ moderationForm.addEventListener('submit', async (event) => {
             } else {
                 moderationCancel.focus();
             }
+        }
+    }
+});
+
+// =========================
+// REVIEW MODERATION ACCESS
+// =========================
+
+// Handles expired sessions or staff permissions removed while the page is open.
+
+function handleReviewAccessError(response) {
+    if (response.status === 401) {
+        window.location.href = 'login.html';
+        return true;
+    }
+
+    if (response.status === 403) {
+        if (reviewModerationDialog.open) {
+            reviewModerationDialog.close();
+        }
+
+        employeeContent.hidden = true;
+        settingsMenu.hidden = true;
+
+        employeeMessage.textContent = 'Employee access required.';
+        employeeMessage.hidden = false;
+
+        return true;
+    }
+
+    return false;
+}
+
+// =========================
+// LOAD PENDING REVIEWS
+// =========================
+
+async function loadPendingReviews() {
+    pendingReviewsList.replaceChildren();
+
+    pendingReviewsMessage.textContent = 'Loading pending reviews...';
+    pendingReviewsMessage.hidden = false;
+
+    try {
+        const response = await fetch(
+            '/FantasyRealm/Backend/api/pending-reviews.php',
+            {
+                headers: {
+                    'Accept': 'application/json'
+                },
+                cache: 'no-store'
+            }
+        );
+
+        if (handleReviewAccessError(response)) {
+            return;
+        }
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+            pendingReviewsMessage.textContent =
+                data.message || 'Unable to load pending reviews.';
+            return;
+        }
+
+        if (data.reviews.length === 0) {
+            pendingReviewsMessage.textContent =
+                'No reviews are waiting for approval.';
+            return;
+        }
+
+        data.reviews.forEach((review) => {
+            pendingReviewsList.appendChild(
+                createReviewModerationCard(review)
+            );
+        });
+
+        pendingReviewsMessage.hidden = true;
+
+    } catch (error) {
+        console.error('Unable to load pending reviews:', error);
+
+        pendingReviewsMessage.textContent =
+            'Unable to load pending reviews. Please refresh to try again.';
+    }
+}
+
+// =========================
+// REVIEW MODERATION CARDS
+// =========================
+
+// Displays submitted comments as plain text rather than interpreting HTML.
+
+function createReviewModerationCard(review) {
+    const card = document.createElement('article');
+    card.className = 'moderation-card';
+
+    const characterName = document.createElement('h3');
+    characterName.textContent = review.character_name;
+
+    const reviewer = document.createElement('p');
+    reviewer.className = 'character-meta';
+    reviewer.textContent = `Review by ${review.reviewer_username}`;
+
+    const rating = document.createElement('p');
+    rating.className = 'moderation-review-rating';
+    rating.textContent = `Rating: ${review.rating}/5`;
+
+    const comment = document.createElement('blockquote');
+    comment.className = 'moderation-review-comment';
+    comment.textContent = review.comment;
+
+    const date = document.createElement('p');
+    date.className = 'character-meta';
+    date.textContent = `Submitted: ${review.created_at}`;
+
+    const actions = document.createElement('div');
+    actions.className = 'character-actions';
+
+    const approveButton = document.createElement('button');
+    approveButton.type = 'button';
+    approveButton.className = 'character-action moderation-approve';
+    approveButton.textContent = 'Approve';
+
+    approveButton.addEventListener('click', () => {
+        openReviewModerationDialog(review, 'APPROVED');
+    });
+
+    const rejectButton = document.createElement('button');
+    rejectButton.type = 'button';
+    rejectButton.className = 'character-action moderation-reject';
+    rejectButton.textContent = 'Reject';
+
+    rejectButton.addEventListener('click', () => {
+        openReviewModerationDialog(review, 'REJECTED');
+    });
+
+    actions.appendChild(approveButton);
+    actions.appendChild(rejectButton);
+
+    card.appendChild(characterName);
+    card.appendChild(reviewer);
+    card.appendChild(rating);
+    card.appendChild(comment);
+    card.appendChild(date);
+    card.appendChild(actions);
+
+    return card;
+}
+
+// =========================
+// REVIEW DECISION DIALOG
+// =========================
+
+let reviewModerationTarget = null;
+let reviewModerationInProgress = false;
+
+function openReviewModerationDialog(review, status) {
+    if (
+        reviewModerationDialog.open ||
+        reviewModerationInProgress
+    ) {
+        return;
+    }
+
+    reviewModerationTarget = {
+        id: review.id,
+        status: status
+    };
+
+    const rejecting = status === 'REJECTED';
+
+    reviewModerationError.textContent = '';
+    reviewModerationError.hidden = true;
+
+    reviewModerationTitle.textContent = rejecting
+        ? 'Reject Review'
+        : 'Approve Review';
+
+    reviewModerationDescription.textContent =
+        `Review by ${review.reviewer_username} for "${review.character_name}", rated ${review.rating}/5. ` +
+        (rejecting
+            ? 'Rejecting will keep this review hidden.'
+            : 'Approving allows this review to appear on the public character page.');
+
+    reviewModerationPreview.textContent = review.comment;
+
+    reviewModerationSubmit.textContent = rejecting
+        ? 'Confirm Rejection'
+        : 'Confirm Approval';
+
+    reviewModerationSubmit.classList.toggle(
+        'moderation-reject',
+        rejecting
+    );
+
+    reviewModerationSubmit.classList.toggle(
+        'moderation-approve',
+        !rejecting
+    );
+
+    reviewModerationDialog.showModal();
+    reviewModerationCancel.focus();
+}
+
+reviewModerationCancel.addEventListener('click', () => {
+    if (!reviewModerationInProgress) {
+        reviewModerationDialog.close();
+    }
+});
+
+reviewModerationDialog.addEventListener('cancel', (event) => {
+    if (reviewModerationInProgress) {
+        event.preventDefault();
+    }
+});
+
+reviewModerationDialog.addEventListener('close', () => {
+    reviewModerationTarget = null;
+});
+
+// =========================
+// SAVE REVIEW DECISION
+// =========================
+
+reviewModerationForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    if (
+        !reviewModerationTarget ||
+        reviewModerationInProgress
+    ) {
+        return;
+    }
+
+    const target = reviewModerationTarget;
+    const originalButtonText = reviewModerationSubmit.textContent;
+
+    reviewModerationInProgress = true;
+
+    reviewModerationSubmit.disabled = true;
+    reviewModerationCancel.disabled = true;
+
+    reviewModerationSubmit.textContent = 'Saving...';
+
+    reviewModerationError.textContent = '';
+    reviewModerationError.hidden = true;
+
+    try {
+        const response = await fetch(
+            '/FantasyRealm/Backend/api/moderate-review.php',
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    review_id: target.id,
+                    status: target.status
+                })
+            }
+        );
+
+        if (handleReviewAccessError(response)) {
+            return;
+        }
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+            reviewModerationError.textContent =
+                data.message || 'Unable to save the review decision.';
+
+            reviewModerationError.hidden = false;
+            return;
+        }
+
+        reviewModerationDialog.close();
+
+        await loadEmployeeDashboard();
+
+    } catch (error) {
+        console.error('Unable to moderate review:', error);
+
+        reviewModerationError.textContent =
+            'Unable to confirm the decision. Close this dialog and refresh before trying again.';
+
+        reviewModerationError.hidden = false;
+
+    } finally {
+        reviewModerationInProgress = false;
+
+        reviewModerationSubmit.disabled = false;
+        reviewModerationCancel.disabled = false;
+
+        reviewModerationSubmit.textContent = originalButtonText;
+
+        if (reviewModerationDialog.open) {
+            reviewModerationCancel.focus();
         }
     }
 });

@@ -196,6 +196,46 @@
         class="moderation-list"
     ></div>
 </section>
+
+<!-- =========================
+     REVIEW MODERATION QUEUE
+========================= -->
+
+<section
+    class="characters-section review-moderation-section"
+    aria-labelledby="review-moderation-title"
+>
+    <div class="section-heading">
+        <p class="section-label">
+            COMMUNITY FEEDBACK
+        </p>
+
+        <h2 id="review-moderation-title">
+            Pending Reviews
+        </h2>
+    </div>
+
+    <p class="dashboard-intro">
+        Review submitted ratings and comments.
+        Only approved reviews appear publicly.
+    </p>
+
+    <!-- JavaScript displays loading, empty and error messages here. -->
+
+    <p
+        id="pending-reviews-message"
+        class="dashboard-message"
+        role="status"
+        aria-live="polite"
+    >
+        Loading pending reviews...
+    </p>
+
+    <div
+        id="pending-reviews-list"
+        class="moderation-list"
+    ></div>
+</section>
     </main>
 
     <!-- =========================
@@ -260,6 +300,67 @@
 
             <button
                 id="moderation-submit"
+                class="character-action"
+                type="submit"
+            >
+                Confirm
+            </button>
+        </div>
+    </form>
+</dialog>
+
+<!-- =========================
+     REVIEW MODERATION DIALOG
+========================= -->
+
+<dialog
+    id="review-moderation-dialog"
+    class="moderation-dialog"
+    aria-labelledby="review-moderation-dialog-title"
+    aria-describedby="review-moderation-dialog-description"
+>
+    <form
+        id="review-moderation-form"
+        class="moderation-form"
+    >
+        <p class="section-label">
+            COMMUNITY REVIEW MODERATION
+        </p>
+
+        <h2 id="review-moderation-dialog-title">
+            Review Decision
+        </h2>
+
+        <p
+            id="review-moderation-dialog-description"
+            class="moderation-description"
+        ></p>
+
+        <!-- Plain-text preview of the review being moderated. -->
+
+        <blockquote
+            id="review-moderation-preview"
+            class="moderation-review-comment"
+        ></blockquote>
+
+        <p
+            id="review-moderation-error"
+            class="moderation-error"
+            role="alert"
+            hidden
+        ></p>
+
+        <div class="moderation-dialog-actions">
+            <button
+                id="review-moderation-cancel"
+                class="character-action"
+                type="button"
+            >
+                Cancel
+            </button>
+
+            <button
+                id="review-moderation-submit"
                 class="character-action"
                 type="submit"
             >
