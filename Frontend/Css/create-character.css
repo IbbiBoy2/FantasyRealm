@@ -1211,3 +1211,13 @@ button {
     outline: 2px solid var(--purple-soft);
     outline-offset: 3px;
 }
+
+/* =========================
+   HIDDEN STAFF NAVIGATION
+========================= */
+
+/* Overrides dropdown display styles for links hidden by the role check. */
+
+.nav-links .settings-dropdown a[hidden] {
+    display: none;
+}

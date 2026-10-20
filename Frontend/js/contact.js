@@ -21,6 +21,9 @@ const settingsMenu = document.getElementById('settings-menu');
 const settingsButton = document.getElementById('settings-button');
 const settingsDropdown = document.getElementById('settings-dropdown');
 
+const employeeDashboardLink =
+    document.getElementById('employee-dashboard-link');
+
 // =========================
 // SETTINGS MENU
 // =========================
@@ -67,12 +70,23 @@ document.addEventListener('keydown', (event) => {
 // Logged-in users get their username and email prefilled automatically.
 
 async function loadSession() {
+
+        employeeDashboardLink.hidden = true;
+
     try {
         const response = await fetch(
             '/FantasyRealm/Backend/api/session.php'
         );
 
         const data = await response.json();
+
+        // Shows staff navigation only after a successful authenticated role check.
+
+employeeDashboardLink.hidden = !(
+    response.ok &&
+    data.authenticated &&
+    ['EMPLOYEE', 'ADMIN'].includes(data.user?.role)
+);
 
         if (!response.ok) {
             throw new Error('Unable to verify session.');

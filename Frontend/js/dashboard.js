@@ -54,6 +54,9 @@ const deleteError = document.getElementById('delete-error');
 const deleteCancel = document.getElementById('delete-cancel');
 const deleteSubmit = document.getElementById('delete-submit');
 
+const employeeDashboardLink =
+    document.getElementById('employee-dashboard-link');
+
 // =========================
 // SESSION
 // =========================
@@ -61,12 +64,23 @@ const deleteSubmit = document.getElementById('delete-submit');
 // Verifies the PHP session before displaying the dashboard account controls.
 
 async function loadSession() {
+
+        employeeDashboardLink.hidden = true;
+
     try {
         const response = await fetch(
             '/FantasyRealm/Backend/api/session.php'
         );
 
         const data = await response.json();
+
+        // Shows staff navigation only after a successful authenticated role check.
+
+employeeDashboardLink.hidden = !(
+    response.ok &&
+    data.authenticated &&
+    ['EMPLOYEE', 'ADMIN'].includes(data.user?.role)
+);
 
         if (!response.ok) {
             throw new Error('Unable to verify session.');
@@ -327,6 +341,21 @@ function createCharacterCard(character) {
     body.appendChild(details);
     body.appendChild(visibility);
     body.appendChild(status);
+
+    // Shows the employee's explanation to the owner of a rejected character.
+
+if (
+    character.status === 'REJECTED' &&
+    character.rejection_reason
+) {
+    const rejectionReason = document.createElement('p');
+
+    rejectionReason.className = 'rejection-reason';
+    rejectionReason.textContent =
+        `Rejection reason: ${character.rejection_reason}`;
+
+    body.appendChild(rejectionReason);
+}
 
 
     // Character management actions

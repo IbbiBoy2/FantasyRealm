@@ -60,6 +60,7 @@ try {
             characters.name,
             characters.gender,
             characters.status,
+            characters.rejection_reason,
             characters.shared,
             characters.image_path,
             characters.created_at,

@@ -37,6 +37,9 @@ const reviewFeedback = document.getElementById('review-feedback');
 const reviewsMessage = document.getElementById('reviews-message');
 const reviewsList = document.getElementById('reviews-list');
 
+const employeeDashboardLink =
+    document.getElementById('employee-dashboard-link');
+
 // =========================
 // CHARACTER ID FROM URL
 // =========================
@@ -53,12 +56,23 @@ const characterId = params.get('id');
 // Checks whether the visitor is logged in and updates the navbar.
 
 async function loadSession() {
+
+        employeeDashboardLink.hidden = true;
+
     try {
         const response = await fetch(
             '/FantasyRealm/Backend/api/session.php'
         );
 
         const data = await response.json();
+
+        // Shows staff navigation only after a successful authenticated role check.
+
+employeeDashboardLink.hidden = !(
+    response.ok &&
+    data.authenticated &&
+    ['EMPLOYEE', 'ADMIN'].includes(data.user?.role)
+);
 
         if (!response.ok) {
             throw new Error('Unable to verify session.');

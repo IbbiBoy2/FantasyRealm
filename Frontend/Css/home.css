@@ -2421,3 +2421,13 @@ a {
     background: rgba(124, 58, 237, 0.24);
     color: var(--purple-soft);
 }
+
+/* =========================
+   HIDDEN STAFF NAVIGATION
+========================= */
+
+/* Overrides dropdown display styles for links hidden by the role check. */
+
+.nav-links .settings-dropdown a[hidden] {
+    display: none;
+}

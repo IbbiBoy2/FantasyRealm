@@ -30,6 +30,9 @@ const eyeChoices = document.querySelectorAll('.eye-choice');
 const colorChoices = document.querySelectorAll('.color-choice');
 const weaponChoices = document.querySelectorAll('.weapon-choice');
 
+const employeeDashboardLink =
+    document.getElementById('employee-dashboard-link');
+
 // =========================
 // SETTINGS MENU
 // =========================
@@ -76,12 +79,23 @@ document.addEventListener('keydown', (event) => {
 // Checks the PHP session and redirects unauthenticated visitors to Login.
 
 async function loadSession() {
+
+    employeeDashboardLink.hidden = true;
+
     try {
         const response = await fetch(
             '/FantasyRealm/Backend/api/session.php'
         );
 
         const data = await response.json();
+
+        // Shows staff navigation only after a successful authenticated role check.
+
+employeeDashboardLink.hidden = !(
+    response.ok &&
+    data.authenticated &&
+    ['EMPLOYEE', 'ADMIN'].includes(data.user?.role)
+);
 
         if (!response.ok) {
             throw new Error('Unable to verify session.');

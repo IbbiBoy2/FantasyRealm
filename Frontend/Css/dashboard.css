@@ -889,3 +889,34 @@ a {
 .delete-submit:focus-visible {
     outline-color: #fca5a5;
 }
+
+/* =========================
+   CHARACTER REJECTION REASON
+========================= */
+
+.rejection-reason {
+    margin-top: 14px;
+    padding: 12px 14px;
+
+    border: 1px solid rgba(248, 113, 113, 0.35);
+    border-radius: 10px;
+
+    background: rgba(127, 29, 29, 0.15);
+    color: #fecaca;
+
+    font-size: 0.85rem;
+    line-height: 1.6;
+
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+/* =========================
+   HIDDEN STAFF NAVIGATION
+========================= */
+
+/* Overrides dropdown display styles for links hidden by the role check. */
+
+.nav-links .settings-dropdown a[hidden] {
+    display: none;
+}
