@@ -108,6 +108,23 @@ const accessoryDeleteCancel =
 const accessoryDeleteSubmit =
     document.getElementById('accessory-delete-submit');
 
+    const usersMessage = document.getElementById('users-message');
+const managedUsersList = document.getElementById('managed-users-list');
+
+const userManagementFeedback =
+    document.getElementById('user-management-feedback');
+
+const userActionDialog = document.getElementById('user-action-dialog');
+const userActionForm = document.getElementById('user-action-form');
+const userActionTitle = document.getElementById('user-action-title');
+
+const userActionDescription =
+    document.getElementById('user-action-description');
+
+const userActionError = document.getElementById('user-action-error');
+const userActionCancel = document.getElementById('user-action-cancel');
+const userActionSubmit = document.getElementById('user-action-submit');
+
 // =========================
 // SETTINGS MENU
 // =========================
@@ -155,6 +172,7 @@ async function loadEmployeeDashboard() {
     await loadPendingCharacters();
     await loadPendingReviews();
     await loadAccessories();
+    await loadManagedUsers();
 
     setSettingsOpen(false);
 
@@ -1352,6 +1370,350 @@ accessoryForm.addEventListener('submit', async (event) => {
         accessoryTypeInput.disabled = false;
 
         accessoryAddButton.textContent = '✦ Add Item';
+    }
+});
+
+// =========================
+// USER MANAGEMENT ACCESS
+// =========================
+
+// Handles expired sessions and staff permissions removed while the page is open.
+
+function handleUserManagementAccessError(response) {
+    if (response.status === 401) {
+        window.location.href = 'login.html';
+        return true;
+    }
+
+    if (response.status === 403) {
+        if (userActionDialog.open) {
+            userActionDialog.close();
+        }
+
+        employeeContent.hidden = true;
+        settingsMenu.hidden = true;
+
+        employeeMessage.textContent = 'Employee access required.';
+        employeeMessage.hidden = false;
+
+        return true;
+    }
+
+    return false;
+}
+
+// =========================
+// LOAD PLAYER ACCOUNTS
+// =========================
+
+async function loadManagedUsers() {
+    managedUsersList.replaceChildren();
+
+    usersMessage.textContent = 'Loading player accounts...';
+    usersMessage.hidden = false;
+
+    try {
+        const response = await fetch(
+            '/FantasyRealm/Backend/api/employee-users.php',
+            {
+                headers: {
+                    'Accept': 'application/json'
+                },
+                cache: 'no-store'
+            }
+        );
+
+        if (handleUserManagementAccessError(response)) {
+            return;
+        }
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+            usersMessage.textContent =
+                data.message || 'Unable to load player accounts.';
+            return;
+        }
+
+        if (data.users.length === 0) {
+            usersMessage.textContent = 'No player accounts found.';
+            return;
+        }
+
+        data.users.forEach((user) => {
+            managedUsersList.appendChild(
+                createManagedUserCard(user)
+            );
+        });
+
+        usersMessage.hidden = true;
+
+    } catch (error) {
+        console.error('Unable to load player accounts:', error);
+
+        usersMessage.textContent =
+            'Unable to load player accounts. Please refresh to try again.';
+    }
+}
+
+// =========================
+// PLAYER ACCOUNT CARDS
+// =========================
+
+// Displays account information as plain text.
+
+function createManagedUserCard(user) {
+    const card = document.createElement('article');
+    card.className = 'moderation-card managed-user-card';
+
+    const username = document.createElement('h3');
+    username.textContent = user.username;
+
+    const email = document.createElement('p');
+    email.className = 'character-meta';
+    email.textContent = user.email;
+
+    const createdDate = document.createElement('p');
+    createdDate.className = 'character-meta';
+    createdDate.textContent = `Joined: ${user.created_at}`;
+
+    const status = document.createElement('span');
+
+    status.className = user.suspended
+        ? 'status-badge status-rejected'
+        : 'status-badge status-approved';
+
+    status.textContent = user.suspended
+        ? 'Suspended'
+        : 'Active';
+
+    card.appendChild(username);
+    card.appendChild(email);
+    card.appendChild(createdDate);
+     card.appendChild(status);
+
+    // Opens confirmation before changing or deleting the selected account.
+
+    const actions = document.createElement('div');
+    actions.className = 'character-actions';
+
+    const suspensionButton = document.createElement('button');
+    suspensionButton.type = 'button';
+    suspensionButton.className = 'character-action';
+
+    suspensionButton.textContent = user.suspended
+        ? 'Reactivate'
+        : 'Suspend';
+
+    suspensionButton.addEventListener('click', () => {
+        openUserActionDialog(
+            user,
+            user.suspended ? 'reactivate' : 'suspend'
+        );
+    });
+
+    const deleteButton = document.createElement('button');
+    deleteButton.type = 'button';
+    deleteButton.className = 'character-action moderation-reject';
+    deleteButton.textContent = 'Delete Account';
+
+    deleteButton.addEventListener('click', () => {
+        openUserActionDialog(user, 'delete');
+    });
+
+    actions.appendChild(suspensionButton);
+    actions.appendChild(deleteButton);
+
+    card.appendChild(actions);
+
+    return card;
+}
+
+// =========================
+// USER MANAGEMENT FEEDBACK
+// =========================
+
+function showUserManagementFeedback(message, isError = false) {
+    userManagementFeedback.textContent = message;
+
+    userManagementFeedback.classList.toggle(
+        'accessory-feedback-error',
+        isError
+    );
+
+    userManagementFeedback.hidden = false;
+}
+
+// =========================
+// ACCOUNT ACTION DIALOG
+// =========================
+
+let userActionTarget = null;
+let userActionInProgress = false;
+
+function openUserActionDialog(user, action) {
+    if (userActionDialog.open || userActionInProgress) {
+        return;
+    }
+
+    const descriptions = {
+        suspend: {
+            title: 'Suspend Account',
+            message:
+                `Suspend "${user.username}"? They will be blocked from logging in and making protected requests. Their characters and reviews will be preserved.`,
+            button: 'Confirm Suspension'
+        },
+        reactivate: {
+            title: 'Reactivate Account',
+            message:
+                `Reactivate "${user.username}"? They will be able to log in again.`,
+            button: 'Reactivate Account'
+        },
+        delete: {
+            title: 'Permanently Delete Account',
+            message:
+                `Permanently delete "${user.username}"? This removes the account, all its characters, and reviews written by the user or received on their characters. This cannot be undone.`,
+            button: 'Permanently Delete'
+        }
+    };
+
+    const details = descriptions[action];
+
+    if (!details) {
+        return;
+    }
+
+    userActionTarget = {
+        id: user.id,
+        action: action
+    };
+
+    userActionTitle.textContent = details.title;
+    userActionDescription.textContent = details.message;
+    userActionSubmit.textContent = details.button;
+
+    userActionSubmit.classList.toggle(
+        'moderation-reject',
+        action !== 'reactivate'
+    );
+
+    userActionSubmit.classList.toggle(
+        'moderation-approve',
+        action === 'reactivate'
+    );
+
+    userActionError.textContent = '';
+    userActionError.hidden = true;
+
+    userManagementFeedback.hidden = true;
+
+    userActionDialog.showModal();
+    userActionCancel.focus();
+}
+
+userActionCancel.addEventListener('click', () => {
+    if (!userActionInProgress) {
+        userActionDialog.close();
+    }
+});
+
+// Prevents closing while the account request is processing.
+
+userActionDialog.addEventListener('cancel', (event) => {
+    if (userActionInProgress) {
+        event.preventDefault();
+    }
+});
+
+userActionDialog.addEventListener('close', () => {
+    userActionTarget = null;
+});
+
+// =========================
+// SAVE ACCOUNT ACTION
+// =========================
+
+userActionForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    if (!userActionTarget || userActionInProgress) {
+        return;
+    }
+
+    const target = userActionTarget;
+    const deleting = target.action === 'delete';
+
+    const endpoint = deleting
+        ? '/FantasyRealm/Backend/api/delete-user.php'
+        : '/FantasyRealm/Backend/api/set-user-suspended.php';
+
+    const payload = {
+        user_id: target.id
+    };
+
+    if (!deleting) {
+        payload.suspended = target.action === 'suspend';
+    }
+
+    const originalButtonText = userActionSubmit.textContent;
+
+    userActionInProgress = true;
+
+    userActionSubmit.disabled = true;
+    userActionCancel.disabled = true;
+    userActionSubmit.textContent = 'Processing...';
+
+    userActionError.textContent = '';
+    userActionError.hidden = true;
+
+    try {
+        const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
+
+        if (handleUserManagementAccessError(response)) {
+            return;
+        }
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+            userActionError.textContent =
+                data.message || 'Unable to complete account action.';
+
+            userActionError.hidden = false;
+            return;
+        }
+
+        userActionDialog.close();
+
+        showUserManagementFeedback(data.message);
+
+        await loadEmployeeDashboard();
+
+    } catch (error) {
+        console.error('Unable to manage account:', error);
+
+        userActionError.textContent =
+            'Unable to confirm the action. Close this dialog and refresh before trying again.';
+
+        userActionError.hidden = false;
+
+    } finally {
+        userActionInProgress = false;
+
+        userActionSubmit.disabled = false;
+        userActionCancel.disabled = false;
+        userActionSubmit.textContent = originalButtonText;
+
+        if (userActionDialog.open) {
+            userActionCancel.focus();
+        }
     }
 });
 

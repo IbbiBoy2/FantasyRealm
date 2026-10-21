@@ -83,6 +83,12 @@ if ($method === 'GET') {
 
 if ($method === 'POST') {
 
+    // Character creation requires a currently active account.
+
+    require_once __DIR__ . '/../config/require-active-user.php';
+
+    requireActiveUser($pdo);
+
     if (!isset($_SESSION['user_id'])) {
 
         http_response_code(401);

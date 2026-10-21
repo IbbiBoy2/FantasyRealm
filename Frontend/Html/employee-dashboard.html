@@ -329,6 +329,54 @@
     <div id="accessories-list" class="accessories-list"></div>
 </section>
 
+<!-- =========================
+     PLAYER ACCOUNT MANAGEMENT
+========================= -->
+
+<section
+    class="characters-section user-management-section"
+    aria-labelledby="user-management-title"
+>
+    <div class="section-heading">
+        <p class="section-label">
+            PLAYER ACCOUNTS
+        </p>
+
+        <h2 id="user-management-title">
+            Manage Users
+        </h2>
+    </div>
+
+    <p class="dashboard-intro">
+        Suspend or reactivate player accounts.
+        Permanently deleting an account also removes its characters
+        and related reviews.
+    </p>
+
+    <!-- Displays feedback after an account action. -->
+
+    <p
+        id="user-management-feedback"
+        class="accessory-feedback"
+        role="status"
+        aria-live="polite"
+        hidden
+    ></p>
+
+    <!-- JavaScript loads ordinary USER accounts into this list. -->
+
+    <p
+        id="users-message"
+        class="dashboard-message"
+        role="status"
+        aria-live="polite"
+    >
+        Loading player accounts...
+    </p>
+
+    <div id="managed-users-list" class="moderation-list"></div>
+</section>
+
     </main>
 
     <!-- =========================
@@ -514,7 +562,58 @@
     </form>
 </dialog>
 
+<!-- =========================
+     PLAYER ACCOUNT ACTION DIALOG
+========================= -->
 
+<dialog
+    id="user-action-dialog"
+    class="moderation-dialog"
+    aria-labelledby="user-action-title"
+    aria-describedby="user-action-description"
+>
+    <form id="user-action-form" class="moderation-form">
+        <p class="section-label">
+            PLAYER ACCOUNT MANAGEMENT
+        </p>
+
+        <h2 id="user-action-title">
+            Confirm Account Action
+        </h2>
+
+        <!-- JavaScript names the account and explains the selected action. -->
+
+        <p
+            id="user-action-description"
+            class="moderation-description"
+        ></p>
+
+        <p
+            id="user-action-error"
+            class="moderation-error"
+            role="alert"
+            hidden
+        ></p>
+
+        <div class="moderation-dialog-actions">
+            <button
+                id="user-action-cancel"
+                class="character-action"
+                type="button"
+            >
+                Cancel
+            </button>
+
+            <button
+                id="user-action-submit"
+                class="character-action"
+                type="submit"
+            >
+                Confirm
+            </button>
+        </div>
+    </form>
+</dialog>
 
     <!-- =========================
          SITE FOOTER

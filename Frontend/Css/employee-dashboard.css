@@ -507,3 +507,28 @@
         padding: 16px;
     }
 }
+
+/* =========================
+   PLAYER ACCOUNT MANAGEMENT
+========================= */
+
+.user-management-section {
+    margin-top: 30px;
+}
+
+.managed-user-card .character-meta {
+    overflow-wrap: anywhere;
+}
+
+#user-action-description {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+/* Preserves feedback visibility controlled by JavaScript. */
+
+#users-message[hidden],
+#user-management-feedback[hidden],
+#user-action-error[hidden] {
+    display: none;
+}
