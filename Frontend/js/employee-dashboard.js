@@ -81,6 +81,33 @@ const reviewModerationCancel =
 const reviewModerationSubmit =
     document.getElementById('review-moderation-submit');
 
+    const accessoryForm = document.getElementById('accessory-form');
+const accessoryNameInput = document.getElementById('accessory-name');
+const accessoryTypeInput = document.getElementById('accessory-type');
+const accessoryAddButton = document.getElementById('accessory-add-button');
+const accessoryFeedback = document.getElementById('accessory-feedback');
+
+const accessoriesMessage = document.getElementById('accessories-message');
+const accessoriesList = document.getElementById('accessories-list');
+
+const accessoryDeleteDialog =
+    document.getElementById('accessory-delete-dialog');
+
+const accessoryDeleteForm =
+    document.getElementById('accessory-delete-form');
+
+const accessoryDeleteDescription =
+    document.getElementById('accessory-delete-description');
+
+const accessoryDeleteError =
+    document.getElementById('accessory-delete-error');
+
+const accessoryDeleteCancel =
+    document.getElementById('accessory-delete-cancel');
+
+const accessoryDeleteSubmit =
+    document.getElementById('accessory-delete-submit');
+
 // =========================
 // SETTINGS MENU
 // =========================
@@ -127,6 +154,7 @@ async function loadEmployeeDashboard() {
     settingsMenu.hidden = true;
     await loadPendingCharacters();
     await loadPendingReviews();
+    await loadAccessories();
 
     setSettingsOpen(false);
 
@@ -839,6 +867,491 @@ reviewModerationForm.addEventListener('submit', async (event) => {
         if (reviewModerationDialog.open) {
             reviewModerationCancel.focus();
         }
+    }
+});
+
+// =========================
+// LOAD ACCESSORY CATALOGUE
+// =========================
+
+async function loadAccessories() {
+    accessoriesList.replaceChildren();
+
+    accessoriesMessage.textContent = 'Loading accessories...';
+    accessoriesMessage.hidden = false;
+
+    try {
+        const response = await fetch(
+            '/FantasyRealm/Backend/api/employee-accessories.php',
+            {
+                headers: {
+                    'Accept': 'application/json'
+                },
+                cache: 'no-store'
+            }
+        );
+
+        if (response.status === 401) {
+            window.location.href = 'login.html';
+            return;
+        }
+
+        if (response.status === 403) {
+            if (accessoryDeleteDialog.open) {
+                accessoryDeleteDialog.close();
+            }
+
+            employeeContent.hidden = true;
+            settingsMenu.hidden = true;
+
+            employeeMessage.textContent = 'Employee access required.';
+            employeeMessage.hidden = false;
+            return;
+        }
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+            accessoriesMessage.textContent =
+                data.message || 'Unable to load accessories.';
+            return;
+        }
+
+        if (data.accessories.length === 0) {
+            accessoriesMessage.textContent = 'No accessories yet.';
+            return;
+        }
+
+        data.accessories.forEach((accessory) => {
+            accessoriesList.appendChild(
+                createAccessoryCard(accessory)
+            );
+        });
+
+        accessoriesMessage.hidden = true;
+
+    } catch (error) {
+        console.error('Unable to load accessories:', error);
+
+        accessoriesMessage.textContent =
+            'Unable to load accessories. Please refresh to try again.';
+    }
+}
+
+// =========================
+// ACCESSORY CARDS
+// =========================
+
+// Displays catalogue values as plain text.
+
+function createAccessoryCard(accessory) {
+    const card = document.createElement('article');
+    card.className = 'moderation-card accessory-card';
+
+    const name = document.createElement('h3');
+    name.textContent = accessory.name;
+
+    const type = document.createElement('p');
+    type.className = 'character-meta';
+    type.textContent = `Type: ${accessory.type}`;
+
+    const availability = document.createElement('p');
+    availability.className = 'character-meta';
+    availability.textContent = accessory.active
+        ? 'Availability: Active'
+        : 'Availability: Disabled';
+
+    const usage = document.createElement('p');
+    usage.className = 'character-meta';
+    usage.textContent =
+        `Used by ${accessory.usage_count} saved character(s)`;
+
+    card.appendChild(name);
+    card.appendChild(type);
+    card.appendChild(availability);
+    card.appendChild(usage);
+
+    // Changes availability without removing existing character equipment.
+
+    const actions = document.createElement('div');
+    actions.className = 'character-actions';
+
+    const availabilityButton = document.createElement('button');
+
+    availabilityButton.type = 'button';
+    availabilityButton.className = 'character-action';
+
+    availabilityButton.textContent = accessory.active
+        ? 'Disable'
+        : 'Enable';
+
+    availabilityButton.addEventListener('click', async () => {
+        availabilityButton.disabled = true;
+
+        try {
+            await setAccessoryAvailability(
+                accessory,
+                !accessory.active
+            );
+        } finally {
+            availabilityButton.disabled = false;
+        }
+    });
+
+    actions.appendChild(availabilityButton);
+
+    // Used items must be disabled instead of deleted.
+
+    const deleteButton = document.createElement('button');
+
+    deleteButton.type = 'button';
+    deleteButton.className = 'character-action moderation-reject';
+    deleteButton.textContent = 'Delete';
+
+    deleteButton.disabled = accessory.usage_count > 0;
+
+    if (deleteButton.disabled) {
+        deleteButton.title =
+            'Used by saved characters. Disable this item instead.';
+    }
+
+    deleteButton.addEventListener('click', () => {
+        openAccessoryDeleteDialog(accessory);
+    });
+
+    actions.appendChild(deleteButton);
+    card.appendChild(actions);
+
+    return card;
+}
+
+
+// =========================
+// ACCESSORY AVAILABILITY
+// =========================
+
+// Sends the requested state instead of blindly toggling the database value.
+
+async function setAccessoryAvailability(accessory, active) {
+    accessoryFeedback.hidden = true;
+
+    try {
+        const response = await fetch(
+            '/FantasyRealm/Backend/api/set-accessory-active.php',
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    accessory_id: accessory.id,
+                    active: active
+                })
+            }
+        );
+
+        if (response.status === 401) {
+            window.location.href = 'login.html';
+            return;
+        }
+
+        if (response.status === 403) {
+            employeeContent.hidden = true;
+            settingsMenu.hidden = true;
+
+            employeeMessage.textContent = 'Employee access required.';
+            employeeMessage.hidden = false;
+            return;
+        }
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+            showAccessoryFeedback(
+                data.message || 'Unable to update accessory availability.',
+                true
+            );
+            return;
+        }
+
+        showAccessoryFeedback(
+            active ? 'Accessory enabled.' : 'Accessory disabled.'
+        );
+
+        await loadEmployeeDashboard();
+
+    } catch (error) {
+        console.error('Unable to update accessory availability:', error);
+
+        showAccessoryFeedback(
+            'Unable to confirm the change. Refresh the catalogue before trying again.',
+            true
+        );
+    }
+}
+
+// =========================
+// ACCESSORY DELETION DIALOG
+// =========================
+
+let accessoryDeleteTarget = null;
+let accessoryDeleteInProgress = false;
+
+function openAccessoryDeleteDialog(accessory) {
+    if (
+        accessoryDeleteDialog.open ||
+        accessoryDeleteInProgress
+    ) {
+        return;
+    }
+
+    accessoryDeleteTarget = {
+        id: accessory.id
+    };
+
+    accessoryDeleteDescription.textContent =
+        `Permanently delete "${accessory.name}"? This cannot be undone.`;
+
+    accessoryDeleteError.textContent = '';
+    accessoryDeleteError.hidden = true;
+
+    accessoryDeleteDialog.showModal();
+    accessoryDeleteCancel.focus();
+}
+
+accessoryDeleteCancel.addEventListener('click', () => {
+    if (!accessoryDeleteInProgress) {
+        accessoryDeleteDialog.close();
+    }
+});
+
+// Prevents closing while the deletion request is processing.
+
+accessoryDeleteDialog.addEventListener('cancel', (event) => {
+    if (accessoryDeleteInProgress) {
+        event.preventDefault();
+    }
+});
+
+accessoryDeleteDialog.addEventListener('close', () => {
+    accessoryDeleteTarget = null;
+});
+
+// =========================
+// DELETE ACCESSORY
+// =========================
+
+accessoryDeleteForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    if (
+        !accessoryDeleteTarget ||
+        accessoryDeleteInProgress
+    ) {
+        return;
+    }
+
+    const accessoryId = accessoryDeleteTarget.id;
+
+    accessoryDeleteInProgress = true;
+
+    accessoryDeleteSubmit.disabled = true;
+    accessoryDeleteCancel.disabled = true;
+
+    accessoryDeleteSubmit.textContent = 'Deleting...';
+
+    accessoryDeleteError.textContent = '';
+    accessoryDeleteError.hidden = true;
+
+    try {
+        const response = await fetch(
+            '/FantasyRealm/Backend/api/delete-accessory.php',
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    accessory_id: accessoryId
+                })
+            }
+        );
+
+        if (response.status === 401) {
+            window.location.href = 'login.html';
+            return;
+        }
+
+        if (response.status === 403) {
+            accessoryDeleteDialog.close();
+
+            employeeContent.hidden = true;
+            settingsMenu.hidden = true;
+
+            employeeMessage.textContent = 'Employee access required.';
+            employeeMessage.hidden = false;
+            return;
+        }
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+            accessoryDeleteError.textContent =
+                data.message || 'Unable to delete accessory.';
+
+            accessoryDeleteError.hidden = false;
+            return;
+        }
+
+        accessoryDeleteDialog.close();
+
+        showAccessoryFeedback('Accessory deleted permanently.');
+
+        await loadEmployeeDashboard();
+
+    } catch (error) {
+        console.error('Unable to delete accessory:', error);
+
+        accessoryDeleteError.textContent =
+            'Unable to confirm deletion. Close this dialog and refresh before trying again.';
+
+        accessoryDeleteError.hidden = false;
+
+    } finally {
+        accessoryDeleteInProgress = false;
+
+        accessoryDeleteSubmit.disabled = false;
+        accessoryDeleteCancel.disabled = false;
+
+        accessoryDeleteSubmit.textContent = 'Permanently Delete';
+
+        if (accessoryDeleteDialog.open) {
+            accessoryDeleteCancel.focus();
+        }
+    }
+});
+
+// =========================
+// ACCESSORY FEEDBACK
+// =========================
+
+// Displays catalogue action feedback as plain text.
+
+function showAccessoryFeedback(message, isError = false) {
+    accessoryFeedback.textContent = message;
+
+    accessoryFeedback.classList.toggle(
+        'accessory-feedback-error',
+        isError
+    );
+
+    accessoryFeedback.hidden = false;
+}
+
+// =========================
+// ADD ACCESSORY
+// =========================
+
+// Sends the new catalogue item's name and type to the protected REST API.
+
+let accessoryAddInProgress = false;
+
+accessoryForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    if (accessoryAddInProgress) {
+        return;
+    }
+
+    const name = accessoryNameInput.value.trim();
+    const type = accessoryTypeInput.value;
+
+    if (name === '' || Array.from(name).length > 100) {
+        showAccessoryFeedback(
+            'Enter an item name of 1 to 100 characters.',
+            true
+        );
+        return;
+    }
+
+    if (!['weapon', 'armor', 'clothing', 'accessory'].includes(type)) {
+        showAccessoryFeedback('Choose an item type.', true);
+        return;
+    }
+
+    accessoryAddInProgress = true;
+
+    accessoryAddButton.disabled = true;
+    accessoryNameInput.disabled = true;
+    accessoryTypeInput.disabled = true;
+
+    accessoryAddButton.textContent = 'Adding...';
+    accessoryFeedback.hidden = true;
+
+    try {
+        const response = await fetch(
+            '/FantasyRealm/Backend/api/add-accessory.php',
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: name,
+                    type: type
+                })
+            }
+        );
+
+        if (response.status === 401) {
+            window.location.href = 'login.html';
+            return;
+        }
+
+        if (response.status === 403) {
+            employeeContent.hidden = true;
+            settingsMenu.hidden = true;
+
+            employeeMessage.textContent = 'Employee access required.';
+            employeeMessage.hidden = false;
+            return;
+        }
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+            showAccessoryFeedback(
+                data.message || 'Unable to add accessory.',
+                true
+            );
+            return;
+        }
+
+        accessoryForm.reset();
+
+        showAccessoryFeedback('Accessory added successfully.');
+
+        await loadEmployeeDashboard();
+
+    } catch (error) {
+        console.error('Unable to add accessory:', error);
+
+        showAccessoryFeedback(
+            'Unable to confirm creation. Refresh the catalogue before trying again.',
+            true
+        );
+
+    } finally {
+        accessoryAddInProgress = false;
+
+        accessoryAddButton.disabled = false;
+        accessoryNameInput.disabled = false;
+        accessoryTypeInput.disabled = false;
+
+        accessoryAddButton.textContent = '✦ Add Item';
     }
 });
 

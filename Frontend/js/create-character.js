@@ -33,6 +33,15 @@ const weaponChoices = document.querySelectorAll('.weapon-choice');
 const employeeDashboardLink =
     document.getElementById('employee-dashboard-link');
 
+    const equipmentMessage = document.getElementById('equipment-message');
+
+const equipmentSelects = {
+    weapon: document.getElementById('equipment-weapon'),
+    armor: document.getElementById('equipment-armor'),
+    clothing: document.getElementById('equipment-clothing'),
+    accessory: document.getElementById('equipment-accessory')
+};
+
 // =========================
 // SETTINGS MENU
 // =========================
@@ -298,6 +307,13 @@ creatorForm.addEventListener(
     async (event) => {
         event.preventDefault();
 
+        // Prevents submission before the available equipment has loaded.
+
+if (!equipmentLoaded) {
+    showMessage('Please wait for equipment to load, or refresh if loading failed.');
+    return;
+}
+        
         const characterData = {
             name: characterNameInput.value.trim(),
 
@@ -319,8 +335,10 @@ creatorForm.addEventListener(
             eye_color:
                 getSelectedValue('eye-color'),
 
-            weapon:
-                selectedWeaponInput.value
+accessory_ids: Object.values(equipmentSelects)
+    .map(select => select.value)
+    .filter(value => value !== '')
+    .map(value => Number(value))
         };
 
 
@@ -465,6 +483,102 @@ function hideMessage() {
 }
 
 // =========================
+// LOAD AVAILABLE EQUIPMENT
+// =========================
+
+let equipmentLoaded = false;
+let availableEquipment = [];
+
+async function loadEquipment() {
+    equipmentLoaded = false;
+    createButton.disabled = true;
+
+    equipmentMessage.textContent = 'Loading available equipment...';
+    equipmentMessage.hidden = false;
+
+    Object.values(equipmentSelects).forEach((select) => {
+        select.disabled = true;
+        select.replaceChildren(new Option('None', ''));
+    });
+
+    try {
+        const response = await fetch(
+            '/FantasyRealm/Backend/api/accessories.php',
+            {
+                headers: {
+                    'Accept': 'application/json'
+                },
+                cache: 'no-store'
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+            equipmentMessage.textContent =
+                data.message || 'Unable to load equipment. Please refresh.';
+            return;
+        }
+
+        availableEquipment = data.accessories;
+
+        availableEquipment.forEach((item) => {
+            const select = equipmentSelects[item.type];
+
+            if (select) {
+                select.appendChild(
+                    new Option(item.name, String(item.id))
+                );
+            }
+        });
+
+        Object.values(equipmentSelects).forEach((select) => {
+            select.disabled = false;
+        });
+
+        equipmentLoaded = true;
+        createButton.disabled = false;
+
+        equipmentMessage.textContent = availableEquipment.length
+            ? 'Choose optional equipment for your character.'
+            : 'No equipment is currently available. You can create a character without it.';
+
+    } catch (error) {
+        console.error('Unable to load equipment:', error);
+
+        equipmentMessage.textContent =
+            'Unable to load equipment. Please refresh to try again.';
+    }
+}
+
+// =========================
+// CATALOGUE WEAPON PREVIEW
+// =========================
+
+// These weapons already have image files in the project.
+// Other catalogue items can be selected without inventing an image path.
+
+equipmentSelects.weapon.addEventListener('change', () => {
+    const selectedId = Number(equipmentSelects.weapon.value);
+
+    const weapon = availableEquipment.find(
+        item => item.id === selectedId && item.type === 'weapon'
+    );
+
+    const previewFiles = new Map([
+        ['Iron Sword', 'iron-sword'],
+        ['Steel Sword', 'steel-sword'],
+        ['Magic Staff', 'magic-staff']
+    ]);
+
+    selectedWeaponInput.value = weapon
+        ? previewFiles.get(weapon.name) || ''
+        : '';
+
+    updatePreview();
+});
+
+// =========================
 // INITIALIZATION
 // =========================
 
@@ -472,3 +586,4 @@ loadSession();
 
 updateSelectedStyles();
 updatePreview();
+loadEquipment();

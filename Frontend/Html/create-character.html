@@ -760,63 +760,76 @@
 
                 </fieldset>
 
-
 <!-- =========================
-     WEAPON SELECTION
+     EQUIPMENT SELECTION
 ========================= -->
 
-                <fieldset class="form-section">
+<fieldset class="form-section">
+    <legend>
+        Equipment
+    </legend>
 
-                    <legend>
-                        Weapon
-                    </legend>
+    <!-- Retains the existing weapon-preview reference. -->
 
-                    <input
-                        type="hidden"
-                        id="selected-weapon"
-                        value=""
-                    >
+    <input
+        type="hidden"
+        id="selected-weapon"
+        value=""
+    >
 
-                    <div class="weapon-options">
+    <p
+        id="equipment-message"
+        class="equipment-message"
+        role="status"
+        aria-live="polite"
+    >
+        Loading available equipment...
+    </p>
 
-                        <button
-                            type="button"
-                            class="weapon-choice"
-                            data-weapon="iron-sword"
-                        >
-                            Iron Sword
-                        </button>
+    <!-- JavaScript fills these lists using active catalogue items. -->
 
+    <div class="equipment-fields">
+        <div class="equipment-field">
+            <label for="equipment-weapon">
+                Weapon
+            </label>
 
-                        <button
-                            type="button"
-                            class="weapon-choice"
-                            data-weapon="steel-sword"
-                        >
-                            Steel Sword
-                        </button>
+            <select id="equipment-weapon" disabled>
+                <option value="">None</option>
+            </select>
+        </div>
 
+        <div class="equipment-field">
+            <label for="equipment-armor">
+                Armor
+            </label>
 
-                        <button
-                            type="button"
-                            class="weapon-choice"
-                            data-weapon="magic-staff"
-                        >
-                            Magic Staff
-                        </button>
+            <select id="equipment-armor" disabled>
+                <option value="">None</option>
+            </select>
+        </div>
 
+        <div class="equipment-field">
+            <label for="equipment-clothing">
+                Clothing
+            </label>
 
-                        <button
-                            type="button"
-                            class="weapon-choice"
-                            data-weapon=""
-                        >
-                            None
-                        </button>
+            <select id="equipment-clothing" disabled>
+                <option value="">None</option>
+            </select>
+        </div>
 
-                    </div>
+        <div class="equipment-field">
+            <label for="equipment-accessory">
+                Accessory
+            </label>
 
-                </fieldset>
+            <select id="equipment-accessory" disabled>
+                <option value="">None</option>
+            </select>
+        </div>
+    </div>
+</fieldset>
 
 
 <!-- =========================

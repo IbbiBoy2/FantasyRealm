@@ -127,8 +127,53 @@ if ($method === 'POST') {
     $eyeStyle = $data['eye_style'] ?? '';
     $eyeColor = $data['eye_color'] ?? '';
 
-    $weapon = $data['weapon'] ?? '';
+// =========================
+// EQUIPMENT INPUT VALIDATION
+// =========================
 
+// Accepts up to four different equipment IDs, one per category.
+// PHP will check their categories and availability against the database.
+
+$accessoryIds = $data['accessory_ids'] ?? [];
+
+if (
+    !is_array($accessoryIds) ||
+    array_values($accessoryIds) !== $accessoryIds ||
+    count($accessoryIds) > 4
+) {
+    http_response_code(422);
+
+    echo json_encode([
+        'success' => false,
+        'message' => 'Provide a list of up to four equipment IDs.'
+    ]);
+
+    exit;
+}
+
+foreach ($accessoryIds as $accessoryId) {
+    if (!is_int($accessoryId) || $accessoryId <= 0) {
+        http_response_code(422);
+
+        echo json_encode([
+            'success' => false,
+            'message' => 'Equipment IDs must be positive integers.'
+        ]);
+
+        exit;
+    }
+}
+
+if (count(array_unique($accessoryIds)) !== count($accessoryIds)) {
+    http_response_code(422);
+
+    echo json_encode([
+        'success' => false,
+        'message' => 'The same equipment item cannot be selected twice.'
+    ]);
+
+    exit;
+}
 
     if (
         $name === '' ||
@@ -207,22 +252,13 @@ if ($method === 'POST') {
         'amber'
     ];
 
-    $allowedWeapons = [
-        '',
-        'iron-sword',
-        'steel-sword',
-        'magic-staff'
-    ];
-
-
     if (
         !in_array($gender, $allowedGenders, true) ||
         !in_array($hairStyle, $allowedHairStyles, true) ||
         !in_array($hairColor, $allowedHairColors, true) ||
         !in_array($skinTone, $allowedSkinTones, true) ||
         !in_array($eyeStyle, $allowedEyeStyles, true) ||
-        !in_array($eyeColor, $allowedEyeColors, true) ||
-        !in_array($weapon, $allowedWeapons, true)
+        !in_array($eyeColor, $allowedEyeColors, true)
     ) {
 
         http_response_code(422);
@@ -235,17 +271,66 @@ if ($method === 'POST') {
         exit;
     }
 
-
-    $weaponNameMap = [
-        'iron-sword' => 'Iron Sword',
-        'steel-sword' => 'Steel Sword',
-        'magic-staff' => 'Magic Staff'
-    ];
-
-
     try {
 
         $pdo->beginTransaction();
+
+        // =========================
+// CHECK AVAILABLE EQUIPMENT
+// =========================
+
+// Locks selected items until creation finishes, preventing availability changes
+// or deletion during this transaction.
+
+if ($accessoryIds !== []) {
+    $placeholders = implode(
+        ',',
+        array_fill(0, count($accessoryIds), '?')
+    );
+
+    $equipmentStmt = $pdo->prepare(
+        'SELECT id, type
+         FROM accessories
+         WHERE id IN (' . $placeholders . ')
+           AND active = 1
+         ORDER BY id
+         FOR UPDATE'
+    );
+
+    $equipmentStmt->execute($accessoryIds);
+
+    $equipment = $equipmentStmt->fetchAll();
+
+    if (count($equipment) !== count($accessoryIds)) {
+        throw new InvalidArgumentException(
+            'Some selected equipment is no longer available. Refresh the creator and choose again.'
+        );
+    }
+
+    $selectedTypes = [];
+
+    foreach ($equipment as $item) {
+        if (
+            !in_array(
+                $item['type'],
+                ['weapon', 'armor', 'clothing', 'accessory'],
+                true
+            )
+        ) {
+            throw new InvalidArgumentException(
+                'An equipment item has an unsupported type.'
+            );
+        }
+
+        if (in_array($item['type'], $selectedTypes, true)) {
+            throw new InvalidArgumentException(
+                'Choose only one item per equipment category.'
+            );
+        }
+
+        $selectedTypes[] = $item['type'];
+    }
+}
 
 
         /*
@@ -321,57 +406,30 @@ if ($method === 'POST') {
             'eye_color' => $eyeColor
         ]);
 
+// =========================
+// CHARACTER EQUIPMENT
+// =========================
 
-        /*
-        |--------------------------------------------------------------------------
-        | 3. WEAPON
-        |--------------------------------------------------------------------------
-        */
+// Links each selected catalogue item to the new character.
 
-        if ($weapon !== '') {
+if ($accessoryIds !== []) {
+    $equipmentStmt = $pdo->prepare(
+        'INSERT INTO character_accessories (
+            character_id,
+            accessory_id
+         ) VALUES (
+            :character_id,
+            :accessory_id
+         )'
+    );
 
-            $weaponName = $weaponNameMap[$weapon];
-
-
-            $stmt = $pdo->prepare(
-                'SELECT id
-                 FROM accessories
-                 WHERE name = :name
-                   AND active = 1
-                 LIMIT 1'
-            );
-
-            $stmt->execute([
-                'name' => $weaponName
-            ]);
-
-
-            $accessory = $stmt->fetch();
-
-
-            if (!$accessory) {
-
-                throw new RuntimeException(
-                    'Selected weapon is not available.'
-                );
-            }
-
-
-            $stmt = $pdo->prepare(
-                'INSERT INTO character_accessories (
-                    character_id,
-                    accessory_id
-                ) VALUES (
-                    :character_id,
-                    :accessory_id
-                )'
-            );
-
-            $stmt->execute([
-                'character_id' => $characterId,
-                'accessory_id' => $accessory['id']
-            ]);
-        }
+    foreach ($accessoryIds as $accessoryId) {
+        $equipmentStmt->execute([
+            'character_id' => $characterId,
+            'accessory_id' => $accessoryId
+        ]);
+    }
+}
 
 
         $pdo->commit();
@@ -386,31 +444,22 @@ if ($method === 'POST') {
         ]);
 
 
-    } catch (PDOException $e) {
+    } catch (InvalidArgumentException $e) {
 
-        if ($pdo->inTransaction()) {
-            $pdo->rollBack();
-        }
+    // Cancels creation if a selected item is unavailable or invalid.
 
+    if ($pdo->inTransaction()) {
+        $pdo->rollBack();
+    }
 
-        if ($e->getCode() === '23000') {
+    http_response_code(422);
 
-            http_response_code(409);
+    echo json_encode([
+        'success' => false,
+        'message' => $e->getMessage()
+    ]);
 
-            echo json_encode([
-                'success' => false,
-                'message' => 'That character name is already taken.'
-            ]);
-
-        } else {
-
-            http_response_code(500);
-
-            echo json_encode([
-                'success' => false,
-                'message' => 'Unable to create character.'
-            ]);
-        }
+} catch (PDOException $e) {
 
 
     } catch (Throwable $e) {

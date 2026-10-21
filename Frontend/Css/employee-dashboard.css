@@ -329,3 +329,181 @@
 #review-moderation-error[hidden] {
     display: none;
 }
+
+/* =========================
+   ACCESSORY MANAGEMENT
+========================= */
+
+.accessory-management-section {
+    margin-top: 30px;
+}
+
+.accessories-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+
+    margin-top: 24px;
+}
+
+/* =========================
+   ADD ACCESSORY FORM
+========================= */
+
+.accessory-form {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) auto;
+    align-items: end;
+    gap: 16px;
+
+    margin-top: 24px;
+    padding: 20px;
+
+    border: 1px solid rgba(196, 131, 255, 0.25);
+    border-radius: 14px;
+
+    background: rgba(6, 6, 18, 0.45);
+}
+
+.accessory-field {
+    min-width: 0;
+
+    display: grid;
+    gap: 9px;
+}
+
+.accessory-field label {
+    color: var(--purple-soft);
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.accessory-field input,
+.accessory-field select {
+    width: 100%;
+    min-width: 0;
+    min-height: 46px;
+    padding: 12px 14px;
+
+    border: 1px solid rgba(196, 131, 255, 0.4);
+    border-radius: 10px;
+
+    background: #0a091c;
+    color: var(--text);
+
+    font: inherit;
+    font-size: 0.9rem;
+}
+
+.accessory-field select {
+    color-scheme: dark;
+}
+
+.accessory-field input::placeholder {
+    color: #92889f;
+}
+
+#accessory-add-button {
+    min-height: 46px;
+    padding: 12px 20px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--purple),
+            var(--purple-light)
+        );
+}
+
+/* =========================
+   ACCESSORY FEEDBACK
+========================= */
+
+.accessory-feedback {
+    margin-top: 18px;
+    padding: 13px 15px;
+
+    border: 1px solid rgba(196, 131, 255, 0.35);
+    border-radius: 10px;
+
+    background: rgba(124, 58, 237, 0.12);
+    color: var(--purple-soft);
+
+    font-size: 0.85rem;
+    line-height: 1.6;
+}
+
+.accessory-feedback-error {
+    border-color: rgba(248, 113, 113, 0.4);
+
+    background: rgba(127, 29, 29, 0.18);
+    color: #fecaca;
+}
+
+/* Preserves feedback visibility controlled by JavaScript. */
+
+.accessory-feedback[hidden],
+#accessory-delete-error[hidden],
+#accessories-message[hidden] {
+    display: none;
+}
+
+/* =========================
+   ACCESSORY CONTROL STATES
+========================= */
+
+.accessory-field input:focus-visible,
+.accessory-field select:focus-visible,
+.accessory-form button:focus-visible {
+    outline: 2px solid var(--purple-soft);
+    outline-offset: 3px;
+}
+
+.accessory-form input:disabled,
+.accessory-form select:disabled,
+.accessory-form button:disabled,
+.accessory-card button:disabled {
+    opacity: 0.55;
+}
+
+.accessory-form input:disabled,
+.accessory-form select:disabled,
+.accessory-form button:disabled {
+    cursor: wait;
+}
+
+.accessory-card button:disabled {
+    cursor: not-allowed;
+}
+
+/* Keeps unavailable card actions visually inactive on hover. */
+
+.accessory-card button:disabled:hover {
+    background: rgba(124, 58, 237, 0.14);
+    border-color: rgba(168, 85, 247, 0.45);
+    transform: none;
+}
+
+/* =========================
+   ACCESSORY MANAGEMENT — MOBILE
+========================= */
+
+@media (max-width: 900px) {
+    .accessory-form {
+        grid-template-columns: 1fr;
+    }
+
+    #accessory-add-button {
+        width: 100%;
+    }
+}
+
+@media (max-width: 680px) {
+    .accessories-list {
+        grid-template-columns: 1fr;
+    }
+
+    .accessory-form {
+        padding: 16px;
+    }
+}

@@ -1221,3 +1221,77 @@ button {
 .nav-links .settings-dropdown a[hidden] {
     display: none;
 }
+
+/* =========================
+   CATALOGUE EQUIPMENT OPTIONS
+========================= */
+
+.equipment-message {
+    margin-bottom: 16px;
+
+    color: var(--muted);
+    font-size: 0.85rem;
+    line-height: 1.6;
+}
+
+.equipment-fields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.equipment-field {
+    min-width: 0;
+
+    display: grid;
+    gap: 8px;
+}
+
+.equipment-field label {
+    color: var(--purple-soft);
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.equipment-field select {
+    width: 100%;
+    min-width: 0;
+    min-height: 46px;
+    padding: 12px 14px;
+
+    border: 1px solid rgba(196, 131, 255, 0.4);
+    border-radius: 10px;
+
+    background: #0a091c;
+    color: var(--text);
+    color-scheme: dark;
+
+    font: inherit;
+    font-size: 0.9rem;
+}
+
+.equipment-field select:focus-visible {
+    outline: 2px solid var(--purple-soft);
+    outline-offset: 3px;
+}
+
+/* Indicates that catalogue choices are still loading. */
+
+.equipment-field select:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+.equipment-message[hidden] {
+    display: none;
+}
+
+/* =========================
+   EQUIPMENT OPTIONS — MOBILE
+========================= */
+
+@media (max-width: 680px) {
+    .equipment-fields {
+        grid-template-columns: 1fr;
+    }
+}

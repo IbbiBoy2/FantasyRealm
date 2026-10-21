@@ -157,7 +157,7 @@
                     <h2>Management Tools</h2>
                 </div>
 
-                <!-- =========================
+<!-- =========================
      CHARACTER NAME MODERATION
 ========================= -->
 
@@ -236,6 +236,99 @@
         class="moderation-list"
     ></div>
 </section>
+
+<!-- =========================
+     ACCESSORY MANAGEMENT
+========================= -->
+
+<section
+    class="characters-section accessory-management-section"
+    aria-labelledby="accessory-management-title"
+>
+    <div class="section-heading">
+        <p class="section-label">
+            CUSTOMIZATION CATALOGUE
+        </p>
+
+        <h2 id="accessory-management-title">
+            Manage Accessories
+        </h2>
+    </div>
+
+    <p class="dashboard-intro">
+        Add customization items and manage their availability.
+        Items used by saved characters can be disabled, but not deleted.
+    </p>
+
+    <!-- =========================
+         ADD ACCESSORY FORM
+    ========================= -->
+
+    <form id="accessory-form" class="accessory-form">
+        <div class="accessory-field">
+            <label for="accessory-name">
+                Item name
+            </label>
+
+            <input
+                id="accessory-name"
+                name="name"
+                type="text"
+                maxlength="100"
+                placeholder="Enter an item name..."
+                required
+            >
+        </div>
+
+        <div class="accessory-field">
+            <label for="accessory-type">
+                Item type
+            </label>
+
+            <select id="accessory-type" name="type" required>
+                <option value="">Choose a type</option>
+                <option value="weapon">Weapon</option>
+                <option value="armor">Armor</option>
+                <option value="clothing">Clothing</option>
+                <option value="accessory">Accessory</option>
+            </select>
+        </div>
+
+        <button
+            id="accessory-add-button"
+            class="character-action"
+            type="submit"
+        >
+            ✦ Add Item
+        </button>
+    </form>
+
+    <!-- Displays feedback for adding, enabling and disabling items. -->
+
+    <p
+        id="accessory-feedback"
+        class="accessory-feedback"
+        role="status"
+        aria-live="polite"
+        hidden
+    ></p>
+
+    <!-- =========================
+         ACCESSORY CATALOGUE
+    ========================= -->
+
+    <p
+        id="accessories-message"
+        class="dashboard-message"
+        role="status"
+        aria-live="polite"
+    >
+        Loading accessories...
+    </p>
+
+    <div id="accessories-list" class="accessories-list"></div>
+</section>
+
     </main>
 
     <!-- =========================
@@ -369,6 +462,59 @@
         </div>
     </form>
 </dialog>
+
+<!-- =========================
+     ACCESSORY DELETION DIALOG
+========================= -->
+
+<dialog
+    id="accessory-delete-dialog"
+    class="moderation-dialog"
+    aria-labelledby="accessory-delete-title"
+    aria-describedby="accessory-delete-description"
+>
+    <form id="accessory-delete-form" class="moderation-form">
+        <p class="section-label">
+            CUSTOMIZATION CATALOGUE
+        </p>
+
+        <h2 id="accessory-delete-title">
+            Delete Accessory
+        </h2>
+
+        <p
+            id="accessory-delete-description"
+            class="moderation-description"
+        ></p>
+
+        <p
+            id="accessory-delete-error"
+            class="moderation-error"
+            role="alert"
+            hidden
+        ></p>
+
+        <div class="moderation-dialog-actions">
+            <button
+                id="accessory-delete-cancel"
+                class="character-action"
+                type="button"
+            >
+                Cancel
+            </button>
+
+            <button
+                id="accessory-delete-submit"
+                class="character-action moderation-reject"
+                type="submit"
+            >
+                Permanently Delete
+            </button>
+        </div>
+    </form>
+</dialog>
+
+
 
     <!-- =========================
          SITE FOOTER
