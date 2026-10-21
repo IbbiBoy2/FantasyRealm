@@ -85,7 +85,7 @@ if ($method === 'POST') {
 
     // Character creation requires a currently active account.
 
-    require_once __DIR__ . '/../config/require-active-user.php';
+    require_once __DIR__ . '/require-active-user.php';
 
     requireActiveUser($pdo);
 

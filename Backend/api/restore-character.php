@@ -7,7 +7,7 @@ session_start();
 header('Content-Type: application/json; charset=utf-8');
 
 require_once __DIR__ . '/../config/database.php';
-require_once __DIR__ . '/../config/require-active-user.php';
+require_once __DIR__ . '/require-active-user.php';
 
 // Blocks private requests from deleted or suspended accounts.
 
