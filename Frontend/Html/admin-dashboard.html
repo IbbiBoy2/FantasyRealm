@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Dashboard | FantasyRealm</title>
+
+    <!-- =========================
+         FONTS
+    ========================= -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- =========================
+         STYLESHEETS
+    ========================= -->
+
+    <link rel="stylesheet" href="../Css/dashboard.css">
+    <link rel="stylesheet" href="../Css/admin-dashboard.css">
+
+    <!-- =========================
+         JAVASCRIPT
+    ========================= -->
+
+    <script src="../js/admin-dashboard.js" defer></script>
+</head>
+
+<body>
+
+    <!-- =========================
+         MAIN NAVIGATION
+    ========================= -->
+
+    <header class="dashboard-navbar">
+
+        <a href="index.html" class="brand">
+            <span class="brand-mark">✦</span>
+            <span>FantasyRealm</span>
+        </a>
+
+        <nav class="nav-links" aria-label="Main navigation">
+
+            <a href="index.html">Home</a>
+
+            <a href="character-gallery.html">Characters</a>
+
+            <a href="employee-dashboard.html">
+                Employee Dashboard
+            </a>
+
+            <span
+                id="nav-username"
+                class="nav-username"
+            ></span>
+
+<!-- =========================
+     ADMIN ACCOUNT SETTINGS
+========================= -->
+
+<div id="admin-settings-menu" class="settings-menu">
+    <button
+        id="admin-settings-button"
+        class="settings-button"
+        type="button"
+        aria-label="Open settings"
+        aria-controls="admin-settings-dropdown"
+        aria-expanded="false"
+    >
+        ⚙
+    </button>
+
+    <div
+        id="admin-settings-dropdown"
+        class="settings-dropdown"
+        hidden
+    >
+        <a href="dashboard.html">
+            Character Settings
+        </a>
+
+        <button id="admin-logout" type="button">
+            Logout
+        </button>
+    </div>
+</div>
+
+        </nav>
+
+    </header>
+
+    <!-- =========================
+         ADMIN DASHBOARD PAGE
+    ========================= -->
+
+    <main class="admin-page">
+
+        <!-- =========================
+             ACCESS AND LOADING MESSAGE
+        ========================= -->
+
+        <p
+            id="admin-access-message"
+            class="admin-feedback"
+            role="status"
+            aria-live="polite"
+        >
+            Checking administrator access...
+        </p>
+
+        <!-- The backend must authorize the admin before this content appears. -->
+
+        <div id="admin-content" hidden>
+
+            <!-- =========================
+                 ADMIN WELCOME SECTION
+            ========================= -->
+
+            <section class="admin-hero">
+
+                <div>
+                    <p class="section-label">
+                        FANTASYREALM ADMINISTRATION
+                    </p>
+
+                    <h1>
+                        Welcome,
+                        <span id="admin-username">
+                            Administrator
+                        </span>
+                    </h1>
+
+                    <p class="admin-intro">
+                        Manage your staff, monitor activity, and oversee FantasyRealm.
+                    </p>
+                </div>
+
+                <div class="admin-identity">
+                    <span
+                        class="admin-identity-icon"
+                        aria-hidden="true"
+                    >
+                        ✦
+                    </span>
+
+                    <span>Administrator</span>
+                </div>
+
+            </section>
+
+            <!-- =========================
+                 ADMIN SECTION NAVIGATION
+            ========================= -->
+
+            <nav
+                class="admin-section-nav"
+                aria-label="Administrator sections"
+            >
+                <a href="#admin-overview">
+                    Overview
+                </a>
+
+                <a href="#admin-employees">
+                    Employee Management
+                </a>
+
+                <a href="#admin-activity">
+                    Activity Logs
+                </a>
+            </nav>
+
+            <!-- =========================
+                 OVERVIEW SECTION START
+            ========================= -->
+
+            <section
+                id="admin-overview"
+                class="admin-section"
+            >
+
+                <div class="admin-section-heading">
+
+                    <div>
+                        <p class="section-label">OVERVIEW</p>
+
+                        <h2>Administration Overview</h2>
+
+                        <p>
+                            Account statistics across FantasyRealm.
+                        </p>
+                    </div>
+
+                    <button
+                        id="refresh-overview"
+                        class="admin-button-secondary"
+                        type="button"
+                    >
+                        Refresh Statistics
+                    </button>
+
+                </div>
+
+                <!-- =========================
+                     ADMIN STATISTICS
+                ========================= -->
+
+                <div class="admin-stats">
+
+                    <!-- TOTAL EMPLOYEES -->
+
+                    <article class="admin-stat-card">
+                        <span>Total Employees</span>
+
+                        <strong id="total-employees">
+                            —
+                        </strong>
+
+                        <p>Registered staff members</p>
+                    </article>
+
+                    <!-- ACTIVE EMPLOYEES -->
+
+                    <article class="admin-stat-card">
+                        <span>Active Employees</span>
+
+                        <strong id="active-employees">
+                            —
+                        </strong>
+
+                        <p>Staff with active accounts</p>
+                    </article>
+
+                    <!-- SUSPENDED EMPLOYEES -->
+
+                    <article class="admin-stat-card">
+                        <span>Suspended Employees</span>
+
+                        <strong id="suspended-employees">
+                            —
+                        </strong>
+
+                        <p>Staff with restricted access</p>
+                    </article>
+
+                    <!-- TOTAL PLAYERS -->
+
+                    <article class="admin-stat-card">
+                        <span>Total Players</span>
+
+                        <strong id="total-players">
+                            —
+                        </strong>
+
+                        <p>Registered player accounts</p>
+                    </article>
+
+                    <!-- TOTAL ADMINISTRATORS -->
+
+                    <article class="admin-stat-card">
+                        <span>Administrators</span>
+
+                        <strong id="total-admins">
+                            —
+                        </strong>
+
+                        <p>Registered administrator accounts</p>
+                    </article>
+
+                </div>
+
+            </section>
+
+            <!-- =========================
+                 OVERVIEW SECTION END
+            ========================= -->
+
+            <!-- =========================
+                 EMPLOYEE MANAGEMENT START
+            ========================= -->
+
+            <section
+                id="admin-employees"
+                class="admin-section"
+            >
+
+                <div class="admin-section-heading">
+
+                    <div>
+                        <p class="section-label">
+                            STAFF MANAGEMENT
+                        </p>
+
+                        <h2>Employee Management</h2>
+
+                        <p>
+                            Promote existing players and manage employee accounts.
+                        </p>
+                    </div>
+
+                </div>
+
+                <div class="admin-management-grid">
+
+                    <!-- =========================
+                         PROMOTE PLAYER START
+                    ========================= -->
+
+                    <article class="admin-panel">
+
+                        <div class="admin-panel-heading">
+                            <h3>Promote Existing Player</h3>
+
+                            <p>
+                                Select a registered player and give them employee access.
+                            </p>
+                        </div>
+
+                        <!-- PROMOTION FEEDBACK -->
+
+                        <p
+                            id="promote-employee-message"
+                            class="admin-feedback"
+                            role="status"
+                            aria-live="polite"
+                            hidden
+                        ></p>
+
+                        <!-- PROMOTION FORM -->
+
+                        <form
+                            id="promote-employee-form"
+                            class="admin-form"
+                        >
+
+                            <!-- SEARCH PLAYERS -->
+
+                            <div class="admin-form-group">
+
+                                <label for="promote-user-search">
+                                    Search Players
+                                </label>
+
+                                <input
+                                    type="search"
+                                    id="promote-user-search"
+                                    placeholder="Search by username or email"
+                                    autocomplete="off"
+                                >
+
+                            </div>
+
+                            <!-- SELECT EXISTING PLAYER -->
+
+                            <div class="admin-form-group">
+
+                                <label for="promote-user-select">
+                                    Select Player
+                                </label>
+
+                                <select
+                                    id="promote-user-select"
+                                    required
+                                    disabled
+                                >
+                                    <option value="">
+                                        Loading players...
+                                    </option>
+                                </select>
+
+                            </div>
+
+                            <!-- PROMOTION INFORMATION -->
+
+                            <p class="admin-form-note">
+                                The selected player will receive the Employee role.
+                                Their existing account, email, and password will remain unchanged.
+                            </p>
+
+                            <!-- PROMOTION BUTTON -->
+
+                            <button
+                                id="promote-employee-button"
+                                class="admin-button-primary"
+                                type="submit"
+                                disabled
+                            >
+                                Make Employee
+                            </button>
+
+                        </form>
+
+                    </article>
+
+                    <!-- =========================
+                         PROMOTE PLAYER END
+                    ========================= -->
+
+                    <!-- =========================
+                         EMPLOYEE LIST START
+                    ========================= -->
+
+                    <article class="admin-panel admin-employee-panel">
+
+                        <div class="admin-panel-heading">
+                            <h3>Employee Accounts</h3>
+
+                            <p>
+                                View, search, suspend, or reactivate staff members.
+                            </p>
+                        </div>
+
+                        <!-- =========================
+                             EMPLOYEE SEARCH AND FILTERS
+                        ========================= -->
+
+                        <div class="admin-toolbar">
+
+                            <!-- SEARCH EMPLOYEES -->
+
+                            <label
+                                class="admin-search-field"
+                                for="employee-search"
+                            >
+                                <span>Search employees</span>
+
+                                <input
+                                    type="search"
+                                    id="employee-search"
+                                    placeholder="Search username or email"
+                                >
+                            </label>
+
+                            <!-- FILTER EMPLOYEES -->
+
+                            <label
+                                class="admin-filter-field"
+                                for="employee-status-filter"
+                            >
+                                <span>Account status</span>
+
+                                <select id="employee-status-filter">
+                                    <option value="all">
+                                        All Employees
+                                    </option>
+
+                                    <option value="active">
+                                        Active
+                                    </option>
+
+                                    <option value="suspended">
+                                        Suspended
+                                    </option>
+                                </select>
+                            </label>
+
+                            <!-- REFRESH EMPLOYEES -->
+
+                            <button
+                                id="refresh-employees"
+                                class="admin-button-secondary"
+                                type="button"
+                            >
+                                Refresh
+                            </button>
+
+                        </div>
+
+                        <!-- EMPLOYEE MANAGEMENT FEEDBACK -->
+
+                        <p
+                            id="employees-message"
+                            class="admin-feedback"
+                            role="status"
+                            aria-live="polite"
+                            hidden
+                        ></p>
+
+                        <!-- =========================
+                             EMPLOYEE TABLE
+                        ========================= -->
+
+                        <div class="admin-table-container">
+
+                            <table class="admin-table">
+
+                                <thead>
+                                    <tr>
+                                        <th scope="col">
+                                            Username
+                                        </th>
+
+                                        <th scope="col">
+                                            Email
+                                        </th>
+
+                                        <th scope="col">
+                                            Status
+                                        </th>
+
+                                        <th scope="col">
+                                            Created
+                                        </th>
+
+                                        <th scope="col">
+                                            Actions
+                                        </th>
+                                    </tr>
+                                </thead>
+
+                                <!-- JavaScript inserts employee rows here. -->
+
+                                <tbody id="employees-table-body">
+                                    <tr>
+                                        <td colspan="5">
+                                            Loading employees...
+                                        </td>
+                                    </tr>
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                        <!-- EMPLOYEE COUNT -->
+
+                        <p
+                            id="employees-count"
+                            class="admin-table-footer"
+                        >
+                            No employee data loaded.
+                        </p>
+
+                    </article>
+
+                    <!-- =========================
+                         EMPLOYEE LIST END
+                    ========================= -->
+
+                </div>
+
+            </section>
+
+            <!-- =========================
+                 EMPLOYEE MANAGEMENT END
+            ========================= -->
+
+            <!-- =========================
+                 ACTIVITY LOGS SECTION START
+            ========================= -->
+
+            <section
+                id="admin-activity"
+                class="admin-section"
+            >
+
+                <div class="admin-section-heading">
+
+                    <div>
+                        <p class="section-label">
+                            ACTIVITY MONITORING
+                        </p>
+
+                        <h2>Staff Activity Logs</h2>
+
+                        <p>
+                            Review recent actions performed by employees and administrators.
+                        </p>
+                    </div>
+
+                    <!-- REFRESH ACTIVITY -->
+
+                    <button
+                        id="refresh-activity"
+                        class="admin-button-secondary"
+                        type="button"
+                    >
+                        Refresh Activity
+                    </button>
+
+                </div>
+
+                <div class="admin-panel">
+
+                    <!-- ACTIVITY FEEDBACK -->
+
+                    <p
+                        id="activity-message"
+                        class="admin-feedback"
+                        role="status"
+                        aria-live="polite"
+                        hidden
+                    ></p>
+
+                    <!-- =========================
+                         ACTIVITY LOG TABLE
+                    ========================= -->
+
+                    <div class="admin-table-container">
+
+                        <table class="admin-table">
+
+                            <thead>
+                                <tr>
+                                    <th scope="col">
+                                        Date &amp; Time
+                                    </th>
+
+                                    <th scope="col">
+                                        Staff Member
+                                    </th>
+
+                                    <th scope="col">
+                                        Action
+                                    </th>
+
+                                    <th scope="col">
+                                        Target
+                                    </th>
+                                </tr>
+                            </thead>
+
+                            <!-- MongoDB activity records appear here. -->
+
+                            <tbody id="activity-table-body">
+                                <tr>
+                                    <td colspan="4">
+                                        Loading activity logs...
+                                    </td>
+                                </tr>
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                    <!-- ACTIVITY COUNT -->
+
+                    <p
+                        id="activity-count"
+                        class="admin-table-footer"
+                    >
+                        Showing up to 50 recent activities.
+                    </p>
+
+                </div>
+
+            </section>
+
+            <!-- =========================
+                 ACTIVITY LOGS SECTION END
+            ========================= -->
+
+        </div>
+
+    </main>
+
+    <!-- =========================
+         EMPLOYEE ACTION DIALOG START
+    ========================= -->
+
+    <!-- Used when suspending or reactivating an employee. -->
+
+    <dialog
+        id="employee-action-dialog"
+        class="admin-dialog"
+        aria-labelledby="employee-action-title"
+    >
+
+        <form id="employee-action-form">
+
+            <!-- DIALOG TITLE -->
+
+            <h2 id="employee-action-title">
+                Confirm Action
+            </h2>
+
+            <!-- DIALOG DESCRIPTION -->
+
+            <p id="employee-action-description">
+                Are you sure you want to update this employee?
+            </p>
+
+            <!-- DIALOG ERROR -->
+
+            <p
+                id="employee-action-error"
+                class="admin-feedback"
+                role="alert"
+                hidden
+            ></p>
+
+            <!-- DIALOG BUTTONS -->
+
+            <div class="admin-dialog-actions">
+
+                <button
+                    id="employee-action-cancel"
+                    class="admin-button-secondary"
+                    type="button"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    id="employee-action-confirm"
+                    class="admin-button-primary"
+                    type="submit"
+                >
+                    Confirm
+                </button>
+
+            </div>
+
+        </form>
+
+    </dialog>
+
+    <!-- =========================
+         EMPLOYEE ACTION DIALOG END
+    ========================= -->
+
+</body>
+
+</html>

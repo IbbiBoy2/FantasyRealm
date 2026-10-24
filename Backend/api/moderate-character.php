@@ -9,10 +9,6 @@ header('Cache-Control: no-store');
 
 require_once __DIR__ . '/../config/database.php';
 
-// =========================
-// REQUEST VALIDATION
-// =========================
-
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Allow: POST');
     http_response_code(405);
@@ -21,13 +17,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         'success' => false,
         'message' => 'Method not allowed.'
     ]);
-
     exit;
 }
-
-// =========================
-// AUTHENTICATION
-// =========================
 
 if (!isset($_SESSION['user_id'])) {
     http_response_code(401);
@@ -36,22 +27,17 @@ if (!isset($_SESSION['user_id'])) {
         'success' => false,
         'message' => 'You must be logged in.'
     ]);
-
     exit;
 }
 
 try {
-    // =========================
-    // EMPLOYEE AUTHORIZATION
-    // =========================
-
+    // Check the employee's current role and account status.
     $stmt = $pdo->prepare(
         'SELECT
             users.suspended,
             roles.name AS role_name
          FROM users
-         INNER JOIN roles
-            ON users.role_id = roles.id
+         INNER JOIN roles ON users.role_id = roles.id
          WHERE users.id = :user_id'
     );
 
@@ -59,16 +45,12 @@ try {
         'user_id' => $_SESSION['user_id']
     ]);
 
-    $user = $stmt->fetch();
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (
         !$user ||
         (bool) $user['suspended'] ||
-        !in_array(
-            $user['role_name'],
-            ['EMPLOYEE', 'ADMIN'],
-            true
-        )
+        !in_array($user['role_name'], ['EMPLOYEE', 'ADMIN'], true)
     ) {
         http_response_code(403);
 
@@ -76,13 +58,8 @@ try {
             'success' => false,
             'message' => 'Employee access required.'
         ]);
-
         exit;
     }
-
-    // =========================
-    // JSON INPUT
-    // =========================
 
     try {
         $data = json_decode(
@@ -98,7 +75,6 @@ try {
             'success' => false,
             'message' => 'Invalid JSON data.'
         ]);
-
         exit;
     }
 
@@ -109,13 +85,8 @@ try {
             'success' => false,
             'message' => 'Invalid JSON data.'
         ]);
-
         exit;
     }
-
-    // =========================
-    // DECISION VALIDATION
-    // =========================
 
     $characterId = $data['character_id'] ?? null;
     $status = $data['status'] ?? null;
@@ -135,11 +106,8 @@ try {
             'success' => false,
             'message' => 'Provide a valid character ID and moderation status.'
         ]);
-
         exit;
     }
-
-    // Rejection requires a reason even if frontend validation is bypassed.
 
     if (
         $status === 'REJECTED' &&
@@ -151,17 +119,10 @@ try {
             'success' => false,
             'message' => 'Rejection requires a reason of 1 to 1000 characters.'
         ]);
-
         exit;
     }
 
-    // =========================
-    // SAVE MODERATION DECISION
-    // =========================
-
-    // Only pending, undeleted characters can be reviewed.
-    // This also prevents a second employee from overwriting a completed decision.
-
+    // Only pending, undeleted characters can be moderated.
     $stmt = $pdo->prepare(
         'UPDATE characters
          SET status = :status,
@@ -188,9 +149,34 @@ try {
             'success' => false,
             'message' => 'Pending character not found. It may already have been reviewed or deleted.'
         ]);
-
         exit;
     }
+
+    // Record successful moderation in MongoDB.
+    $activityLogged = false;
+
+    try {
+        require_once __DIR__ . '/../config/activity-logger.php';
+
+        $action = $status === 'APPROVED'
+            ? 'character.approved'
+            : 'character.rejected';
+
+        recordStaffActivity(
+            (int) $_SESSION['user_id'],
+            $action,
+            'character',
+            $characterId
+        );
+
+        $activityLogged = true;
+    } catch (Throwable $logError) {
+        error_log(
+            'FantasyRealm: Character moderation activity logging failed.'
+        );
+    }
+
+    http_response_code(200);
 
     echo json_encode([
         'success' => true,
@@ -198,12 +184,9 @@ try {
             ? 'Character name approved.'
             : 'Character name rejected.',
         'character_id' => $characterId,
-        'status' => $status
+        'status' => $status,
+        'activity_logged' => $activityLogged
     ]);
-
-// =========================
-// ERROR HANDLING
-// =========================
 
 } catch (Throwable $e) {
     http_response_code(500);
