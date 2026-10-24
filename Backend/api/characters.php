@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-session_start();
+// SECURE SESSION
+require_once __DIR__ . '/../config/security.php';
+startSecureSession();
 
 header('Content-Type: application/json; charset=utf-8');
 
@@ -33,8 +35,8 @@ if ($method === 'GET') {
 
              FROM characters
 
-             INNER JOIN users
-                ON characters.user_id = users.id
+INNER JOIN users
+    ON characters.user_id = users.id
 
              WHERE characters.status = :status
                AND characters.shared = 1
@@ -89,6 +91,13 @@ if ($method === 'POST') {
 
     requireActiveUser($pdo);
 
+        // =========================
+    // CSRF PROTECTION
+    // =========================
+
+    // Reject character creation without a valid security token.
+    requireCsrfToken();
+
     if (!isset($_SESSION['user_id'])) {
 
         http_response_code(401);
@@ -121,8 +130,15 @@ if ($method === 'POST') {
     }
 
 
-    $name = trim($data['name'] ?? '');
+// =========================
+// CHARACTER NAME VALIDATION
+// =========================
 
+// Accept only strings to prevent malformed input from causing PHP errors.
+$name = is_string($data['name'] ?? null)
+    ? trim($data['name'])
+    : '';
+    
     $gender = $data['gender'] ?? '';
 
     $hairStyle = $data['hair_style'] ?? '';
@@ -465,10 +481,7 @@ if ($accessoryIds !== []) {
         'message' => $e->getMessage()
     ]);
 
-} catch (PDOException $e) {
-
-
-    } catch (Throwable $e) {
+} catch (Throwable $e) {
 
         if ($pdo->inTransaction()) {
             $pdo->rollBack();

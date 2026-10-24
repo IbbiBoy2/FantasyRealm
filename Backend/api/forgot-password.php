@@ -4,6 +4,19 @@ declare(strict_types=1);
 
 header('Content-Type: application/json; charset=utf-8');
 
+// SECURITY: Temporarily disable password reset until
+// reset links can be delivered privately by email.
+header('Cache-Control: no-store');
+
+http_response_code(503);
+
+echo json_encode([
+    'success' => false,
+    'message' => 'Password reset is temporarily unavailable.'
+]);
+
+exit;
+
 require_once __DIR__ . '/../config/database.php';
 
 // =========================

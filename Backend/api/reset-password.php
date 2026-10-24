@@ -42,9 +42,22 @@ if (!is_array($input)) {
 }
 
 
-$token = trim($input['token'] ?? '');
-$password = $input['password'] ?? '';
-$passwordConfirm = $input['password_confirm'] ?? '';
+// =========================
+// INPUT TYPE VALIDATION
+// =========================
+
+// Reject malformed input before processing reset requests.
+$token = is_string($input['token'] ?? null)
+    ? trim($input['token'])
+    : '';
+
+$password = is_string($input['password'] ?? null)
+    ? $input['password']
+    : '';
+
+$passwordConfirm = is_string($input['password_confirm'] ?? null)
+    ? $input['password_confirm']
+    : '';
 
 
 if (
@@ -64,11 +77,50 @@ if (
 
 
 if ($password !== $passwordConfirm) {
+
+// =========================
+// PASSWORD SECURITY
+// =========================
+
+// Enforce the same password requirements as registration.
+if (
+    mb_strlen($password, 'UTF-8') < 12 ||
+    strlen($password) > 72
+) {
+    http_response_code(422);
+
+    echo json_encode([
+        'success' => false,
+        'message' => 'Password must be at least 12 characters and no more than 72 bytes.'
+    ]);
+
+    exit;
+}
+
     http_response_code(400);
 
     echo json_encode([
         'success' => false,
         'message' => 'Passwords do not match.'
+    ]);
+
+    exit;
+}
+
+// =========================
+// PASSWORD SECURITY
+// =========================
+
+// Enforce password requirements before checking the reset token.
+if (
+    mb_strlen($password, 'UTF-8') < 12 ||
+    strlen($password) > 72
+) {
+    http_response_code(422);
+
+    echo json_encode([
+        'success' => false,
+        'message' => 'Password must be at least 12 characters and no more than 72 bytes.'
     ]);
 
     exit;

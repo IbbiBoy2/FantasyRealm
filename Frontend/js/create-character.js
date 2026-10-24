@@ -92,6 +92,26 @@ async function loadSession() {
     employeeDashboardLink.hidden = true;
 
     try {
+
+// SECURITY: Retrieve the current CSRF token.
+const sessionResponse = await fetch(
+    '/FantasyRealm/Backend/api/session.php',
+    {
+        credentials: 'same-origin',
+        cache: 'no-store'
+    }
+);
+
+const sessionData = await sessionResponse.json();
+
+if (
+    !sessionResponse.ok ||
+    !sessionData.authenticated ||
+    typeof sessionData.csrf_token !== 'string'
+) {
+    throw new Error('Unable to verify session security.');
+}
+
         const response = await fetch(
             '/FantasyRealm/Backend/api/session.php'
         );
@@ -367,15 +387,40 @@ accessory_ids: Object.values(equipmentSelects)
 
 
         try {
+
+// =========================
+// CSRF PROTECTION
+// =========================
+
+// Retrieve the authenticated user's CSRF token.
+const sessionResponse = await fetch(
+    '/FantasyRealm/Backend/api/session.php',
+    {
+        credentials: 'same-origin',
+        cache: 'no-store'
+    }
+);
+
+const sessionData = await sessionResponse.json();
+
+if (
+    !sessionResponse.ok ||
+    !sessionData.authenticated ||
+    typeof sessionData.csrf_token !== 'string'
+) {
+    throw new Error('Unable to verify session security.');
+}
+
             const response = await fetch(
                 '/FantasyRealm/Backend/api/characters.php',
                 {
                     method: 'POST',
 
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
+headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'X-CSRF-Token': sessionData.csrf_token
+},
 
                     body: JSON.stringify(
                         characterData
@@ -441,9 +486,12 @@ logoutLink.addEventListener('click', async () => {
             '/FantasyRealm/Backend/api/logout.php',
             {
                 method: 'POST',
-                headers: {
-                    'Accept': 'application/json'
-                }
+headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'X-CSRF-Token': sessionData.csrf_token
+},
+
             }
         );
 
@@ -505,9 +553,10 @@ async function loadEquipment() {
         const response = await fetch(
             '/FantasyRealm/Backend/api/accessories.php',
             {
-                headers: {
-                    'Accept': 'application/json'
-                },
+headers: {
+    'Accept': 'application/json'
+},
+
                 cache: 'no-store'
             }
         );

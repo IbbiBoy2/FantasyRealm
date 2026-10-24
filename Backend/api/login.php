@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-session_start();
+// SECURE SESSION
+require_once __DIR__ . '/../config/security.php';
+startSecureSession();
 
 header('Content-Type: application/json; charset=utf-8');
 

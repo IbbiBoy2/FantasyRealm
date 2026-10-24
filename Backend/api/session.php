@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-session_start();
+// SECURE SESSION
+require_once __DIR__ . '/../config/security.php';
+startSecureSession();
 
 header('Content-Type: application/json; charset=utf-8');
 
@@ -57,18 +59,18 @@ try {
         exit;
     }
 
-    // Preserves existing response fields and adds the role name.
-
-    echo json_encode([
-        'authenticated' => true,
-        'user' => [
-            'id' => (int) $user['id'],
-            'role_id' => (int) $user['role_id'],
-            'username' => $user['username'],
-            'email' => $user['email'],
-            'role' => $user['role']
-        ]
-    ]);
+// AUTHENTICATED SESSION AND CSRF TOKEN
+echo json_encode([
+    'authenticated' => true,
+    'user' => [
+        'id' => (int) $user['id'],
+        'role_id' => (int) $user['role_id'],
+        'username' => $user['username'],
+        'email' => $user['email'],
+        'role' => $user['role']
+    ],
+    'csrf_token' => getCsrfToken()
+]);
 
 // =========================
 // ERROR HANDLING

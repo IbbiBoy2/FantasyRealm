@@ -488,14 +488,35 @@ function getStatusClass(status) {
 
 async function setCharacterVisibility(character, shared) {
     try {
+                // SECURITY: Retrieve the current CSRF token.
+        const sessionResponse = await fetch(
+            '/FantasyRealm/Backend/api/session.php',
+            {
+                credentials: 'same-origin',
+                cache: 'no-store'
+            }
+        );
+
+        const sessionData = await sessionResponse.json();
+
+        if (
+            !sessionResponse.ok ||
+            !sessionData.authenticated ||
+            typeof sessionData.csrf_token !== 'string'
+        ) {
+            alert('Your session has expired. Please log in again.');
+            return;
+        }
+
         const response = await fetch(
             '/FantasyRealm/Backend/api/share-character.php',
             {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
+headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'X-CSRF-Token': sessionData.csrf_token
+},
                 body: JSON.stringify({
                     character_id: character.id,
                     shared: shared
@@ -621,14 +642,34 @@ duplicateForm.addEventListener('submit', async (event) => {
     duplicateError.hidden = true;
 
     try {
+// SECURITY: Retrieve the current CSRF token.
+const sessionResponse = await fetch(
+    '/FantasyRealm/Backend/api/session.php',
+    {
+        credentials: 'same-origin',
+        cache: 'no-store'
+    }
+);
+
+const sessionData = await sessionResponse.json();
+
+if (
+    !sessionResponse.ok ||
+    !sessionData.authenticated ||
+    typeof sessionData.csrf_token !== 'string'
+) {
+    throw new Error('Unable to verify session security.');
+}
+
         const response = await fetch(
             '/FantasyRealm/Backend/api/duplicate-character.php',
             {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
+headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'X-CSRF-Token': sessionData.csrf_token
+},
                 body: JSON.stringify({
                     character_id: sourceId,
                     name: name
@@ -774,12 +815,33 @@ deleteForm.addEventListener('submit', async (event) => {
     deleteError.hidden = true;
 
     try {
-        const response = await fetch(endpoint, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
+
+// SECURITY: Retrieve the current CSRF token.
+const sessionResponse = await fetch(
+    '/FantasyRealm/Backend/api/session.php',
+    {
+        credentials: 'same-origin',
+        cache: 'no-store'
+    }
+);
+
+const sessionData = await sessionResponse.json();
+
+if (
+    !sessionResponse.ok ||
+    !sessionData.authenticated ||
+    typeof sessionData.csrf_token !== 'string'
+) {
+    throw new Error('Unable to verify session security.');
+}
+// SECURITY: Send CSRF token with character deletion.
+const response = await fetch(endpoint, {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'X-CSRF-Token': sessionData.csrf_token
+    },
             body: JSON.stringify({
                 character_id: target.id
             })
@@ -993,6 +1055,25 @@ function showDeletedMessage(message) {
 
 async function restoreCharacter(character) {
     try {
+                // SECURITY: Retrieve the current CSRF token.
+        const sessionResponse = await fetch(
+            '/FantasyRealm/Backend/api/session.php',
+            {
+                credentials: 'same-origin',
+                cache: 'no-store'
+            }
+        );
+
+        const sessionData = await sessionResponse.json();
+
+        if (
+            !sessionResponse.ok ||
+            !sessionData.authenticated ||
+            typeof sessionData.csrf_token !== 'string'
+        ) {
+            throw new Error('Unable to verify session security.');
+        }
+
         const response = await fetch(
             '/FantasyRealm/Backend/api/restore-character.php',
             {
@@ -1110,13 +1191,38 @@ document.addEventListener('keydown', (event) => {
 
 logoutLink.addEventListener('click', async () => {
     try {
+      
+// =========================
+// CSRF PROTECTION
+// =========================
+
+// Retrieve the current session security token.
+const sessionResponse = await fetch(
+    '/FantasyRealm/Backend/api/session.php',
+    {
+        credentials: 'same-origin',
+        cache: 'no-store'
+    }
+);
+
+const sessionData = await sessionResponse.json();
+
+if (
+    !sessionResponse.ok ||
+    !sessionData.authenticated ||
+    typeof sessionData.csrf_token !== 'string'
+) {
+    throw new Error('Unable to verify session security.');
+}
+
         const response = await fetch(
             '/FantasyRealm/Backend/api/logout.php',
             {
                 method: 'POST',
-                headers: {
-                    'Accept': 'application/json'
-                }
+headers: {
+    'Accept': 'application/json',
+    'X-CSRF-Token': sessionData.csrf_token
+}
             }
         );
 
