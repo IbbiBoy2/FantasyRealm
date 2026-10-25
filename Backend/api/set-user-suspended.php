@@ -2,7 +2,12 @@
 
 declare(strict_types=1);
 
-session_start();
+// =========================
+// SECURE SESSION
+// =========================
+
+require_once __DIR__ . '/../config/security.php';
+startSecureSession();
 
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store');
@@ -25,6 +30,12 @@ if (!isset($_SESSION['user_id'])) {
     ]);
     exit;
 }
+
+// =========================
+// CSRF PROTECTION
+// =========================
+
+requireCsrfToken();
 
 try {
     require_once __DIR__ . '/../config/database.php';
@@ -172,58 +183,71 @@ try {
 
     $pdo->commit();
 
-    // Record the completed change in MongoDB.
-    $activityLogged = false;
+    
+// =========================
+// ACTIVITY LOGGING
+// =========================
 
+// Missing activity logging must not break
+// account suspension or reactivation.
+
+$activityLogged = false;
+
+$loggerFile = __DIR__ . '/../config/activity-logger.php';
+
+if (is_file($loggerFile) && is_readable($loggerFile)) {
     try {
-        require_once __DIR__ . '/../config/activity-logger.php';
+        require_once $loggerFile;
 
-        $action = $suspended
-            ? 'player.suspended'
-            : 'player.reactivated';
+        if (function_exists('recordStaffActivity')) {
+            $action = $suspended
+                ? 'player.suspended'
+                : 'player.reactivated';
 
-        recordStaffActivity(
-            (int) $_SESSION['user_id'],
-            $action,
-            'player',
-            $userId
-        );
+            recordStaffActivity(
+                (int) $_SESSION['user_id'],
+                $action,
+                'player',
+                $userId
+            );
 
-        $activityLogged = true;
+            $activityLogged = true;
+        }
     } catch (Throwable $logError) {
         error_log(
             'FantasyRealm: Player suspension activity logging failed.'
         );
     }
+} else {
+    error_log(
+        'FantasyRealm: Player activity logger unavailable.'
+    );
+}
 
     http_response_code(200);
     echo json_encode([
         'success' => true,
         'message' => $suspended
-            ? 'User account suspended.'
-            : 'User account reactivated.',
+            ? 'Player account suspended successfully.'
+            : 'Player account reactivated successfully.',
         'user_id' => $userId,
         'suspended' => $suspended,
         'changed' => true,
         'activity_logged' => $activityLogged
     ]);
-
 } catch (Throwable $e) {
-    if (isset($pdo) && $pdo instanceof PDO) {
-        try {
-            if ($pdo->inTransaction()) {
-                $pdo->rollBack();
-            }
-        } catch (Throwable $rollbackError) {
-            error_log(
-                'FantasyRealm: Player suspension rollback failed.'
-            );
-        }
+    if (isset($pdo) && $pdo->inTransaction()) {
+        $pdo->rollBack();
     }
+
+    error_log(
+        'FantasyRealm: Failed to set player suspension state: '
+        . $e->getMessage()
+    );
 
     http_response_code(500);
     echo json_encode([
         'success' => false,
-        'message' => 'Unable to update account suspension.'
+        'message' => 'Failed to set player suspension state.'
     ]);
 }

@@ -482,6 +482,29 @@ headers: {
 
 logoutLink.addEventListener('click', async () => {
     try {
+
+// =========================
+// CSRF PROTECTION
+// =========================
+
+const sessionResponse = await fetch(
+    '/FantasyRealm/Backend/api/session.php',
+    {
+        credentials: 'same-origin',
+        cache: 'no-store'
+    }
+);
+
+const sessionData = await sessionResponse.json();
+
+if (
+    !sessionResponse.ok ||
+    !sessionData.authenticated ||
+    typeof sessionData.csrf_token !== 'string'
+) {
+    throw new Error('Unable to verify session security.');
+}
+
         const response = await fetch(
             '/FantasyRealm/Backend/api/logout.php',
             {

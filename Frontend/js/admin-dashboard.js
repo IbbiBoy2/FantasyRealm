@@ -852,9 +852,31 @@ getElement('admin-logout').addEventListener(
         button.disabled = true;
 
         try {
-            await apiRequest('logout.php', {
-                method: 'POST'
-            });
+            const sessionResponse = await fetch(
+    '/FantasyRealm/Backend/api/session.php',
+    {
+        credentials: 'same-origin',
+        cache: 'no-store'
+    }
+);
+
+if (!sessionResponse.ok) {
+    throw new Error('Unable to retrieve session.');
+}
+
+const sessionData = await sessionResponse.json();
+
+if (
+    !sessionData.authenticated ||
+    typeof sessionData.csrf_token !== 'string'
+) {
+    throw new Error('Unable to verify session security.');
+}
+
+await apiRequest('logout.php', {
+    method: 'POST',
+    csrfToken: sessionData.csrf_token
+});
 
             window.location.href = 'login.html';
 

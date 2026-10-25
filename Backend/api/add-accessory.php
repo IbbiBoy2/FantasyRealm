@@ -2,7 +2,12 @@
 
 declare(strict_types=1);
 
-session_start();
+// =========================
+// SECURE SESSION
+// =========================
+
+require_once __DIR__ . '/../config/security.php';
+startSecureSession();
 
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store');
@@ -27,6 +32,12 @@ if (!isset($_SESSION['user_id'])) {
     ]);
     exit;
 }
+
+// =========================
+// CSRF PROTECTION
+// =========================
+
+requireCsrfToken();
 
 try {
     // Verify employee or administrator permissions.
@@ -140,8 +151,14 @@ try {
     $activityLogged = false;
 
     try {
-        require_once __DIR__ . '/../config/activity-logger.php';
+// Check that the optional activity logger exists.
+$loggerFile = __DIR__ . '/../config/activity-logger.php';
 
+if (!is_file($loggerFile)) {
+    throw new RuntimeException('Activity logger unavailable.');
+}
+
+require_once $loggerFile;
         recordStaffActivity(
             (int) $_SESSION['user_id'],
             'accessory.created',

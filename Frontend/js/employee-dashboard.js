@@ -1,4 +1,70 @@
 // =========================
+// SECURE POST REQUESTS
+// =========================
+
+
+ // =========================
+ // SECURE API REQUESTS
+ // =========================
+
+async function securePost(url, options = {}) {
+    // Keep GET requests as GET.
+    // Only POST requests require a CSRF token.
+
+const method = (
+    options.method || (options.body !== undefined ? 'POST' : 'GET')
+).toUpperCase();
+
+    if (method !== 'POST') {
+        return fetch(url, {
+            ...options,
+            method: method,
+            credentials: 'same-origin'
+        });
+    }
+
+    // =========================
+    // GET CSRF TOKEN FOR POST
+    // =========================
+
+    const sessionResponse = await fetch(
+        '/FantasyRealm/Backend/api/session.php',
+        {
+            method: 'GET',
+            credentials: 'same-origin',
+            cache: 'no-store'
+        }
+    );
+
+    if (!sessionResponse.ok) {
+        throw new Error('Unable to verify session.');
+    }
+
+    const sessionData = await sessionResponse.json();
+
+    if (
+        !sessionData.authenticated ||
+        typeof sessionData.csrf_token !== 'string'
+    ) {
+        throw new Error('Unable to verify session security.');
+    }
+
+    // =========================
+    // SEND PROTECTED POST
+    // =========================
+
+    return fetch(url, {
+        ...options,
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: {
+            ...(options.headers || {}),
+            'X-CSRF-Token': sessionData.csrf_token
+        }
+    });
+}
+
+// =========================
 // DOM REFERENCES
 // =========================
 
@@ -180,8 +246,8 @@ async function loadEmployeeDashboard() {
     employeeMessage.hidden = false;
 
     try {
-        const response = await fetch(
-            '/FantasyRealm/Backend/api/employee-dashboard.php',
+const response = await fetch(
+                '/FantasyRealm/Backend/api/employee-dashboard.php',
             {
                 headers: {
                     'Accept': 'application/json'
@@ -237,22 +303,56 @@ async function loadEmployeeDashboard() {
     }
 }
 
+
+
 // =========================
-// LOGOUT
+// SECURE EMPLOYEE LOGOUT
 // =========================
 
-// Redirects only after the API confirms the PHP session has ended.
+logoutButton.addEventListener('click', async (event) => {
+    event.preventDefault();
 
-logoutButton.addEventListener('click', async () => {
     logoutButton.disabled = true;
 
     try {
+        // Get the current session and CSRF token.
+
+        const sessionResponse = await fetch(
+            '/FantasyRealm/Backend/api/session.php',
+            {
+                method: 'GET',
+                credentials: 'same-origin',
+                cache: 'no-store'
+            }
+        );
+
+        if (!sessionResponse.ok) {
+            throw new Error('Unable to retrieve session.');
+        }
+
+        const sessionData = await sessionResponse.json();
+
+        // Already logged out.
+        if (!sessionData.authenticated) {
+            window.location.href = 'login.html';
+            return;
+        }
+
+        if (typeof sessionData.csrf_token !== 'string') {
+            throw new Error('Missing CSRF token.');
+        }
+
+        // Send the logout request directly.
+        // Do not use securePost() here.
+
         const response = await fetch(
             '/FantasyRealm/Backend/api/logout.php',
             {
                 method: 'POST',
+                credentials: 'same-origin',
                 headers: {
-                    'Accept': 'application/json'
+                    'Accept': 'application/json',
+                    'X-CSRF-Token': sessionData.csrf_token
                 }
             }
         );
@@ -260,20 +360,20 @@ logoutButton.addEventListener('click', async () => {
         const data = await response.json();
 
         if (!response.ok || !data.success) {
-            employeeMessage.textContent =
-                data.message || 'Unable to log out. Please try again.';
-
-            employeeMessage.hidden = false;
-            return;
+            throw new Error(
+                data.message || 'Logout failed.'
+            );
         }
 
-        window.location.href = 'index.html';
+        // Successful logout.
+
+        window.location.href = 'login.html';
 
     } catch (error) {
-        console.error('Unable to logout:', error);
+        console.error('Employee logout failed:', error);
 
         employeeMessage.textContent =
-            'Unable to log out. Please try again.';
+            error.message || 'Unable to log out.';
 
         employeeMessage.hidden = false;
 
@@ -281,6 +381,7 @@ logoutButton.addEventListener('click', async () => {
         logoutButton.disabled = false;
     }
 });
+
 
 // =========================
 // LOAD PENDING CHARACTERS
@@ -293,8 +394,8 @@ async function loadPendingCharacters() {
     pendingCharactersMessage.hidden = false;
 
     try {
-        const response = await fetch(
-            '/FantasyRealm/Backend/api/pending-characters.php',
+const response = await fetch(
+                '/FantasyRealm/Backend/api/pending-characters.php',
             {
                 headers: {
                     'Accept': 'application/json'
@@ -514,7 +615,7 @@ moderationForm.addEventListener('submit', async (event) => {
     moderationError.hidden = true;
 
     try {
-        const response = await fetch(
+        const response = await securePost(
             '/FantasyRealm/Backend/api/moderate-character.php',
             {
                 method: 'POST',
@@ -833,7 +934,7 @@ reviewModerationForm.addEventListener('submit', async (event) => {
     reviewModerationError.hidden = true;
 
     try {
-        const response = await fetch(
+        const response = await securePost(
             '/FantasyRealm/Backend/api/moderate-review.php',
             {
                 method: 'POST',
@@ -1054,7 +1155,7 @@ async function setAccessoryAvailability(accessory, active) {
     accessoryFeedback.hidden = true;
 
     try {
-        const response = await fetch(
+        const response = await securePost(
             '/FantasyRealm/Backend/api/set-accessory-active.php',
             {
                 method: 'POST',
@@ -1183,7 +1284,7 @@ accessoryDeleteForm.addEventListener('submit', async (event) => {
     accessoryDeleteError.hidden = true;
 
     try {
-        const response = await fetch(
+        const response = await securePost(
             '/FantasyRealm/Backend/api/delete-accessory.php',
             {
                 method: 'POST',
@@ -1309,7 +1410,7 @@ accessoryForm.addEventListener('submit', async (event) => {
     accessoryFeedback.hidden = true;
 
     try {
-        const response = await fetch(
+        const response = await securePost(
             '/FantasyRealm/Backend/api/add-accessory.php',
             {
                 method: 'POST',
@@ -1413,7 +1514,7 @@ async function loadManagedUsers() {
     usersMessage.hidden = false;
 
     try {
-        const response = await fetch(
+        const response = await securePost(
             '/FantasyRealm/Backend/api/employee-users.php',
             {
                 headers: {
@@ -1667,8 +1768,7 @@ userActionForm.addEventListener('submit', async (event) => {
     userActionError.hidden = true;
 
     try {
-        const response = await fetch(endpoint, {
-            method: 'POST',
+        const response = await securePost(endpoint, {
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'

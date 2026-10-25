@@ -1079,10 +1079,12 @@ async function restoreCharacter(character) {
             {
                 method: 'POST',
 
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
+// Send the CSRF token to authorize character restoration.
+headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'X-CSRF-Token': sessionData.csrf_token
+},
 
                 body: JSON.stringify({
                     character_id: character.id
@@ -1215,7 +1217,7 @@ if (
     throw new Error('Unable to verify session security.');
 }
 
-        const response = await fetch(
+        const response = await secureFetch(
             '/FantasyRealm/Backend/api/logout.php',
             {
                 method: 'POST',

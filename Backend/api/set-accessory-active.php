@@ -2,7 +2,12 @@
 
 declare(strict_types=1);
 
-session_start();
+// =========================
+// SECURE SESSION
+// =========================
+
+require_once __DIR__ . '/../config/security.php';
+startSecureSession();
 
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store');
@@ -27,6 +32,12 @@ if (!isset($_SESSION['user_id'])) {
     ]);
     exit;
 }
+
+// =========================
+// CSRF PROTECTION
+// =========================
+
+requireCsrfToken();
 
 try {
     // Verify employee or administrator permissions.
@@ -159,54 +170,62 @@ try {
 
     $pdo->commit();
 
-    // Record the successful status change in MongoDB.
-    $activityLogged = false;
+    
+// =========================
+// ACTIVITY LOGGING
+// =========================
 
+// Logging is optional and must not break
+// successful accessory updates.
+
+$activityLogged = false;
+
+$loggerFile = __DIR__ . '/../config/activity-logger.php';
+
+if (is_file($loggerFile) && is_readable($loggerFile)) {
     try {
-        require_once __DIR__ . '/../config/activity-logger.php';
+        require_once $loggerFile;
 
-        recordStaffActivity(
-            (int) $_SESSION['user_id'],
-            'accessory.updated',
-            'accessory',
-            $accessoryId
-        );
+        if (function_exists('recordStaffActivity')) {
+            recordStaffActivity(
+                (int) $_SESSION['user_id'],
+                'accessory.updated',
+                'accessory',
+                $accessoryId
+            );
 
-        $activityLogged = true;
+            $activityLogged = true;
+        }
     } catch (Throwable $logError) {
         error_log(
             'FantasyRealm: Accessory status activity logging failed.'
         );
     }
+} else {
+    error_log(
+        'FantasyRealm: Accessory activity logger unavailable.'
+    );
+}
 
     http_response_code(200);
     echo json_encode([
         'success' => true,
         'message' => $active
-            ? 'Accessory enabled.'
-            : 'Accessory disabled.',
+            ? 'Accessory enabled successfully.'
+            : 'Accessory disabled successfully.',
         'accessory_id' => $accessoryId,
         'active' => $active,
         'changed' => true,
         'activity_logged' => $activityLogged
     ]);
-
 } catch (Throwable $e) {
-    if (isset($pdo) && $pdo instanceof PDO) {
-        try {
-            if ($pdo->inTransaction()) {
-                $pdo->rollBack();
-            }
-        } catch (Throwable $rollbackError) {
-            error_log(
-                'FantasyRealm: Accessory update rollback failed.'
-            );
-        }
+    if ($pdo->inTransaction()) {
+        $pdo->rollBack();
     }
 
     http_response_code(500);
     echo json_encode([
         'success' => false,
-        'message' => 'Unable to update accessory availability.'
+        'message' => 'An unexpected error occurred.'
     ]);
 }

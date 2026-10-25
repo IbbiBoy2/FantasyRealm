@@ -24,6 +24,13 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
+// =========================
+// CSRF PROTECTION
+// =========================
+
+// Reject logout requests without a valid security token.
+requireCsrfToken();
+
 // Removes all session data for the authenticated user.
 
 // =========================

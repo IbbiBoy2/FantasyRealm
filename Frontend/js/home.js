@@ -131,13 +131,37 @@ adminDashboardLink.hidden = !(
 
 logoutButton.addEventListener('click', async () => {
     try {
+
+// =========================
+// CSRF PROTECTION
+// =========================
+
+const sessionResponse = await fetch(
+    '/FantasyRealm/Backend/api/session.php',
+    {
+        credentials: 'same-origin',
+        cache: 'no-store'
+    }
+);
+
+const sessionData = await sessionResponse.json();
+
+if (
+    !sessionResponse.ok ||
+    !sessionData.authenticated ||
+    typeof sessionData.csrf_token !== 'string'
+) {
+    throw new Error('Unable to verify session security.');
+}
+
         const response = await fetch(
             '/FantasyRealm/Backend/api/logout.php',
             {
                 method: 'POST',
-                headers: {
-                    'Accept': 'application/json'
-                }
+headers: {
+    'Accept': 'application/json',
+    'X-CSRF-Token': sessionData.csrf_token
+}
             }
         );
 

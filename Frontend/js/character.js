@@ -1,3 +1,4 @@
+
 // =========================
 // DOM REFERENCES
 // =========================
@@ -44,8 +45,6 @@ const employeeDashboardLink =
 // CHARACTER ID FROM URL
 // =========================
 
-// Reads ?id= from character.html?id=...
-
 const params = new URLSearchParams(window.location.search);
 const characterId = params.get('id');
 
@@ -53,30 +52,32 @@ const characterId = params.get('id');
 // SESSION / NAVBAR
 // =========================
 
-// Checks whether the visitor is logged in and updates the navbar.
+// Public pages must support both logged-in and logged-out visitors.
 
 async function loadSession() {
-
-        employeeDashboardLink.hidden = true;
+    employeeDashboardLink.hidden = true;
 
     try {
         const response = await fetch(
-            '/FantasyRealm/Backend/api/session.php'
+            '/FantasyRealm/Backend/api/session.php',
+            {
+                credentials: 'same-origin',
+                cache: 'no-store'
+            }
         );
-
-        const data = await response.json();
-
-        // Shows staff navigation only after a successful authenticated role check.
-
-employeeDashboardLink.hidden = !(
-    response.ok &&
-    data.authenticated &&
-    ['EMPLOYEE', 'ADMIN'].includes(data.user?.role)
-);
 
         if (!response.ok) {
             throw new Error('Unable to verify session.');
         }
+
+        const data = await response.json();
+
+        // Show staff navigation only for employees and admins.
+
+        employeeDashboardLink.hidden = !(
+            data.authenticated &&
+            ['EMPLOYEE', 'ADMIN'].includes(data.user?.role)
+        );
 
         if (data.authenticated) {
             loginLink.hidden = true;
@@ -101,7 +102,8 @@ employeeDashboardLink.hidden = !(
 
             reviewForm.reset();
             reviewFeedback.textContent = '';
-            reviewFeedback.hidden = true; 
+            reviewFeedback.hidden = true;
+
             setSettingsOpen(false);
         }
 
@@ -113,8 +115,6 @@ employeeDashboardLink.hidden = !(
 // =========================
 // LOAD CHARACTER FROM API
 // =========================
-
-// Requests one approved and shared character from the REST API.
 
 async function loadCharacter() {
     if (!characterId) {
@@ -142,7 +142,6 @@ async function loadCharacter() {
 
     } catch (error) {
         console.error('Unable to load character:', error);
-
         showMessage('Unable to load character.');
     }
 }
@@ -150,8 +149,6 @@ async function loadCharacter() {
 // =========================
 // DISPLAY CHARACTER DATA
 // =========================
-
-// Inserts the JSON returned by the API into the page using the DOM.
 
 function renderCharacter(character) {
     characterName.textContent = character.name;
@@ -173,15 +170,15 @@ function renderCharacter(character) {
     characterEyeColor.textContent =
         character.eye_color || '—';
 
-
     if (character.image_path) {
         characterImage.src = `../${character.image_path}`;
         characterImage.alt = character.name;
         characterImage.hidden = false;
     }
 
+    // Remove old equipment safely.
 
-    characterEquipment.innerHTML = '';
+    characterEquipment.replaceChildren();
 
     if (
         Array.isArray(character.equipment) &&
@@ -201,20 +198,20 @@ function renderCharacter(character) {
         const emptyEquipment =
             document.createElement('p');
 
-        emptyEquipment.textContent =
-            'No equipment.';
+        emptyEquipment.textContent = 'No equipment.';
 
         characterEquipment.appendChild(
             emptyEquipment
         );
     }
 
-
     characterMessage.hidden = true;
     characterContent.hidden = false;
 }
 
-// Displays loading/error messages and hides the character content.
+// =========================
+// CHARACTER MESSAGES
+// =========================
 
 function showMessage(message) {
     characterMessage.textContent = message;
@@ -225,8 +222,6 @@ function showMessage(message) {
 // =========================
 // SETTINGS MENU
 // =========================
-
-// Keeps dropdown visibility and its accessibility state synchronized.
 
 function setSettingsOpen(isOpen) {
     settingsDropdown.hidden = !isOpen;
@@ -241,7 +236,7 @@ settingsButton.addEventListener('click', () => {
     setSettingsOpen(settingsDropdown.hidden);
 });
 
-// Closes the dropdown when clicking outside the settings container.
+// Close dropdown when clicking outside.
 
 document.addEventListener('click', (event) => {
     if (!settingsMenu.contains(event.target)) {
@@ -249,7 +244,7 @@ document.addEventListener('click', (event) => {
     }
 });
 
-// Returns keyboard focus to the gear when Escape closes the dropdown.
+// Close dropdown with Escape.
 
 document.addEventListener('keydown', (event) => {
     if (
@@ -262,19 +257,50 @@ document.addEventListener('keydown', (event) => {
 });
 
 // =========================
-// LOGOUT
+// SECURE LOGOUT
 // =========================
 
 logoutLink.addEventListener('click', async (event) => {
     event.preventDefault();
 
     try {
+        // Get the current PHP session and CSRF token.
+
+        const sessionResponse = await fetch(
+            '/FantasyRealm/Backend/api/session.php',
+            {
+                credentials: 'same-origin',
+                cache: 'no-store'
+            }
+        );
+
+        if (!sessionResponse.ok) {
+            throw new Error('Unable to retrieve session.');
+        }
+
+        const sessionData = await sessionResponse.json();
+
+        // If already logged out, update the navbar.
+
+        if (!sessionData.authenticated) {
+            await loadSession();
+            return;
+        }
+
+        if (typeof sessionData.csrf_token !== 'string') {
+            throw new Error('Missing CSRF token.');
+        }
+
+        // Send the protected logout request.
+
         const response = await fetch(
             '/FantasyRealm/Backend/api/logout.php',
             {
                 method: 'POST',
+                credentials: 'same-origin',
                 headers: {
-                    'Accept': 'application/json'
+                    'Accept': 'application/json',
+                    'X-CSRF-Token': sessionData.csrf_token
                 }
             }
         );
@@ -282,11 +308,14 @@ logoutLink.addEventListener('click', async (event) => {
         const data = await response.json();
 
         if (!response.ok || !data.success) {
-            console.error('Logout failed:', data.message);
-            return;
+            throw new Error(
+                data.message || 'Logout failed.'
+            );
         }
 
-        await loadSession();
+        // Reload to display Login/Register again.
+
+        window.location.reload();
 
     } catch (error) {
         console.error('Unable to logout:', error);
@@ -297,11 +326,14 @@ logoutLink.addEventListener('click', async (event) => {
 // REVIEW FEEDBACK
 // =========================
 
-// Displays plain-text feedback without inserting user-supplied HTML.
-
 function showReviewFeedback(message, isError = false) {
     reviewFeedback.textContent = message;
-    reviewFeedback.classList.toggle('review-feedback-error', isError);
+
+    reviewFeedback.classList.toggle(
+        'review-feedback-error',
+        isError
+    );
+
     reviewFeedback.hidden = false;
 }
 
@@ -310,8 +342,6 @@ function showReviewFeedback(message, isError = false) {
 // =========================
 
 let reviewSubmissionInProgress = false;
-
-// Sends the rating and comment to the API; PHP determines reviewer and status.
 
 reviewForm.addEventListener('submit', async (event) => {
     event.preventDefault();
@@ -324,17 +354,33 @@ reviewForm.addEventListener('submit', async (event) => {
     const rating = Number(reviewRating.value);
     const comment = reviewComment.value.trim();
 
+    // Validate character ID.
+
     if (!Number.isSafeInteger(id) || id <= 0) {
         showReviewFeedback('Invalid character ID.', true);
         return;
     }
 
-    if (!Number.isInteger(rating) || rating < 1 || rating > 5) {
-        showReviewFeedback('Choose a rating from 1 to 5.', true);
+    // Validate rating.
+
+    if (
+        !Number.isInteger(rating) ||
+        rating < 1 ||
+        rating > 5
+    ) {
+        showReviewFeedback(
+            'Choose a rating from 1 to 5.',
+            true
+        );
         return;
     }
 
-    if (comment === '' || Array.from(comment).length > 2000) {
+    // Validate review comment.
+
+    if (
+        comment === '' ||
+        Array.from(comment).length > 2000
+    ) {
         showReviewFeedback(
             'Enter a comment of 1 to 2000 characters.',
             true
@@ -351,14 +397,57 @@ reviewForm.addEventListener('submit', async (event) => {
     reviewFeedback.hidden = true;
 
     try {
+        // =========================
+        // REVIEW CSRF PROTECTION
+        // =========================
+
+        const sessionResponse = await fetch(
+            '/FantasyRealm/Backend/api/session.php',
+            {
+                credentials: 'same-origin',
+                cache: 'no-store'
+            }
+        );
+
+        if (!sessionResponse.ok) {
+            throw new Error('Unable to retrieve session.');
+        }
+
+        const sessionData = await sessionResponse.json();
+
+        if (!sessionData.authenticated) {
+            await loadSession();
+
+            showReviewFeedback(
+                'Please log in to submit a review.',
+                true
+            );
+
+            return;
+        }
+
+        if (typeof sessionData.csrf_token !== 'string') {
+            throw new Error(
+                'Unable to verify session security.'
+            );
+        }
+
+        // =========================
+        // SUBMIT REVIEW
+        // =========================
+
         const response = await fetch(
             '/FantasyRealm/Backend/api/submit-review.php',
             {
                 method: 'POST',
+                credentials: 'same-origin',
+
                 headers: {
                     'Content-Type': 'application/json',
-                    'Accept': 'application/json'
+                    'Accept': 'application/json',
+                    'X-CSRF-Token': sessionData.csrf_token
                 },
+
                 body: JSON.stringify({
                     character_id: id,
                     rating: rating,
@@ -369,6 +458,8 @@ reviewForm.addEventListener('submit', async (event) => {
 
         const data = await response.json();
 
+        // Session expired.
+
         if (response.status === 401) {
             await loadSession();
 
@@ -376,16 +467,22 @@ reviewForm.addEventListener('submit', async (event) => {
                 'Please log in to submit a review.',
                 true
             );
+
             return;
         }
+
+        // Handle backend errors.
 
         if (!response.ok || !data.success) {
             showReviewFeedback(
                 data.message || 'Unable to submit your review.',
                 true
             );
+
             return;
         }
+
+        // Review successfully submitted.
 
         reviewForm.reset();
 
@@ -413,8 +510,6 @@ reviewForm.addEventListener('submit', async (event) => {
 // LOAD APPROVED REVIEWS
 // =========================
 
-// The REST API returns only approved reviews for an available public character.
-
 async function loadReviews() {
     reviewsList.replaceChildren();
 
@@ -431,16 +526,21 @@ async function loadReviews() {
         if (!response.ok || !data.success) {
             reviewsMessage.textContent =
                 data.message || 'Unable to load reviews.';
+
             return;
         }
 
         if (data.reviews.length === 0) {
-            reviewsMessage.textContent = 'No approved reviews yet.';
+            reviewsMessage.textContent =
+                'No approved reviews yet.';
+
             return;
         }
 
         data.reviews.forEach((review) => {
-            reviewsList.appendChild(createReviewCard(review));
+            reviewsList.appendChild(
+                createReviewCard(review)
+            );
         });
 
         reviewsMessage.hidden = true;
@@ -448,7 +548,8 @@ async function loadReviews() {
     } catch (error) {
         console.error('Unable to load reviews:', error);
 
-        reviewsMessage.textContent = 'Unable to load reviews.';
+        reviewsMessage.textContent =
+            'Unable to load reviews.';
     }
 }
 
@@ -456,7 +557,7 @@ async function loadReviews() {
 // REVIEW CARDS
 // =========================
 
-// Uses textContent so review comments are displayed as text, not executed as HTML.
+// Uses textContent to protect against XSS.
 
 function createReviewCard(review) {
     const card = document.createElement('article');
@@ -474,6 +575,7 @@ function createReviewCard(review) {
 
     const stars = document.createElement('span');
     stars.setAttribute('aria-hidden', 'true');
+
     stars.textContent =
         '★'.repeat(review.rating) +
         '☆'.repeat(5 - review.rating);

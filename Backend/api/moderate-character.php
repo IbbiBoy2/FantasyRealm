@@ -2,7 +2,13 @@
 
 declare(strict_types=1);
 
-session_start();
+// =========================
+// SECURE SESSION
+// =========================
+
+require_once __DIR__ . '/../config/security.php';
+startSecureSession();
+
 
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store');
@@ -60,6 +66,15 @@ try {
         ]);
         exit;
     }
+
+// =========================
+// CSRF PROTECTION
+// =========================
+
+// Reject unauthorized POST requests before reading input.
+
+requireCsrfToken();
+
 
     try {
         $data = json_decode(
@@ -152,47 +167,64 @@ try {
         exit;
     }
 
-    // Record successful moderation in MongoDB.
-    $activityLogged = false;
+    
+// =========================
+// ACTIVITY LOGGING
+// =========================
 
+// Logging must not break character moderation
+// when the MongoDB activity logger is unavailable.
+
+$activityLogged = false;
+
+$loggerFile = __DIR__ . '/../config/activity-logger.php';
+
+if (is_file($loggerFile) && is_readable($loggerFile)) {
     try {
-        require_once __DIR__ . '/../config/activity-logger.php';
+        require_once $loggerFile;
 
-        $action = $status === 'APPROVED'
-            ? 'character.approved'
-            : 'character.rejected';
+        if (function_exists('recordStaffActivity')) {
+            $action = $status === 'APPROVED'
+                ? 'character.approved'
+                : 'character.rejected';
 
-        recordStaffActivity(
-            (int) $_SESSION['user_id'],
-            $action,
-            'character',
-            $characterId
-        );
+            recordStaffActivity(
+                (int) $_SESSION['user_id'],
+                $action,
+                'character',
+                $characterId
+            );
 
-        $activityLogged = true;
+            $activityLogged = true;
+        }
     } catch (Throwable $logError) {
         error_log(
             'FantasyRealm: Character moderation activity logging failed.'
         );
     }
+} else {
+    error_log(
+        'FantasyRealm: Character activity logger unavailable.'
+    );
+}
 
     http_response_code(200);
-
     echo json_encode([
         'success' => true,
-        'message' => $status === 'APPROVED'
-            ? 'Character name approved.'
-            : 'Character name rejected.',
+        'message' => 'Character moderation completed successfully.',
         'character_id' => $characterId,
-        'status' => $status,
+        'new_status' => $status,
         'activity_logged' => $activityLogged
     ]);
-
 } catch (Throwable $e) {
-    http_response_code(500);
+    error_log(
+        'FantasyRealm: Character moderation failed. Error: ' .
+        $e->getMessage()
+    );
 
+    http_response_code(500);
     echo json_encode([
         'success' => false,
-        'message' => 'Unable to save the moderation decision.'
+        'message' => 'An internal server error occurred.'
     ]);
 }
