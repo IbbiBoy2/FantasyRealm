@@ -1,3 +1,4 @@
+document.addEventListener('DOMContentLoaded', () => {
 
 // =========================
 // DOM REFERENCES
@@ -294,3 +295,5 @@ function hideMessage() {
 // =========================
 
 loadSession();
+
+});
