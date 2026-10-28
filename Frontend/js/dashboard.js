@@ -1217,7 +1217,7 @@ if (
     throw new Error('Unable to verify session security.');
 }
 
-        const response = await secureFetch(
+        const response = await fetch(
             '/FantasyRealm/Backend/api/logout.php',
             {
                 method: 'POST',

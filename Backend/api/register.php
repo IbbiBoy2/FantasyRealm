@@ -106,7 +106,7 @@ if ($password !== $passwordConfirm) {
 }
 
 // =========================
-// PASSWORD SECURITY
+// PASSWORD SECURITY 
 // =========================
 
 // Require at least 12 characters.
@@ -190,10 +190,15 @@ try {
 
 // Prepared statements keep user input separate from SQL.
 
-    $passwordHash = password_hash(
-        $password,
-        PASSWORD_DEFAULT
-    );
+$passwordHash = password_hash(
+    $password,
+    PASSWORD_ARGON2ID,
+    [
+        'memory_cost' => 19456,
+        'time_cost' => 2,
+        'threads' => 1
+    ]
+);
 
 
     $stmt = $pdo->prepare(
