@@ -433,3 +433,105 @@ a {
 .nav-links .settings-dropdown a[hidden] {
     display: none;
 }
+
+/* =========================
+   FANTASYREALM PREMIUM FOOTER
+========================= */
+
+.footer {
+    background: linear-gradient(
+        135deg,
+        #1b1038 0%,
+        #0c071b 55%,
+        #080513 100%
+    );
+
+    border-top: 1px solid rgba(180, 115, 255, 0.35);
+
+    box-shadow:
+        0 -8px 35px rgba(100, 35, 190, 0.12),
+        inset 0 1px rgba(255, 255, 255, 0.04);
+
+    padding: 35px 8%;
+    min-height: 110px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+
+    color: #a8a0bf;
+}
+
+/* Branding */
+
+.footer-brand {
+    font-family: "Cinzel", serif;
+    color: #f4eaff;
+    font-size: 19px;
+    font-weight: 700;
+    letter-spacing: 1px;
+
+    text-shadow: 0 0 18px rgba(178, 107, 255, 0.45);
+}
+
+/* Copyright */
+
+.footer > p {
+    color: #9187a9;
+    font-size: 12px;
+}
+
+/* Navigation links */
+
+.footer-links {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.footer-links a {
+    color: #c5b6dd;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+
+    padding: 10px 15px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+
+    transition:
+        color 0.2s ease,
+        background 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+}
+
+.footer-links a:hover,
+.footer-links a:focus-visible {
+    color: #ffffff;
+
+    background: rgba(147, 74, 238, 0.16);
+    border-color: rgba(185, 130, 255, 0.35);
+
+    box-shadow: 0 0 18px rgba(153, 76, 255, 0.14);
+
+    transform: translateY(-2px);
+}
+
+/* Mobile */
+
+@media (max-width: 760px) {
+    .footer {
+        flex-direction: column;
+        text-align: center;
+        padding: 32px 20px;
+        gap: 16px;
+    }
+
+    .footer-links {
+        justify-content: center;
+    }
+}

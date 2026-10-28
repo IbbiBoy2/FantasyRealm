@@ -138,11 +138,10 @@ contactForm.addEventListener(
 
 // Basic client-side validation before sending the request.
 
-        if (
-            contactData.username === '' ||
-            contactData.email === '' ||
-            contactData.message === ''
-        ) {
+       if (
+    contactData.email === '' ||
+    contactData.message === ''
+) {
             showMessage(
                 'Please fill in all fields.'
             );
