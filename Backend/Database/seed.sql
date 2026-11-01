@@ -1,63 +1,28 @@
-USE fantasyrealm;
+-- FantasyRealm - starter/reference data (no demo user accounts or credentials)
+-- Import into a NEW database AFTER shema.sql.
+-- Roles must exist before registration or staff account provisioning.
+-- Seed is designed for a fresh database and should be applied ONCE.
+-- Passwords and account data are intentionally NOT included in public seed data.
 
-INSERT INTO roles (name) VALUES
-('USER'),
-('EMPLOYEE'),
-('ADMIN');
+SET NAMES utf8mb4;
 
-INSERT INTO users (
-    role_id,
-    email,
-    username,
-    password_hash,
-    suspended
-) VALUES
-(1, 'player1@example.com', 'PlayerOne', 'TEST_HASH', FALSE),
-(2, 'employee@example.com', 'EmployeeOne', 'TEST_HASH', FALSE),
-(3, 'admin@example.com', 'AdminOne', 'TEST_HASH', FALSE);
+INSERT INTO `roles` (`name`) VALUES
+  ('USER'),
+  ('EMPLOYEE'),
+  ('ADMIN');
 
-INSERT INTO accessories (
-    name,
-    type,
-    active
-) VALUES
-('Iron Sword', 'weapon', TRUE),
-('Leather Armor', 'armor', TRUE),
-('Black Cloak', 'clothing', TRUE),
-('Silver Ring', 'accessory', TRUE);
+-- Small starting catalogue for the character creation and accessory pages.
+-- These are example names; the app reads equipment IDs dynamically from the DB.
+INSERT INTO `accessories` (`name`, `type`, `active`) VALUES
+  ('Iron Sword', 'weapon', 1),
+  ('Leather Armor', 'armor', 1),
+  ('Black Cloak', 'clothing', 1),
+  ('Silver Ring', 'accessory', 1);
 
-INSERT INTO characters (
-    user_id,
-    name,
-    gender,
-    status,
-    shared
-) VALUES
-(1, 'Arkon', 'Male', 'APPROVED', TRUE);
-
-INSERT INTO appearances (
-    character_id,
-    eye_shape,
-    nose_shape,
-    mouth_shape,
-    skin_color,
-    hair_color,
-    eye_color
-) VALUES
-(1, 'Round', 'Straight', 'Neutral', 'Light', 'Black', 'Green');
-
-INSERT INTO character_accessories (
-    character_id,
-    accessory_id
-) VALUES
-(1, 1),
-(1, 3);
-
-INSERT INTO reviews (
-    user_id,
-    character_id,
-    rating,
-    comment,
-    status
-) VALUES
-(1, 1, 5, 'Great character design!', 'APPROVED');
+-- To create test accounts, REGISTER them through the application, then for the
+-- private/local testing database only grant EMPLOYEE/ADMIN roles deliberately.
+-- Example to run manually in phpMyAdmin after registering YOUR OWN admin account:
+-- UPDATE users
+-- SET role_id = (SELECT id FROM roles WHERE name = 'ADMIN')
+-- WHERE username = 'YOUR_ACTUAL_TEST_ADMIN_USERNAME';
+-- Never commit working admin credentials or real users' private data to Git.
