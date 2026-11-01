@@ -2,12 +2,19 @@
 
 declare(strict_types=1);
 
-session_start();
+// SECURE SESSION
+require_once __DIR__ . '/../config/security.php';
+startSecureSession();
 
 header('Content-Type: application/json; charset=utf-8');
 
 require_once __DIR__ . '/../config/database.php';
 
+// =========================
+// REQUEST VALIDATION
+// =========================
+
+// The login endpoint only accepts POST requests.
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
@@ -70,6 +77,11 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     exit;
 }
 
+// =========================
+// USER LOOKUP
+// =========================
+
+// Prepared statements keep user input separate from the SQL query.
 
 try {
 
@@ -92,6 +104,7 @@ try {
 
     $user = $stmt->fetch();
 
+// Verifies the submitted password against the stored password hash.
 
     if (
         !$user ||
@@ -111,6 +124,7 @@ try {
         exit;
     }
 
+// Suspended accounts are not allowed to create an authenticated session.
 
     if ((bool) $user['suspended']) {
 
@@ -124,9 +138,44 @@ try {
         exit;
     }
 
+// Upgrade older bcrypt hashes to Argon2id after successful login.
+
+$argon2Options = [
+    'memory_cost' => 19456,
+    'time_cost' => 2,
+    'threads' => 1
+];
+
+if (password_needs_rehash(
+    $user['password_hash'],
+    PASSWORD_ARGON2ID,
+    $argon2Options
+)) {
+    $newHash = password_hash(
+        $password,
+        PASSWORD_ARGON2ID,
+        $argon2Options
+    );
+
+    $updateStmt = $pdo->prepare(
+        'UPDATE users
+         SET password_hash = :password_hash
+         WHERE id = :id'
+    );
+
+    $updateStmt->execute([
+        'password_hash' => $newHash,
+        'id' => $user['id']
+    ]);
+}
+
+
+// Regenerating the session ID after login helps prevent session fixation.
+
 
     session_regenerate_id(true);
 
+// Store the authenticated user's identity and role in the PHP session.
 
     $_SESSION['user_id'] = (int) $user['id'];
 
@@ -152,6 +201,8 @@ try {
             'email' => $user['email']
         ]
     ]);
+
+// Return a generic error so database details are not exposed to the client.
 
 } catch (PDOException $e) {
 

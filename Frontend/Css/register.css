@@ -85,12 +85,11 @@ a {
   border: 1px solid rgba(233, 213, 255, 0.85);
   border-radius: 999px;
 
-  background:
-    linear-gradient(
-      135deg,
-      #6d28d9,
-      #a855f7
-    );
+background: linear-gradient(
+    135deg,
+    #6d28d9,
+    #7c3aed
+);
 }
 
 .register-page {
@@ -278,4 +277,24 @@ a {
   color: var(--purple-soft);
 
   text-align: center;
+}
+
+/* RGAA - Hide empty form feedback */
+
+.form-message:empty {
+    display: none;
+}
+
+/* Keep empty feedback invisible without hiding it from screen readers */
+
+.form-message:empty {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
 }

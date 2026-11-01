@@ -1,14 +1,18 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
     <title>Contact | FantasyRealm</title>
 
+    <!-- Fonts and assets -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com" crossorigin>
 
     <link
         href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600&display=swap"
@@ -16,192 +20,222 @@
     >
 
     <link rel="stylesheet" href="../Css/contact.css">
-
     <script src="../js/contact.js" defer></script>
+    <link rel="stylesheet" href="../Css/accessibility.css">
 </head>
 
 <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
 
-<header class="contact-navbar">
+    <!-- MAIN NAVIGATION -->
+    <header class="contact-navbar">
 
-    <a class="brand" href="index.html">
-        <span class="brand-mark">✦</span>
-        <span>FantasyRealm</span>
-    </a>
-
-    <nav class="nav-links">
-
-        <a href="index.html">
-            Home
+        <a class="brand" href="index.html">
+            <span class="brand-mark">✦</span>
+            <span>FantasyRealm</span>
         </a>
 
-        <a href="character-gallery.html">
-            Characters
-        </a>
+        <nav class="nav-links">
 
-        <a href="create-character.html">
-            Create
-        </a>
+            <a href="index.html">Home</a>
+            <a href="character-gallery.html">Characters</a>
+            <a href="create-character.html">Create</a>
 
-        <a
-            id="login-link"
-            href="login.html"
-        >
-            Login
-        </a>
-
-        <a
-            id="register-link"
-            class="nav-register"
-            href="register.html"
-        >
-            Register
-        </a>
-
-        <span
-            id="nav-username"
-            class="nav-username"
-            hidden
-        ></span>
-
-        <a
-            id="logout-link"
-            href="#"
-            hidden
-        >
-            Logout
-        </a>
-
-    </nav>
-
-</header>
-
-
-<main class="contact-page">
-
-    <section class="contact-panel">
-
-        <p class="section-label">
-            CONTACT
-        </p>
-
-        <h1>
-            Contact FantasyRealm
-        </h1>
-
-        <p class="contact-intro">
-            Have a question or need help? Send us a message.
-        </p>
-
-
-        <p
-            id="form-message"
-            class="form-message"
-            hidden
-        ></p>
-
-
-        <form
-            id="contact-form"
-            class="contact-form"
-        >
-
-            <label for="username">
-                Username
-            </label>
-
-            <input
-                type="text"
-                id="username"
-                maxlength="50"
-                required
-            >
-
-
-            <label for="email">
-                Email
-            </label>
-
-            <input
-                type="email"
-                id="email"
-                maxlength="255"
-                required
-            >
-
-
-            <label for="message">
-                Message
-            </label>
-
-            <textarea
-                id="message"
-                rows="6"
-                maxlength="2000"
-                required
-            ></textarea>
-
-
-            <button
-                id="send-button"
-                type="submit"
-            >
-                Send Message
-            </button>
-
-        </form>
-
-
-        <div class="contact-actions">
-
-            <a
-                href="index.html"
-                class="back-link"
-            >
-                Back to Home
+            <a id="login-link" href="login.html">
+                Login
             </a>
 
             <a
-                href="character-gallery.html"
-                class="back-link"
+                id="register-link"
+                class="nav-register"
+                href="register.html"
             >
-                View Characters
+                Register
             </a>
 
+            <span
+                id="nav-username"
+                class="nav-username"
+                hidden
+            ></span>
+
+            <!-- Account settings -->
+            <div
+                id="settings-menu"
+                class="settings-menu"
+                hidden
+            >
+                <button
+                    id="settings-button"
+                    class="settings-button"
+                    type="button"
+                    aria-label="Open settings"
+                    aria-controls="settings-dropdown"
+                    aria-expanded="false"
+                >
+                    ⚙
+                </button>
+
+                <div
+                    id="settings-dropdown"
+                    class="settings-dropdown"
+                    hidden
+                >
+                    <a href="dashboard.html">
+                        Character Settings
+                    </a>
+
+                    <a
+                        id="employee-dashboard-link"
+                        href="employee-dashboard.html"
+                        hidden
+                    >
+                        Employee Dashboard
+                    </a>
+
+                    <button
+                        id="logout-link"
+                        type="button"
+                    >
+                        Logout
+                    </button>
+                </div>
+            </div>
+
+        </nav>
+    </header>
+
+    <!-- MAIN CONTACT PAGE -->
+    <main tabindex="-1" id="main-content" class="contact-page">
+
+        <section class="contact-panel">
+
+            <p class="section-label">
+                CONTACT
+            </p>
+
+            <h1>Contact FantasyRealm</h1>
+
+            <p class="contact-intro">
+                Have a question or need help?
+                Send us a message.
+            </p>
+
+            <!-- Form feedback -->
+            <p
+                id="form-message"
+                class="form-message"
+                hidden
+            ></p>
+
+            <!-- Contact form -->
+            <form
+                id="contact-form"
+                class="contact-form"
+            >
+
+                <label for="username">
+                    Username (optional)
+                </label>
+
+                <input
+                    type="text"
+                    id="username"
+                    maxlength="50"
+                >
+
+                <label for="email">
+                    Email
+                </label>
+
+                <input
+                    type="email"
+                    id="email"
+                    maxlength="255"
+                    required
+                >
+
+                <label for="message">
+                    Message
+                </label>
+
+                <textarea
+                    id="message"
+                    rows="6"
+                    maxlength="2000"
+                    required
+                ></textarea>
+
+                <!-- RGPD information -->
+                <p class="privacy-notice">
+                    We use your email address and message
+                    to respond to your enquiry.
+                    Providing a username is optional.
+
+                    Learn more in our
+                    <a href="privacy.html">
+                        Privacy Policy
+                    </a>.
+                </p>
+
+                <button
+                    id="send-button"
+                    type="submit"
+                >
+                    Send Message
+                </button>
+
+            </form>
+
+            <!-- Page navigation -->
+            <div class="contact-actions">
+
+                <a
+                    href="index.html"
+                    class="back-link"
+                >
+                    Back to Home
+                </a>
+
+                <a
+                    href="character-gallery.html"
+                    class="back-link"
+                >
+                    View Characters
+                </a>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- SITE FOOTER -->
+    <footer class="footer">
+
+        <div class="footer-brand">
+            ✦ FantasyRealm
         </div>
 
-    </section>
+        <p>
+            © 2026 FantasyRealm. All rights reserved.
+        </p>
 
-</main>
+        <div class="footer-links">
+            <a href="legal-notice.html">
+                Legal Notice
+            </a>
 
+            <a href="privacy.html">
+                Privacy Policy
+            </a>
 
-<footer class="footer">
+            <a href="contact.html">
+                Contact
+            </a>
+        </div>
 
-    <div class="footer-brand">
-        ✦ FantasyRealm
-    </div>
-
-    <p>
-        © 2026 FantasyRealm. All rights reserved.
-    </p>
-
-    <div class="footer-links">
-
-        <a href="#">
-            Legal Notice
-        </a>
-
-        <a href="#">
-            Terms
-        </a>
-
-        <a href="contact.html">
-            Contact
-        </a>
-
-    </div>
-
-</footer>
+    </footer>
 
 </body>
 </html>

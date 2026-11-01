@@ -6,6 +6,11 @@ header('Content-Type: application/json; charset=utf-8');
 
 require_once __DIR__ . '/../config/database.php';
 
+// =========================
+// REQUEST VALIDATION
+// =========================
+
+// Registration only accepts POST requests.
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
@@ -37,10 +42,27 @@ if (!is_array($input)) {
 }
 
 
-$username = trim($input['username'] ?? '');
-$email = trim($input['email'] ?? '');
-$password = $input['password'] ?? '';
-$passwordConfirm = $input['password_confirm'] ?? '';
+// =========================
+// INPUT TYPE VALIDATION
+// =========================
+
+// Only accept strings for registration fields.
+
+$username = is_string($input['username'] ?? null)
+    ? trim($input['username'])
+    : '';
+
+$email = is_string($input['email'] ?? null)
+    ? trim($input['email'])
+    : '';
+
+$password = is_string($input['password'] ?? null)
+    ? $input['password']
+    : '';
+
+$passwordConfirm = is_string($input['password_confirm'] ?? null)
+    ? $input['password_confirm']
+    : '';
 
 
 if (
@@ -83,6 +105,33 @@ if ($password !== $passwordConfirm) {
     exit;
 }
 
+// =========================
+// PASSWORD SECURITY 
+// =========================
+
+// Require at least 12 characters.
+// Limit passwords to 72 bytes to avoid silent truncation by bcrypt.
+
+if (
+    mb_strlen($password, 'UTF-8') < 12 ||
+    strlen($password) > 72
+) {
+    http_response_code(422);
+
+    echo json_encode([
+        'success' => false,
+        'message' => 'Password must be at least 12 characters and no more than 72 bytes.'
+    ]);
+
+    exit;
+}
+
+
+// =========================
+// DUPLICATE ACCOUNT CHECK
+// =========================
+
+// Prevents duplicate email addresses and usernames.
 
 try {
 
@@ -113,6 +162,11 @@ try {
         exit;
     }
 
+// =========================
+// DEFAULT ROLE
+// =========================
+
+// New accounts are assigned the standard USER role.
 
     $stmt = $pdo->prepare(
         'SELECT id
@@ -134,11 +188,17 @@ try {
         );
     }
 
+// Prepared statements keep user input separate from SQL.
 
-    $passwordHash = password_hash(
-        $password,
-        PASSWORD_DEFAULT
-    );
+$passwordHash = password_hash(
+    $password,
+    PASSWORD_ARGON2ID,
+    [
+        'memory_cost' => 19456,
+        'time_cost' => 2,
+        'threads' => 1
+    ]
+);
 
 
     $stmt = $pdo->prepare(
@@ -177,6 +237,8 @@ try {
             'email' => $email
         ]
     ]);
+
+// Database constraint errors are converted into safe API responses.
 
 } catch (PDOException $e) {
 

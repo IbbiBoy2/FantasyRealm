@@ -18,9 +18,15 @@
     <link rel="stylesheet" href="../Css/gallery.css">
 
     <script src="../js/character-gallery.js" defer></script>
+    <link rel="stylesheet" href="../Css/accessibility.css">
 </head>
 
 <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+
+<!-- =========================
+     MAIN NAVIGATION
+========================= -->
 
 <header class="gallery-navbar">
 
@@ -61,20 +67,57 @@
             hidden
         ></span>
 
-        <a
-            id="logout-link"
-            href="#"
-            hidden
-        >
-            Logout
-        </a>
+<!-- =========================
+     ACCOUNT SETTINGS
+========================= -->
+
+        <div id="settings-menu" class="settings-menu" hidden>
+            <button
+                id="settings-button"
+                class="settings-button"
+                type="button"
+                aria-label="Open settings"
+                aria-controls="settings-dropdown"
+                aria-expanded="false"
+            >
+                ⚙
+            </button>
+
+            <div
+                id="settings-dropdown"
+                class="settings-dropdown"
+                hidden
+            >
+                <a href="dashboard.html">
+                    Character Settings
+                </a>
+
+                <!-- Staff navigation: shown only for employee and administrator accounts. -->
+
+<a
+    id="employee-dashboard-link"
+    href="employee-dashboard.html"
+    hidden
+>
+    Employee Dashboard
+</a>
+
+                <button id="logout-link" type="button">
+                    Logout
+                </button>
+            </div>
+        </div>
 
     </nav>
 
 </header>
 
 
-<main>
+<main tabindex="-1" id="main-content">
+
+<!-- =========================
+     GALLERY INTRODUCTION
+========================= -->
 
     <section class="gallery-hero">
 
@@ -96,6 +139,9 @@
 
     </section>
 
+<!-- =========================
+     PUBLIC CHARACTER GALLERY
+========================= -->
 
     <section class="gallery-shell">
 
@@ -113,6 +159,9 @@
 
             </div>
 
+<!-- =========================
+     CREATOR AND DATE FILTERS
+========================= -->
 
             <div class="gallery-filters">
 
@@ -159,18 +208,25 @@
 
 
         <p
+
             id="gallery-message"
             class="empty-gallery"
         >
             Loading characters...
         </p>
 
+<!-- =========================
+ GALLERY STATUS MESSAGES
+========================= -->
 
         <div
             id="gallery-grid"
             class="gallery-grid"
         ></div>
 
+<!-- =========================
+     GALLERY PAGINATION
+========================= -->
 
         <nav
             id="gallery-pagination"
@@ -182,6 +238,9 @@
 
 </main>
 
+<!-- =========================
+     SITE FOOTER
+========================= -->
 
 <footer class="footer">
 
@@ -194,18 +253,10 @@
     </p>
 
     <div class="footer-links">
-
-        <a href="#">
-            Legal Notice
-        </a>
-
-        <a href="#">
-            Terms
-        </a>
-
-        <a href="contact.html">
-            Contact
-        </a>
+    <a href="legal-notice.html">Legal Notice</a>
+    <a href="privacy.html">Privacy Policy</a>
+    <a href="contact.html">Contact</a>
+</div>
 
     </div>
 

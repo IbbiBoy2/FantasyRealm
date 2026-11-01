@@ -7,6 +7,10 @@
 
     <title>Create Character | FantasyRealm</title>
 
+<!-- =========================
+     FONTS AND PAGE ASSETS
+========================= -->
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
@@ -18,19 +22,23 @@
     <link rel="stylesheet" href="../Css/create-character.css">
 
     <script src="../js/create-character.js" defer></script>
+    <link rel="stylesheet" href="../Css/accessibility.css">
 </head>
 
 <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+
+<<!-- =========================
+     MAIN NAVIGATION
+========================= -->
 
 <header class="creator-navbar">
-
     <a class="brand" href="index.html">
         <span class="brand-mark">✦</span>
         <span>FantasyRealm</span>
     </a>
 
     <nav class="nav-links">
-
         <a href="index.html">
             Home
         </a>
@@ -39,17 +47,11 @@
             Characters
         </a>
 
-        <a
-            class="active"
-            href="create-character.html"
-        >
+        <a class="active" href="create-character.html">
             Create
         </a>
 
-        <a
-            id="login-link"
-            href="login.html"
-        >
+        <a id="login-link" href="login.html">
             Login
         </a>
 
@@ -67,20 +69,55 @@
             hidden
         ></span>
 
-        <a
-            id="logout-link"
-            href="#"
-            hidden
-        >
-            Logout
-        </a>
+        <!-- =========================
+             ACCOUNT SETTINGS
+        ========================= -->
 
+        <div id="settings-menu" class="settings-menu" hidden>
+            <button
+                id="settings-button"
+                class="settings-button"
+                type="button"
+                aria-label="Open settings"
+                aria-controls="settings-dropdown"
+                aria-expanded="false"
+            >
+                ⚙
+            </button>
+
+            <div
+                id="settings-dropdown"
+                class="settings-dropdown"
+                hidden
+            >
+                <a href="dashboard.html">
+                    Character Settings
+                </a>
+
+                <!-- Staff navigation: shown only for employee and administrator accounts. -->
+
+<a
+    id="employee-dashboard-link"
+    href="employee-dashboard.html"
+    hidden
+>
+    Employee Dashboard
+</a>
+
+                <button id="logout-link" type="button">
+                    Logout
+                </button>
+            </div>
+        </div>
     </nav>
-
 </header>
 
 
-<main class="creator-page">
+<main tabindex="-1" id="main-content" class="creator-page">
+
+<!-- =========================
+    CHARACTER CREATOR INTRODUCTION
+========================= -->
 
     <section class="creator-heading">
 
@@ -98,10 +135,15 @@
 
     </section>
 
+ <!-- =========================
+    CHARACTER PREVIEW AND EDITOR
+========================= -->
 
     <section class="creator-shell">
 
-        <!-- PREVIEW -->
+<!-- =========================
+     LIVE CHARACTER PREVIEW
+========================= -->
 
         <aside class="preview-panel">
 
@@ -121,6 +163,8 @@
             <div class="preview-stage">
 
                 <span class="preview-glow"></span>
+
+                <!-- Selected appearance images are layered to build the preview. -->
 
                 <div class="character-layer-stack">
 
@@ -165,24 +209,29 @@
         </aside>
 
 
-        <!-- EDITOR -->
+<!-- =========================
+     CHARACTER CREATION FORM
+========================= -->
 
         <section class="editor-panel">
 
             <form
                 id="creator-form"
                 class="creator-form"
-            >
+                >
 
-                <p
-                    id="form-message"
-                    class="form-message"
-                    hidden
-                ></p>
+                <!-- Displays validation messages and responses from the PHP REST API. -->
+
+<p
+    id="form-message"
+    class="form-message"
+    hidden
+></p>
 
 
-                <!-- CHARACTER NAME -->
-
+<!-- =========================
+     CHARACTER NAME
+========================= -->
                 <div class="form-section">
 
                     <label
@@ -203,7 +252,9 @@
                 </div>
 
 
-                <!-- GENDER -->
+<!-- =========================
+     GENDER
+========================= -->
 
                 <fieldset class="form-section">
 
@@ -258,7 +309,9 @@
                 </fieldset>
 
 
-                <!-- APPEARANCE -->
+<!-- =========================
+     APPEARANCE
+========================= -->
 
                 <fieldset class="form-section">
 
@@ -267,7 +320,9 @@
                     </legend>
 
 
-                    <!-- HAIR STYLE -->
+<!-- =========================
+     HAIR STYLE
+========================= -->
 
                     <div class="option-row">
 
@@ -346,7 +401,9 @@
                     </div>
 
 
-                    <!-- HAIR COLOR -->
+<!-- =========================
+     HAIR COLOR
+========================= -->
 
                     <div class="option-row">
 
@@ -361,12 +418,13 @@
                                 style="--swatch:#e9e2ff"
                             >
 
-                                <input
-                                    type="radio"
-                                    name="hair-color"
-                                    value="silver"
-                                    checked
-                                >
+<input
+    type="radio"
+    name="hair-color"
+    value="silver"
+    aria-label="Silver hair"
+    checked
+>
 
                                 <span></span>
 
@@ -378,12 +436,13 @@
                                 style="--swatch:#17131d"
                             >
 
-                                <input
-                                    type="radio"
-                                    name="hair-color"
-                                    value="black"
-                                >
-
+<input
+    type="radio"
+    name="hair-color"
+    value="Black"
+    aria-label="Black hair"
+    checked
+>
                                 <span></span>
 
                             </label>
@@ -394,11 +453,13 @@
                                 style="--swatch:#6c4430"
                             >
 
-                                <input
-                                    type="radio"
-                                    name="hair-color"
-                                    value="brown"
-                                >
+<input
+    type="radio"
+    name="hair-color"
+    value="Brown"
+    aria-label="Brown hair"
+    checked
+>
 
                                 <span></span>
 
@@ -409,13 +470,13 @@
                                 class="color-choice"
                                 style="--swatch:#a9463f"
                             >
-
-                                <input
-                                    type="radio"
-                                    name="hair-color"
-                                    value="red"
-                                >
-
+<input
+    type="radio"
+    name="hair-color"
+    value="Red"
+    aria-label="Red hair"
+    checked
+>
                                 <span></span>
 
                             </label>
@@ -426,11 +487,13 @@
                                 style="--swatch:#9c4cff"
                             >
 
-                                <input
-                                    type="radio"
-                                    name="hair-color"
-                                    value="purple"
-                                >
+<input
+    type="radio"
+    name="hair-color"
+    value="purple"
+    aria-label="Purple hair"
+    checked
+>
 
                                 <span></span>
 
@@ -441,7 +504,9 @@
                     </div>
 
 
-                    <!-- SKIN TONE -->
+<!-- =========================
+     SKIN TONE
+========================= -->
 
                     <div class="option-row">
 
@@ -456,12 +521,13 @@
                                 style="--swatch:#f6d2bd"
                             >
 
-                                <input
-                                    type="radio"
-                                    name="skin-tone"
-                                    value="light"
-                                    checked
-                                >
+<input
+    type="radio"
+    name="skin-tone"
+    value="light"
+    aria-label="Light skin tone"
+    checked
+>
 
                                 <span></span>
 
@@ -473,11 +539,13 @@
                                 style="--swatch:#dfb095"
                             >
 
-                                <input
-                                    type="radio"
-                                    name="skin-tone"
-                                    value="fair"
-                                >
+<input
+    type="radio"
+    name="skin-tone"
+    value="fair"
+    aria-label="Fair skin tone"
+    checked
+>
 
                                 <span></span>
 
@@ -489,11 +557,13 @@
                                 style="--swatch:#bc8568"
                             >
 
-                                <input
-                                    type="radio"
-                                    name="skin-tone"
-                                    value="medium"
-                                >
+<input
+    type="radio"
+    name="skin-tone"
+    value="medium"
+    aria-label="Medium skin tone"
+    checked
+>
 
                                 <span></span>
 
@@ -505,11 +575,13 @@
                                 style="--swatch:#8d5d48"
                             >
 
-                                <input
-                                    type="radio"
-                                    name="skin-tone"
-                                    value="tan"
-                                >
+<input
+    type="radio"
+    name="skin-tone"
+    value="tan"
+    aria-label="Tan skin tone"
+    checked
+>
 
                                 <span></span>
 
@@ -520,12 +592,13 @@
                                 class="color-choice"
                                 style="--swatch:#5c382f"
                             >
-
-                                <input
-                                    type="radio"
-                                    name="skin-tone"
-                                    value="dark"
-                                >
+<input
+    type="radio"
+    name="skin-tone"
+    value="dark"
+    aria-label="Dark skin tone"
+    checked
+>
 
                                 <span></span>
 
@@ -536,7 +609,9 @@
                     </div>
 
 
-                    <!-- EYE STYLE -->
+<!-- =========================
+     EYE STYLE
+========================= -->
 
                     <div class="option-row">
 
@@ -547,13 +622,13 @@
                         <div class="eye-options">
 
                             <label class="eye-choice selected-choice">
-
-                                <input
-                                    type="radio"
-                                    name="eye-style"
-                                    value="round"
-                                    checked
-                                >
+<input
+    type="radio"
+    name="eye-style"
+    value="round"
+    aria-label="Round eyes"
+    checked
+>
 
                                 <span>◉</span>
 
@@ -562,11 +637,13 @@
 
                             <label class="eye-choice">
 
-                                <input
-                                    type="radio"
-                                    name="eye-style"
-                                    value="soft"
-                                >
+<input
+    type="radio"
+    name="eye-style"
+    value="soft"
+    aria-label="Soft eyes"
+    checked
+>
 
                                 <span>◍</span>
 
@@ -579,6 +656,7 @@
                                     type="radio"
                                     name="eye-style"
                                     value="sharp"
+                                    aria-label="Sharp eyes"
                                 >
 
                                 <span>◉</span>
@@ -592,6 +670,7 @@
                                     type="radio"
                                     name="eye-style"
                                     value="narrow"
+                                    aria-label="Narrow eyes"
                                 >
 
                                 <span>◌</span>
@@ -603,7 +682,9 @@
                     </div>
 
 
-                    <!-- EYE COLOR -->
+<!-- =========================
+     EYE COLOR
+========================= -->
 
                     <div class="option-row">
 
@@ -618,12 +699,13 @@
                                 style="--swatch:#48cfff"
                             >
 
-                                <input
-                                    type="radio"
-                                    name="eye-color"
-                                    value="blue"
-                                    checked
-                                >
+<input
+    type="radio"
+    name="eye-color"
+    value="blue"
+    aria-label="Blue eyes"
+    checked
+>
 
                                 <span></span>
 
@@ -639,6 +721,7 @@
                                     type="radio"
                                     name="eye-color"
                                     value="purple"
+                                    aria-label="Purple eyes"
                                 >
 
                                 <span></span>
@@ -655,6 +738,8 @@
                                     type="radio"
                                     name="eye-color"
                                     value="red"
+                                    aria-label="Red eyes"
+
                                 >
 
                                 <span></span>
@@ -671,6 +756,7 @@
                                     type="radio"
                                     name="eye-color"
                                     value="green"
+                                    aria-label="Green eyes"
                                 >
 
                                 <span></span>
@@ -687,6 +773,7 @@
                                     type="radio"
                                     name="eye-color"
                                     value="amber"
+                                    aria-label="Amber eyes"
                                 >
 
                                 <span></span>
@@ -699,64 +786,81 @@
 
                 </fieldset>
 
+<!-- =========================
+     EQUIPMENT SELECTION
+========================= -->
 
-                <!-- EQUIPMENT -->
+<fieldset class="form-section">
+    <legend>
+        Equipment
+    </legend>
 
-                <fieldset class="form-section">
+    <!-- Retains the existing weapon-preview reference. -->
 
-                    <legend>
-                        Weapon
-                    </legend>
+    <input
+        type="hidden"
+        id="selected-weapon"
+        value=""
+    >
 
-                    <input
-                        type="hidden"
-                        id="selected-weapon"
-                        value=""
-                    >
+    <p
+        id="equipment-message"
+        class="equipment-message"
+        role="status"
+        aria-live="polite"
+    >
+        Loading available equipment...
+    </p>
 
-                    <div class="weapon-options">
+    <!-- JavaScript fills these lists using active catalogue items. -->
 
-                        <button
-                            type="button"
-                            class="weapon-choice"
-                            data-weapon="iron-sword"
-                        >
-                            Iron Sword
-                        </button>
+    <div class="equipment-fields">
+        <div class="equipment-field">
+            <label for="equipment-weapon">
+                Weapon
+            </label>
+
+            <select id="equipment-weapon" disabled>
+                <option value="">None</option>
+            </select>
+        </div>
+
+        <div class="equipment-field">
+            <label for="equipment-armor">
+                Armor
+            </label>
+
+            <select id="equipment-armor" disabled>
+                <option value="">None</option>
+            </select>
+        </div>
+
+        <div class="equipment-field">
+            <label for="equipment-clothing">
+                Clothing
+            </label>
+
+            <select id="equipment-clothing" disabled>
+                <option value="">None</option>
+            </select>
+        </div>
+
+        <div class="equipment-field">
+            <label for="equipment-accessory">
+                Accessory
+            </label>
+
+            <select id="equipment-accessory" disabled>
+                <option value="">None</option>
+            </select>
+        </div>
+    </div>
+</fieldset>
 
 
-                        <button
-                            type="button"
-                            class="weapon-choice"
-                            data-weapon="steel-sword"
-                        >
-                            Steel Sword
-                        </button>
-
-
-                        <button
-                            type="button"
-                            class="weapon-choice"
-                            data-weapon="magic-staff"
-                        >
-                            Magic Staff
-                        </button>
-
-
-                        <button
-                            type="button"
-                            class="weapon-choice"
-                            data-weapon=""
-                        >
-                            None
-                        </button>
-
-                    </div>
-
-                </fieldset>
-
-
-                <!-- BUTTONS -->
+<!-- =========================
+     CANCEL AND CREATE ACTIONS
+========================= -->
 
                 <div class="form-actions">
 
@@ -790,6 +894,9 @@
 
 </main>
 
+<!-- =========================
+     SITE FOOTER
+========================= -->
 
 <footer class="footer">
 
@@ -801,19 +908,11 @@
         © 2026 FantasyRealm. All rights reserved.
     </p>
 
-    <div class="footer-links">
-
-        <a href="#">
-            Legal Notice
-        </a>
-
-        <a href="#">
-            Terms
-        </a>
-
-        <a href="contact.html">
-            Contact
-        </a>
+<div class="footer-links">
+    <a href="legal-notice.html">Legal Notice</a>
+    <a href="privacy.html">Privacy Policy</a>
+    <a href="contact.html">Contact</a>
+</div>
 
     </div>
 

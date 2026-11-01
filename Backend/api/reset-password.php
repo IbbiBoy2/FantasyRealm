@@ -6,6 +6,11 @@ header('Content-Type: application/json; charset=utf-8');
 
 require_once __DIR__ . '/../config/database.php';
 
+// =========================
+// REQUEST VALIDATION
+// =========================
+
+// Password resets only accept POST requests.
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
@@ -37,9 +42,22 @@ if (!is_array($input)) {
 }
 
 
-$token = trim($input['token'] ?? '');
-$password = $input['password'] ?? '';
-$passwordConfirm = $input['password_confirm'] ?? '';
+// =========================
+// INPUT TYPE VALIDATION
+// =========================
+
+// Reject malformed input before processing reset requests.
+$token = is_string($input['token'] ?? null)
+    ? trim($input['token'])
+    : '';
+
+$password = is_string($input['password'] ?? null)
+    ? $input['password']
+    : '';
+
+$passwordConfirm = is_string($input['password_confirm'] ?? null)
+    ? $input['password_confirm']
+    : '';
 
 
 if (
@@ -59,6 +77,26 @@ if (
 
 
 if ($password !== $passwordConfirm) {
+
+// =========================
+// PASSWORD SECURITY
+// =========================
+
+// Enforce the same password requirements as registration.
+if (
+    mb_strlen($password, 'UTF-8') < 12 ||
+    strlen($password) > 72
+) {
+    http_response_code(422);
+
+    echo json_encode([
+        'success' => false,
+        'message' => 'Password must be at least 12 characters and no more than 72 bytes.'
+    ]);
+
+    exit;
+}
+
     http_response_code(400);
 
     echo json_encode([
@@ -69,6 +107,30 @@ if ($password !== $passwordConfirm) {
     exit;
 }
 
+// =========================
+// PASSWORD SECURITY
+// =========================
+
+// Enforce password requirements before checking the reset token.
+if (
+    mb_strlen($password, 'UTF-8') < 12 ||
+    strlen($password) > 72
+) {
+    http_response_code(422);
+
+    echo json_encode([
+        'success' => false,
+        'message' => 'Password must be at least 12 characters and no more than 72 bytes.'
+    ]);
+
+    exit;
+}
+
+// =========================
+// TOKEN VERIFICATION
+// =========================
+
+// Hashes the submitted token so it can be compared with the hash stored in the database.
 
 try {
 
@@ -77,6 +139,7 @@ try {
         $token
     );
 
+// The reset token must exist and still be within its expiration time.
 
     $stmt = $pdo->prepare(
         'SELECT id
@@ -104,12 +167,14 @@ try {
         exit;
     }
 
+// Hashes the new password before saving it.
 
     $passwordHash = password_hash(
         $password,
         PASSWORD_DEFAULT
     );
 
+    // Updates the password and immediately invalidates the reset token.
 
     $stmt = $pdo->prepare(
         'UPDATE users

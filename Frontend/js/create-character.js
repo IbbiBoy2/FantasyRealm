@@ -1,3 +1,7 @@
+// =========================
+// DOM REFERENCES
+// =========================
+
 const creatorForm = document.getElementById('creator-form');
 const formMessage = document.getElementById('form-message');
 const createButton = document.getElementById('create-button');
@@ -16,20 +20,135 @@ const registerLink = document.getElementById('register-link');
 const usernameDisplay = document.getElementById('nav-username');
 const logoutLink = document.getElementById('logout-link');
 
+const settingsMenu = document.getElementById('settings-menu');
+const settingsButton = document.getElementById('settings-button');
+const settingsDropdown = document.getElementById('settings-dropdown');
+
 const genderCards = document.querySelectorAll('.gender-card');
 const imageChoices = document.querySelectorAll('.image-choice');
 const eyeChoices = document.querySelectorAll('.eye-choice');
 const colorChoices = document.querySelectorAll('.color-choice');
 const weaponChoices = document.querySelectorAll('.weapon-choice');
 
+const employeeDashboardLink =
+    document.getElementById('employee-dashboard-link');
+
+    // Create Admin Dashboard link
+const adminDashboardLink = document.createElement('a');
+
+adminDashboardLink.id = 'admin-dashboard-link';
+adminDashboardLink.href = 'admin-dashboard.html';
+adminDashboardLink.textContent = 'Admin Dashboard';
+adminDashboardLink.hidden = true;
+
+employeeDashboardLink.insertAdjacentElement(
+    'afterend',
+    adminDashboardLink
+);
+
+    const equipmentMessage = document.getElementById('equipment-message');
+
+const equipmentSelects = {
+    weapon: document.getElementById('equipment-weapon'),
+    armor: document.getElementById('equipment-armor'),
+    clothing: document.getElementById('equipment-clothing'),
+    accessory: document.getElementById('equipment-accessory')
+};
+
+// =========================
+// SETTINGS MENU
+// =========================
+
+// Keeps dropdown visibility and its accessibility state synchronized.
+
+function setSettingsOpen(isOpen) {
+    settingsDropdown.hidden = !isOpen;
+
+    settingsButton.setAttribute(
+        'aria-expanded',
+        String(isOpen)
+    );
+}
+
+settingsButton.addEventListener('click', () => {
+    setSettingsOpen(settingsDropdown.hidden);
+});
+
+// Closes the dropdown when clicking outside the settings container.
+
+document.addEventListener('click', (event) => {
+    if (!settingsMenu.contains(event.target)) {
+        setSettingsOpen(false);
+    }
+});
+
+// Returns keyboard focus to the gear when Escape closes the dropdown.
+
+document.addEventListener('keydown', (event) => {
+    if (
+        event.key === 'Escape' &&
+        !settingsDropdown.hidden
+    ) {
+        setSettingsOpen(false);
+        settingsButton.focus();
+    }
+});
+
+// =========================
+// SESSION CHECK
+// =========================
+
+// Checks the PHP session and redirects unauthenticated visitors to Login.
 
 async function loadSession() {
+
+    employeeDashboardLink.hidden = true;
+
     try {
+
+// SECURITY: Retrieve the current CSRF token.
+const sessionResponse = await fetch(
+    '/FantasyRealm/Backend/api/session.php',
+    {
+        credentials: 'same-origin',
+        cache: 'no-store'
+    }
+);
+
+const sessionData = await sessionResponse.json();
+
+if (
+    !sessionResponse.ok ||
+    !sessionData.authenticated ||
+    typeof sessionData.csrf_token !== 'string'
+) {
+    throw new Error('Unable to verify session security.');
+}
+
         const response = await fetch(
             '/FantasyRealm/Backend/api/session.php'
         );
 
         const data = await response.json();
+
+        // Shows staff navigation only after a successful authenticated role check.
+
+employeeDashboardLink.hidden = !(
+    response.ok &&
+    data.authenticated &&
+    ['EMPLOYEE', 'ADMIN'].includes(data.user?.role)
+);
+
+// Only ADMIN accounts can see this link
+adminDashboardLink.hidden = !(
+    response.ok &&
+    data.authenticated &&
+    data.user?.role === 'ADMIN'
+);
+
+        if (!response.ok) {
+            throw new Error('Unable to verify session.');
+        }
 
         if (!data.authenticated) {
             window.location.href = 'login.html';
@@ -42,7 +161,7 @@ async function loadSession() {
         usernameDisplay.textContent = data.user.username;
         usernameDisplay.hidden = false;
 
-        logoutLink.hidden = false;
+        settingsMenu.hidden = false;
 
     } catch (error) {
         console.error('Unable to load session:', error);
@@ -53,6 +172,11 @@ async function loadSession() {
     }
 }
 
+// =========================
+// CHARACTER CUSTOMIZATION
+// =========================
+
+// Returns the selected value from a radio-button group.
 
 function getSelectedValue(name) {
     const selected = document.querySelector(
@@ -62,6 +186,7 @@ function getSelectedValue(name) {
     return selected ? selected.value : '';
 }
 
+// Builds the live character preview from the selected appearance options.
 
 function updatePreview() {
     const gender = getSelectedValue('gender');
@@ -109,6 +234,7 @@ function updatePreview() {
         characterName || 'Your Legend';
 }
 
+// Updates the visual state of the selected customization controls.
 
 function updateSelectedStyles() {
     genderCards.forEach((card) => {
@@ -174,7 +300,9 @@ function handleAppearanceChange() {
     updatePreview();
 }
 
-
+// =========================
+// EVENT LISTENERS
+// =========================
 document
     .querySelectorAll(
         'input[name="gender"], ' +
@@ -208,12 +336,24 @@ weaponChoices.forEach((button) => {
     });
 });
 
+// =========================
+// CREATE CHARACTER
+// =========================
+
+// Sends the selected character data as JSON to the REST API.
 
 creatorForm.addEventListener(
     'submit',
     async (event) => {
         event.preventDefault();
 
+        // Prevents submission before the available equipment has loaded.
+
+if (!equipmentLoaded) {
+    showMessage('Please wait for equipment to load, or refresh if loading failed.');
+    return;
+}
+        
         const characterData = {
             name: characterNameInput.value.trim(),
 
@@ -235,8 +375,10 @@ creatorForm.addEventListener(
             eye_color:
                 getSelectedValue('eye-color'),
 
-            weapon:
-                selectedWeaponInput.value
+accessory_ids: Object.values(equipmentSelects)
+    .map(select => select.value)
+    .filter(value => value !== '')
+    .map(value => Number(value))
         };
 
 
@@ -265,15 +407,40 @@ creatorForm.addEventListener(
 
 
         try {
+
+// =========================
+// CSRF PROTECTION
+// =========================
+
+// Retrieve the authenticated user's CSRF token.
+const sessionResponse = await fetch(
+    '/FantasyRealm/Backend/api/session.php',
+    {
+        credentials: 'same-origin',
+        cache: 'no-store'
+    }
+);
+
+const sessionData = await sessionResponse.json();
+
+if (
+    !sessionResponse.ok ||
+    !sessionData.authenticated ||
+    typeof sessionData.csrf_token !== 'string'
+) {
+    throw new Error('Unable to verify session security.');
+}
+
             const response = await fetch(
                 '/FantasyRealm/Backend/api/characters.php',
                 {
                     method: 'POST',
 
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
+headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'X-CSRF-Token': sessionData.csrf_token
+},
 
                     body: JSON.stringify(
                         characterData
@@ -327,35 +494,73 @@ creatorForm.addEventListener(
     }
 );
 
+// =========================
+// LOGOUT
+// =========================
 
-logoutLink.addEventListener(
-    'click',
-    async (event) => {
-        event.preventDefault();
+// Redirects only after the REST API confirms the PHP session has ended.
 
-        try {
-            await fetch(
-                '/FantasyRealm/Backend/api/logout.php',
-                {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json'
-                    }
-                }
-            );
+logoutLink.addEventListener('click', async () => {
+    try {
 
-            window.location.href =
-                'index.html';
+// =========================
+// CSRF PROTECTION
+// =========================
 
-        } catch (error) {
-            console.error(
-                'Unable to logout:',
-                error
-            );
-        }
+const sessionResponse = await fetch(
+    '/FantasyRealm/Backend/api/session.php',
+    {
+        credentials: 'same-origin',
+        cache: 'no-store'
     }
 );
 
+const sessionData = await sessionResponse.json();
+
+if (
+    !sessionResponse.ok ||
+    !sessionData.authenticated ||
+    typeof sessionData.csrf_token !== 'string'
+) {
+    throw new Error('Unable to verify session security.');
+}
+
+        const response = await fetch(
+            '/FantasyRealm/Backend/api/logout.php',
+            {
+                method: 'POST',
+headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'X-CSRF-Token': sessionData.csrf_token
+},
+
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+            showMessage(
+                data.message || 'Unable to log out. Please try again.'
+            );
+            return;
+        }
+
+        window.location.href = 'index.html';
+
+    } catch (error) {
+        console.error('Unable to logout:', error);
+
+        showMessage(
+            'Unable to log out. Please try again.'
+        );
+    }
+});
+
+// =========================
+// FORM FEEDBACK
+// =========================
 
 function showMessage(message) {
     formMessage.textContent = message;
@@ -368,8 +573,109 @@ function hideMessage() {
     formMessage.hidden = true;
 }
 
+// =========================
+// LOAD AVAILABLE EQUIPMENT
+// =========================
+
+let equipmentLoaded = false;
+let availableEquipment = [];
+
+async function loadEquipment() {
+    equipmentLoaded = false;
+    createButton.disabled = true;
+
+    equipmentMessage.textContent = 'Loading available equipment...';
+    equipmentMessage.hidden = false;
+
+    Object.values(equipmentSelects).forEach((select) => {
+        select.disabled = true;
+        select.replaceChildren(new Option('None', ''));
+    });
+
+    try {
+        const response = await fetch(
+            '/FantasyRealm/Backend/api/accessories.php',
+            {
+headers: {
+    'Accept': 'application/json'
+},
+
+                cache: 'no-store'
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+            equipmentMessage.textContent =
+                data.message || 'Unable to load equipment. Please refresh.';
+            return;
+        }
+
+        availableEquipment = data.accessories;
+
+        availableEquipment.forEach((item) => {
+            const select = equipmentSelects[item.type];
+
+            if (select) {
+                select.appendChild(
+                    new Option(item.name, String(item.id))
+                );
+            }
+        });
+
+        Object.values(equipmentSelects).forEach((select) => {
+            select.disabled = false;
+        });
+
+        equipmentLoaded = true;
+        createButton.disabled = false;
+
+        equipmentMessage.textContent = availableEquipment.length
+            ? 'Choose optional equipment for your character.'
+            : 'No equipment is currently available. You can create a character without it.';
+
+    } catch (error) {
+        console.error('Unable to load equipment:', error);
+
+        equipmentMessage.textContent =
+            'Unable to load equipment. Please refresh to try again.';
+    }
+}
+
+// =========================
+// CATALOGUE WEAPON PREVIEW
+// =========================
+
+// These weapons already have image files in the project.
+// Other catalogue items can be selected without inventing an image path.
+
+equipmentSelects.weapon.addEventListener('change', () => {
+    const selectedId = Number(equipmentSelects.weapon.value);
+
+    const weapon = availableEquipment.find(
+        item => item.id === selectedId && item.type === 'weapon'
+    );
+
+    const previewFiles = new Map([
+        ['Iron Sword', 'iron-sword'],
+        ['Steel Sword', 'steel-sword'],
+        ['Magic Staff', 'magic-staff']
+    ]);
+
+    selectedWeaponInput.value = weapon
+        ? previewFiles.get(weapon.name) || ''
+        : '';
+
+    updatePreview();
+});
+
+// =========================
+// INITIALIZATION
+// =========================
 
 loadSession();
 
 updateSelectedStyles();
 updatePreview();
+loadEquipment();
