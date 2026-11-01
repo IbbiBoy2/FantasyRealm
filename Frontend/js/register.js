@@ -76,5 +76,4 @@ registerForm.addEventListener('submit', async (event) => {
 
 function showMessage(message) {
     formMessage.textContent = message;
-    formMessage.hidden = false;
 }

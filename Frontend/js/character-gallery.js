@@ -317,8 +317,16 @@ function renderPagination() {
             window.scrollTo({
                 top: galleryGrid.offsetTop - 120,
                 behavior: 'smooth'
+                
             });
         });
+
+        // Restore keyboard focus after rebuilding pagination buttons.
+const currentButton = galleryPagination.querySelector(
+    '.pagination-button.active'
+);
+
+currentButton?.focus({ preventScroll: true });
 
         galleryPagination.appendChild(button);
     }

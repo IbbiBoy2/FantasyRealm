@@ -1,0 +1,35 @@
+/* RGAA - Accessible skip navigation */
+
+.skip-link {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    z-index: 9999;
+
+    padding: 12px 20px;
+
+    background: #24123f;
+    color: #ffffff;
+
+    border: 2px solid #d8b4fe;
+    border-radius: 8px;
+
+    transform: translateY(-200%);
+}
+
+.skip-link:focus-visible {
+    transform: translateY(0);
+    outline: 3px solid #ffffff;
+    outline-offset: 3px;
+}
+/* RGAA - Visible keyboard focus */
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible {
+    outline: 3px solid #f0dcff !important;
+    outline-offset: 3px;
+}

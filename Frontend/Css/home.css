@@ -2533,3 +2533,28 @@ a {
         justify-content: center;
     }
 }
+
+/* RGAA - Skip navigation */
+
+.skip-link {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    z-index: 9999;
+
+    padding: 12px 20px;
+
+    background: #24123f;
+    color: #ffffff;
+
+    border: 2px solid #d8b4fe;
+    border-radius: 8px;
+
+    transform: translateY(-160%);
+}
+
+.skip-link:focus {
+    transform: translateY(0);
+    outline: 3px solid #ffffff;
+    outline-offset: 3px;
+}

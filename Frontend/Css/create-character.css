@@ -483,7 +483,23 @@ button {
 .image-choice input,
 .eye-choice input,
 .color-choice input {
-    display: none;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    padding: 0;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Visible keyboard focus */
+
+.gender-card:has(input:focus-visible),
+.image-choice:has(input:focus-visible),
+.eye-choice:has(input:focus-visible),
+.color-choice:has(input:focus-visible) {
+    outline: 3px solid #f0dcff;
+    outline-offset: 4px;
 }
 
 /* :has() styles the label according to its radio button's checked state. */
