@@ -33,6 +33,19 @@ const weaponChoices = document.querySelectorAll('.weapon-choice');
 const employeeDashboardLink =
     document.getElementById('employee-dashboard-link');
 
+    // Create Admin Dashboard link
+const adminDashboardLink = document.createElement('a');
+
+adminDashboardLink.id = 'admin-dashboard-link';
+adminDashboardLink.href = 'admin-dashboard.html';
+adminDashboardLink.textContent = 'Admin Dashboard';
+adminDashboardLink.hidden = true;
+
+employeeDashboardLink.insertAdjacentElement(
+    'afterend',
+    adminDashboardLink
+);
+
     const equipmentMessage = document.getElementById('equipment-message');
 
 const equipmentSelects = {
@@ -124,6 +137,13 @@ employeeDashboardLink.hidden = !(
     response.ok &&
     data.authenticated &&
     ['EMPLOYEE', 'ADMIN'].includes(data.user?.role)
+);
+
+// Only ADMIN accounts can see this link
+adminDashboardLink.hidden = !(
+    response.ok &&
+    data.authenticated &&
+    data.user?.role === 'ADMIN'
 );
 
         if (!response.ok) {

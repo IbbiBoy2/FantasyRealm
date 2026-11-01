@@ -25,6 +25,19 @@ const settingsDropdown = document.getElementById('settings-dropdown');
 const employeeDashboardLink =
     document.getElementById('employee-dashboard-link');
 
+    // Create Admin Dashboard link
+const adminDashboardLink = document.createElement('a');
+
+adminDashboardLink.id = 'admin-dashboard-link';
+adminDashboardLink.href = 'admin-dashboard.html';
+adminDashboardLink.textContent = 'Admin Dashboard';
+adminDashboardLink.hidden = true;
+
+employeeDashboardLink.insertAdjacentElement(
+    'afterend',
+    adminDashboardLink
+);
+
 // =========================
 // SETTINGS MENU
 // =========================
@@ -87,6 +100,13 @@ employeeDashboardLink.hidden = !(
     response.ok &&
     data.authenticated &&
     ['EMPLOYEE', 'ADMIN'].includes(data.user?.role)
+);
+
+// Only show this link to administrators
+adminDashboardLink.hidden = !(
+    response.ok &&
+    data.authenticated &&
+    data.user?.role === 'ADMIN'
 );
 
         if (!response.ok) {

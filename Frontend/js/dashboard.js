@@ -57,6 +57,19 @@ const deleteSubmit = document.getElementById('delete-submit');
 const employeeDashboardLink =
     document.getElementById('employee-dashboard-link');
 
+    // Create Admin Dashboard link
+const adminDashboardLink = document.createElement('a');
+
+adminDashboardLink.id = 'admin-dashboard-link';
+adminDashboardLink.href = 'admin-dashboard.html';
+adminDashboardLink.textContent = 'Admin Dashboard';
+adminDashboardLink.hidden = true;
+
+employeeDashboardLink.insertAdjacentElement(
+    'afterend',
+    adminDashboardLink
+);
+
 // =========================
 // SESSION
 // =========================
@@ -80,6 +93,13 @@ employeeDashboardLink.hidden = !(
     response.ok &&
     data.authenticated &&
     ['EMPLOYEE', 'ADMIN'].includes(data.user?.role)
+);
+
+// Show Admin Dashboard only to ADMIN accounts
+adminDashboardLink.hidden = !(
+    response.ok &&
+    data.authenticated &&
+    data.user?.role === 'ADMIN'
 );
 
         if (!response.ok) {

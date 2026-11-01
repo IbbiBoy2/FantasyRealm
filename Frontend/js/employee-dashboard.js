@@ -92,6 +92,20 @@ const settingsButton = document.getElementById('settings-button');
 const settingsDropdown = document.getElementById('settings-dropdown');
 const logoutButton = document.getElementById('logout-link');
 
+// Create the Admin Dashboard link.
+const adminDashboardLink = document.createElement('a');
+
+adminDashboardLink.id = 'admin-dashboard-link';
+adminDashboardLink.href = 'admin-dashboard.html';
+adminDashboardLink.textContent = 'Admin Dashboard';
+adminDashboardLink.hidden = true;
+
+// Place the link above Logout.
+settingsDropdown.insertBefore(
+    adminDashboardLink,
+    logoutButton
+);
+
 const pendingCharactersMessage =
     document.getElementById('pending-characters-message');
 
@@ -278,6 +292,9 @@ const response = await fetch(
         usernameDisplay.textContent = data.user.username;
         employeeUsername.textContent = data.user.username;
         employeeRole.textContent = `Role: ${data.user.role}`;
+
+        // Only administrators can see the Admin Dashboard link.
+adminDashboardLink.hidden = data.user.role !== 'ADMIN';
 
         pendingCharactersCount.textContent =
             data.statistics.pending_characters;

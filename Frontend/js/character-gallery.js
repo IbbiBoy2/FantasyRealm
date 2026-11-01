@@ -22,6 +22,18 @@ const settingsDropdown = document.getElementById('settings-dropdown');
 
 const employeeDashboardLink =
     document.getElementById('employee-dashboard-link');
+    // Create the Admin Dashboard navigation link.
+const adminDashboardLink = document.createElement('a');
+
+adminDashboardLink.id = 'admin-dashboard-link';
+adminDashboardLink.href = 'admin-dashboard.html';
+adminDashboardLink.textContent = 'Admin Dashboard';
+adminDashboardLink.hidden = true;
+
+employeeDashboardLink.insertAdjacentElement(
+    'afterend',
+    adminDashboardLink
+);
 
 // =========================
 // GALLERY STATE
@@ -65,6 +77,12 @@ async function loadSession() {
             data.authenticated &&
             ['EMPLOYEE', 'ADMIN'].includes(data.user?.role)
         );
+        
+        adminDashboardLink.hidden = !(
+    response.ok &&
+    data.authenticated &&
+    data.user?.role === 'ADMIN'
+);
 
         if (data.authenticated) {
             loginLink.hidden = true;
