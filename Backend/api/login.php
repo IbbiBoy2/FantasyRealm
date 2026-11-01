@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-session_start();
+// SECURE SESSION
+require_once __DIR__ . '/../config/security.php';
+startSecureSession();
 
 header('Content-Type: application/json; charset=utf-8');
 
@@ -136,7 +138,40 @@ try {
         exit;
     }
 
+// Upgrade older bcrypt hashes to Argon2id after successful login.
+
+$argon2Options = [
+    'memory_cost' => 19456,
+    'time_cost' => 2,
+    'threads' => 1
+];
+
+if (password_needs_rehash(
+    $user['password_hash'],
+    PASSWORD_ARGON2ID,
+    $argon2Options
+)) {
+    $newHash = password_hash(
+        $password,
+        PASSWORD_ARGON2ID,
+        $argon2Options
+    );
+
+    $updateStmt = $pdo->prepare(
+        'UPDATE users
+         SET password_hash = :password_hash
+         WHERE id = :id'
+    );
+
+    $updateStmt->execute([
+        'password_hash' => $newHash,
+        'id' => $user['id']
+    ]);
+}
+
+
 // Regenerating the session ID after login helps prevent session fixation.
+
 
     session_regenerate_id(true);
 

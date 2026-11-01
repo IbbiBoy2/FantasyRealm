@@ -43,6 +43,7 @@ try {
             ON characters.user_id = users.id
          WHERE characters.status = :status
            AND characters.shared = 1
+           AND characters.deleted_at IS NULL
          ORDER BY characters.created_at DESC'
     );
 

@@ -1,3 +1,4 @@
+document.addEventListener('DOMContentLoaded', () => {
 
 // =========================
 // DOM REFERENCES
@@ -17,6 +18,65 @@ const registerLink = document.getElementById('register-link');
 const usernameDisplay = document.getElementById('nav-username');
 const logoutLink = document.getElementById('logout-link');
 
+const settingsMenu = document.getElementById('settings-menu');
+const settingsButton = document.getElementById('settings-button');
+const settingsDropdown = document.getElementById('settings-dropdown');
+
+const employeeDashboardLink =
+    document.getElementById('employee-dashboard-link');
+
+    // Create Admin Dashboard link
+const adminDashboardLink = document.createElement('a');
+
+adminDashboardLink.id = 'admin-dashboard-link';
+adminDashboardLink.href = 'admin-dashboard.html';
+adminDashboardLink.textContent = 'Admin Dashboard';
+adminDashboardLink.hidden = true;
+
+employeeDashboardLink.insertAdjacentElement(
+    'afterend',
+    adminDashboardLink
+);
+
+// =========================
+// SETTINGS MENU
+// =========================
+
+// Keeps dropdown visibility and its accessibility state synchronized.
+
+function setSettingsOpen(isOpen) {
+    settingsDropdown.hidden = !isOpen;
+
+    settingsButton.setAttribute(
+        'aria-expanded',
+        String(isOpen)
+    );
+}
+
+settingsButton.addEventListener('click', () => {
+    setSettingsOpen(settingsDropdown.hidden);
+});
+
+// Closes the dropdown when clicking outside the settings container.
+
+document.addEventListener('click', (event) => {
+    if (!settingsMenu.contains(event.target)) {
+        setSettingsOpen(false);
+    }
+});
+
+// Returns keyboard focus to the gear when Escape closes the dropdown.
+
+document.addEventListener('keydown', (event) => {
+    if (
+        event.key === 'Escape' &&
+        !settingsDropdown.hidden
+    ) {
+        setSettingsOpen(false);
+        settingsButton.focus();
+    }
+});
+
 // =========================
 // SESSION / NAVBAR
 // =========================
@@ -24,12 +84,34 @@ const logoutLink = document.getElementById('logout-link');
 // Logged-in users get their username and email prefilled automatically.
 
 async function loadSession() {
+
+        employeeDashboardLink.hidden = true;
+
     try {
         const response = await fetch(
             '/FantasyRealm/Backend/api/session.php'
         );
 
         const data = await response.json();
+
+        // Shows staff navigation only after a successful authenticated role check.
+
+employeeDashboardLink.hidden = !(
+    response.ok &&
+    data.authenticated &&
+    ['EMPLOYEE', 'ADMIN'].includes(data.user?.role)
+);
+
+// Only show this link to administrators
+adminDashboardLink.hidden = !(
+    response.ok &&
+    data.authenticated &&
+    data.user?.role === 'ADMIN'
+);
+
+        if (!response.ok) {
+            throw new Error('Unable to verify session.');
+        }
 
         if (data.authenticated) {
             loginLink.hidden = true;
@@ -38,24 +120,23 @@ async function loadSession() {
             usernameDisplay.textContent = data.user.username;
             usernameDisplay.hidden = false;
 
-            logoutLink.hidden = false;
+            settingsMenu.hidden = false;
 
             usernameInput.value = data.user.username;
             emailInput.value = data.user.email;
-
         } else {
             loginLink.hidden = false;
             registerLink.hidden = false;
 
+            usernameDisplay.textContent = '';
             usernameDisplay.hidden = true;
-            logoutLink.hidden = true;
+
+            settingsMenu.hidden = true;
+            setSettingsOpen(false);
         }
 
     } catch (error) {
-        console.error(
-            'Unable to load session:',
-            error
-        );
+        console.error('Unable to load session:', error);
     }
 }
 
@@ -78,11 +159,10 @@ contactForm.addEventListener(
 
 // Basic client-side validation before sending the request.
 
-        if (
-            contactData.username === '' ||
-            contactData.email === '' ||
-            contactData.message === ''
-        ) {
+       if (
+    contactData.email === '' ||
+    contactData.message === ''
+) {
             showMessage(
                 'Please fill in all fields.'
             );
@@ -157,32 +237,63 @@ contactForm.addEventListener(
 // LOGOUT
 // =========================
 
-logoutLink.addEventListener(
-    'click',
-    async (event) => {
-        event.preventDefault();
+// Redirects only after the REST API confirms the PHP session has ended.
 
-        try {
-            await fetch(
-                '/FantasyRealm/Backend/api/logout.php',
-                {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json'
-                    }
-                }
-            );
+logoutLink.addEventListener('click', async () => {
+    try {
 
-            window.location.href = 'index.html';
+// =========================
+// CSRF PROTECTION
+// =========================
 
-        } catch (error) {
-            console.error(
-                'Unable to logout:',
-                error
-            );
-        }
+const sessionResponse = await fetch(
+    '/FantasyRealm/Backend/api/session.php',
+    {
+        credentials: 'same-origin',
+        cache: 'no-store'
     }
 );
+
+const sessionData = await sessionResponse.json();
+
+if (
+    !sessionResponse.ok ||
+    !sessionData.authenticated ||
+    typeof sessionData.csrf_token !== 'string'
+) {
+    throw new Error('Unable to verify session security.');
+}
+
+        const response = await fetch(
+            '/FantasyRealm/Backend/api/logout.php',
+            {
+                method: 'POST',
+headers: {
+    'Accept': 'application/json',
+    'X-CSRF-Token': sessionData.csrf_token
+}
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+            showMessage(
+                data.message || 'Unable to log out. Please try again.'
+            );
+            return;
+        }
+
+        window.location.href = 'index.html';
+
+    } catch (error) {
+        console.error('Unable to logout:', error);
+
+        showMessage(
+            'Unable to log out. Please try again.'
+        );
+    }
+});
 
 // =========================
 // FORM FEEDBACK
@@ -204,3 +315,5 @@ function hideMessage() {
 // =========================
 
 loadSession();
+
+});

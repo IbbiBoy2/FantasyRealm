@@ -29,6 +29,7 @@ CREATE TABLE characters (
     status VARCHAR(20) NOT NULL DEFAULT 'PENDING',
     shared BOOLEAN NOT NULL DEFAULT FALSE,
     image_path VARCHAR(255) NULL,
+    deleted_at DATETIME NULL,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id)
 );

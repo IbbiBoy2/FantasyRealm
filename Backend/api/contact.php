@@ -52,7 +52,6 @@ $message = trim($data['message'] ?? '');
 
 
 if (
-    $username === '' ||
     $email === '' ||
     $message === ''
 ) {
