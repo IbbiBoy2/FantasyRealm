@@ -143,6 +143,20 @@ try {
     }
 
     // Delete reviews written by the player or linked to their characters.
+
+
+    // Delete contact messages linked to this account.
+    // Prevents the foreign key from blocking account deletion.
+    $stmt = $pdo->prepare(
+        'DELETE FROM contact_messages
+         WHERE user_id = :user_id'
+    );
+
+    $stmt->execute([
+        'user_id' => $userId
+    ]);
+
+
     $stmt = $pdo->prepare(
         'DELETE reviews
          FROM reviews
