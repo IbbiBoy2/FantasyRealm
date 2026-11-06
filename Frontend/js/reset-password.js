@@ -9,74 +9,86 @@ const params = new URLSearchParams(window.location.search);
 const token = params.get('token');
 
 if (!token) {
-    showMessage('Invalid password reset link.');
-    resetForm.hidden = true;
+	showMessage('Invalid password reset link.');
+	resetForm.hidden = true;
 }
 
 resetForm.addEventListener('submit', async (event) => {
-    event.preventDefault();
+	event.preventDefault();
 
-    const password = passwordInput.value;
-    const passwordConfirm = passwordConfirmInput.value;
+	const password = passwordInput.value;
+	const passwordConfirm = passwordConfirmInput.value;
 
-    formMessage.hidden = true;
-    formMessage.textContent = '';
+	formMessage.hidden = true;
+	formMessage.textContent = '';
 
-    if (password === '' || passwordConfirm === '') {
-        showMessage('Please fill in all fields.');
-        return;
-    }
+	if (password === '' || passwordConfirm === '') {
+		showMessage('Please fill in all fields.');
+		return;
+	}
 
-    if (password !== passwordConfirm) {
-        showMessage('Passwords do not match.');
-        return;
-    }
+	if (password !== passwordConfirm) {
+		showMessage('Passwords do not match.');
+		return;
+	}
 
-    resetButton.disabled = true;
-    resetButton.textContent = 'Resetting password...';
+	resetButton.disabled = true;
+	resetButton.textContent = 'Resetting password...';
 
-    try {
-        const response = await fetch(
-            '/FantasyRealm/Backend/api/reset-password.php',
-            {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({
-                    token: token,
-                    password: password,
-                    password_confirm: passwordConfirm
-                })
-            }
-        );
+	try {
+		const response = await fetch(
+			'/FantasyRealm/Backend/api/reset-password.php',
+			{
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'Accept': 'application/json'
+				},
+				body: JSON.stringify({
+					token: token,
+					password: password,
+					password_confirm: passwordConfirm
+				})
+			}
+		);
 
-        const data = await response.json();
+		const data = await response.json();
 
-        if (!response.ok || !data.success) {
-            showMessage(
-                data.message || 'Unable to reset password.'
-            );
-            return;
-        }
+		if (!response.ok || !data.success) {
+			showMessage(
+				data.message || 'Unable to reset password.'
+			);
+			return;
+		}
 
-        showMessage('Password reset successfully.');
+		/*
+		* Redirect the user to the login page after a
+		* successful password reset.
+		* 
+		* The reset token has already been invalidated
+		* by the backend and must not be reused.
+		*/
+		showMessage('Password reset successfully. Redirecting to login...');
 
-        resetForm.reset();
+		resetForm.reset();
+		resetForm.hidden = true;
 
-    } catch (error) {
-        console.error('Password reset request failed:', error);
+		setTimeout(() => {
+			window.location.replace('login.html');
+		}, 2000);
 
-        showMessage('Unable to connect to the server.');
-    } finally {
-        resetButton.disabled = false;
-        resetButton.textContent = 'Reset Password';
-    }
+	} catch (error) {
+		console.error('Password reset request failed:', error);
+
+		showMessage('Unable to connect to the server.');
+	} finally {
+		resetButton.disabled = false;
+		resetButton.textContent = 'Reset Password';
+	}
 });
 
 
 function showMessage(message) {
-    formMessage.textContent = message;
-    formMessage.hidden = false;
+	formMessage.textContent = message;
+	formMessage.hidden = false;
 }

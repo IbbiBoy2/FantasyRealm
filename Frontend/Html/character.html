@@ -1,349 +1,219 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Character Details | FantasyRealm</title>
 
-    <title>Character | FantasyRealm</title>
+    <meta
+      name="description"
+      content="Explore a FantasyRealm community character, their appearance, equipment and approved reviews."
+    />
 
-    <!-- =========================
-         FONTS AND PAGE ASSETS
-    ========================= -->
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Shared branding and typography. -->
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
     <link
-        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600&display=swap"
-        rel="stylesheet"
-    >
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
 
-    <link rel="stylesheet" href="../Css/character.css">
-
+    <!-- Character details and shared application styles. -->
+    <link rel="stylesheet" href="../Css/character.css" />
+    <link rel="stylesheet" href="../Css/header.css" />
+    <link rel="stylesheet" href="../Css/footer.css" />
+    <link rel="stylesheet" href="../Css/accessibility.css" />
+    <link rel="stylesheet" href="../Css/layout.css" />
+    <!-- Shared renderer styles for saved character appearances. -->
+    <link rel="stylesheet" href="../Css/character-renderer.css" />
+    <!-- Shared navigation and character details. -->
+    <script src="../js/components/header.js" defer></script>
+    <script src="../js/components/footer.js" defer></script>
+    <!-- Rebuild saved characters from their PNG layers. -->
+    <script src="../js/components/character-renderer.js" defer></script>
     <script src="../js/character.js" defer></script>
-    <link rel="stylesheet" href="../Css/accessibility.css">
-</head>
+  </head>
 
-<body>
-    <a class="skip-link" href="#main-content">Skip to main content</a>
+  <body class="app-layout" data-page="character">
+    <a class="skip-link" href="#main-content"> Skip to main content </a>
 
-    <!-- =========================
-         MAIN NAVIGATION
-    ========================= -->
+    <!-- Shared application header. -->
+    <header id="site-header" class="app-header"></header>
 
-    <header class="character-navbar">
-        <a class="brand" href="index.html">
-            <span class="brand-mark">✦</span>
-            <span>FantasyRealm</span>
-        </a>
-
-        <nav class="nav-links">
-            <a href="index.html">Home</a>
-            <a href="character-gallery.html">Characters</a>
-            <a href="create-character.html">Create</a>
-
-            <a id="login-link" href="login.html">
-                Login
-            </a>
-
-            <a
-                id="register-link"
-                class="nav-register"
-                href="register.html"
-            >
-                Register
-            </a>
-
-            <span
-                id="nav-username"
-                class="nav-username"
-                hidden
-            ></span>
-
-            <!-- =========================
-                 ACCOUNT SETTINGS
-            ========================= -->
-
-            <div id="settings-menu" class="settings-menu" hidden>
-                <button
-                    id="settings-button"
-                    class="settings-button"
-                    type="button"
-                    aria-label="Open settings"
-                    aria-controls="settings-dropdown"
-                    aria-expanded="false"
-                >
-                    ⚙
-                </button>
-
-                <div
-                    id="settings-dropdown"
-                    class="settings-dropdown"
-                    hidden
-                >
-                    <a href="dashboard.html">
-                        Character Settings
-                    </a>
-
-                    <!-- Staff navigation: shown only for employee and administrator accounts. -->
-
-<a
-    id="employee-dashboard-link"
-    href="employee-dashboard.html"
-    hidden
->
-    Employee Dashboard
-</a>
-
-                    <button id="logout-link" type="button">
-                        Logout
-                    </button>
-                </div>
-            </div>
-        </nav>
-    </header>
-
-    <main tabindex="-1" id="main-content" class="character-page">
-
-        <!-- =========================
-             GALLERY RETURN LINK
-        ========================= -->
-
+    <main id="main-content" class="app-main character-page" tabindex="-1">
+      <div class="character-container">
         <a href="character-gallery.html" class="back-link">
-            ← Back to Gallery
+          <span aria-hidden="true">←</span>
+          Back to Gallery
         </a>
 
-        <!-- =========================
-             CHARACTER STATUS MESSAGE
-        ========================= -->
-
+        <!-- Loading and API error messages. -->
         <p
-            id="character-message"
-            class="character-message"
+          id="character-message"
+          class="character-message"
+          role="status"
+          aria-live="polite"
         >
-            Loading character...
+          Loading character...
         </p>
 
-        <!-- =========================
-             CHARACTER CONTENT
-        ========================= -->
-
-        <!-- JavaScript displays this section after loading the character. -->
-
+        <!-- Visible only when a public character is loaded. -->
         <section
-            id="character-content"
-            class="character-content"
-            hidden
+          id="character-content"
+          class="character-content"
+          aria-labelledby="character-name"
+          hidden
         >
+          <div class="character-visual">
+            <div class="character-stage">
+              <img id="character-image" alt="" hidden />
 
-            <!-- =========================
-                 CHARACTER IMAGE
-            ========================= -->
+            </div>
+          </div>
 
-            <div class="character-visual">
-                <div class="character-stage">
-                    <img
-                        id="character-image"
-                        src=""
-                        alt=""
-                        hidden
-                    >
+          <div class="character-details">
+            <p class="eyebrow">FANTASYREALM CHARACTER</p>
 
-                    <span class="stage-ring"></span>
+            <h1 id="character-name">Character Name</h1>
+
+            <p class="character-meta">
+              Created by
+              <strong id="character-creator"> Unknown </strong>
+            </p>
+
+            <p id="character-created-date" class="character-date"></p>
+
+            <section
+              class="detail-section"
+              aria-labelledby="appearance-heading"
+            >
+              <h2 id="appearance-heading">Appearance</h2>
+
+              <div class="detail-grid">
+                <div class="detail-item">
+                  <span>Gender</span>
+                  <strong id="character-gender">—</strong>
                 </div>
-            </div>
 
-            <!-- =========================
-                 CHARACTER IDENTITY
-            ========================= -->
+                <div class="detail-item">
+                  <span>Skin Tone</span>
+                  <strong id="character-skin">—</strong>
+                </div>
 
-            <div class="character-details">
-                <p class="eyebrow">
-                    FANTASYREALM CHARACTER
-                </p>
+                <div class="detail-item">
+                  <span>Hair Style</span>
+                  <strong id="character-hair-style">—</strong>
+                </div>
 
-                <h1 id="character-name">
-                    Character Name
-                </h1>
+                <div class="detail-item">
+                  <span>Hair Color</span>
+                  <strong id="character-hair-color">—</strong>
+                </div>
 
-                <p class="character-meta">
-                    Created by
-                    <strong id="character-creator">
-                        Unknown
-                    </strong>
-                </p>
+                <div class="detail-item">
+                  <span>Eye Color</span>
+                  <strong id="character-eye-color">—</strong>
+                </div>
+              </div>
+            </section>
 
-                <p
-                    id="character-created-date"
-                    class="character-date"
-                ></p>
+            <section class="detail-section" aria-labelledby="equipment-heading">
+              <h2 id="equipment-heading">Equipment</h2>
 
-                <!-- =========================
-                     CHARACTER APPEARANCE
-                ========================= -->
-
-                <section class="detail-section">
-                    <h2>Appearance</h2>
-
-                    <div class="detail-grid">
-                        <div class="detail-item">
-                            <span>Gender</span>
-                            <strong id="character-gender">—</strong>
-                        </div>
-
-                        <div class="detail-item">
-                            <span>Skin Tone</span>
-                            <strong id="character-skin">—</strong>
-                        </div>
-
-                        <div class="detail-item">
-                            <span>Hair Style</span>
-                            <strong id="character-hair-style">—</strong>
-                        </div>
-
-                        <div class="detail-item">
-                            <span>Hair Color</span>
-                            <strong id="character-hair-color">—</strong>
-                        </div>
-
-                        <div class="detail-item">
-                            <span>Eye Color</span>
-                            <strong id="character-eye-color">—</strong>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- =========================
-                     CHARACTER EQUIPMENT
-                ========================= -->
-
-                <section class="detail-section">
-                    <h2>Equipment</h2>
-
-                    <div
-                        id="character-equipment"
-                        class="equipment-list"
-                    >
-                        <p>No equipment.</p>
-                    </div>
-                </section>
-            </div>
+              <div id="character-equipment" class="equipment-list">
+                <p>No equipment.</p>
+              </div>
+            </section>
+          </div>
         </section>
 
-        
-<!-- =========================
-    SUBMIT CHARACTER REVIEW
-========================= -->
+        <!--
+          Reviews are hidden until the requested
+          character is confirmed public by the API.
+        -->
+        <div id="character-reviews-content" hidden>
+          <section
+            class="detail-section review-section"
+            aria-labelledby="review-heading"
+          >
+            <h2 id="review-heading">Leave a Review</h2>
 
-<section class="detail-section review-section">
-    <h2>Leave a Review</h2>
+            <p class="review-intro">
+              Share your opinion with a rating and comment. Reviews become
+              public after employee approval.
+            </p>
 
-    <p class="review-intro">
-        Share your opinion with a rating and comment.
-        Reviews stay hidden until employee approval.
-    </p>
+            <!-- Default guest state before session verification. -->
+            <p id="review-login-notice" class="review-intro">
+              <a href="login.html">Log in</a>
+              to submit a review.
+            </p>
 
-    <!-- JavaScript shows the login notice or form after checking the session. -->
+            <form id="review-form" class="review-form" method="post" hidden>
+              <label for="review-rating"> Rating </label>
 
-    <p id="review-login-notice" class="review-intro" hidden>
-        <a href="login.html">Log in</a> to submit a review.
-    </p>
+              <select id="review-rating" name="rating" required>
+                <option value="">Choose a rating</option>
+                <option value="1">1 — Poor</option>
+                <option value="2">2 — Fair</option>
+                <option value="3">3 — Good</option>
+                <option value="4">4 — Very good</option>
+                <option value="5">5 — Excellent</option>
+              </select>
 
-    <form id="review-form" class="review-form" hidden>
-        <label for="review-rating">
-            Rating
-        </label>
+              <label for="review-comment"> Comment </label>
 
-        <select id="review-rating" name="rating" required>
-            <option value="">Choose a rating</option>
-            <option value="1">1 — Poor</option>
-            <option value="2">2 — Fair</option>
-            <option value="3">3 — Good</option>
-            <option value="4">4 — Very good</option>
-            <option value="5">5 — Excellent</option>
-        </select>
+              <textarea
+                id="review-comment"
+                name="comment"
+                rows="5"
+                maxlength="2000"
+                placeholder="What do you think of this character?"
+                required
+              ></textarea>
 
-        <label for="review-comment">
-            Comment
-        </label>
+              <button id="review-submit" type="submit">Submit Review</button>
+            </form>
 
-        <textarea
-            id="review-comment"
-            name="comment"
-            rows="5"
-            maxlength="2000"
-            placeholder="What do you think of this character?"
-            required
-        ></textarea>
+            <p
+              id="review-feedback"
+              class="review-feedback"
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
+              hidden
+            ></p>
+          </section>
 
-        <button id="review-submit" type="submit">
-            Submit Review
-        </button>
-    </form>
+          <section
+            class="detail-section reviews-section"
+            aria-labelledby="reviews-title"
+          >
+            <h2 id="reviews-title">Community Reviews</h2>
 
-    <!-- Displays submission feedback without exposing pending review content. -->
+            <p class="review-intro">
+              Reviews approved by the FantasyRealm team.
+            </p>
 
-    <p
-        id="review-feedback"
-        class="review-feedback"
-        role="status"
-        aria-live="polite"
-        hidden
-    ></p>
-</section>
+            <p
+              id="reviews-message"
+              class="review-intro"
+              role="status"
+              aria-live="polite"
+            >
+              Loading reviews...
+            </p>
 
-<!-- =========================
-     APPROVED CHARACTER REVIEWS
-========================= -->
-
-<section
-    class="detail-section reviews-section"
-    aria-labelledby="reviews-title"
->
-    <h2 id="reviews-title">
-        Community Reviews
-    </h2>
-
-    <p class="review-intro">
-        Reviews approved by the FantasyRealm team.
-    </p>
-
-    <!-- JavaScript updates loading, empty and error messages here. -->
-
-    <p
-        id="reviews-message"
-        class="review-intro"
-        role="status"
-        aria-live="polite"
-    >
-        Loading reviews...
-    </p>
-
-    <!-- Review cards are created from the approved reviews API response. -->
-
-    <div id="reviews-list" class="reviews-list"></div>
-</section>
-
+            <div id="reviews-list" class="reviews-list"></div>
+          </section>
+        </div>
+      </div>
     </main>
 
-    <!-- =========================
-         SITE FOOTER
-    ========================= -->
-
-    <footer class="footer">
-        <div class="footer-brand">
-            ✦ FantasyRealm
-        </div>
-
-        <p>© 2026 FantasyRealm. All rights reserved.</p>
-
-<div class="footer-links">
-    <a href="legal-notice.html">Legal Notice</a>
-    <a href="privacy.html">Privacy Policy</a>
-    <a href="contact.html">Contact</a>
-</div>
-    </footer>
-
-</body>
+    <!-- Shared application footer. -->
+    <footer id="site-footer" class="app-footer"></footer>
+  </body>
 </html>

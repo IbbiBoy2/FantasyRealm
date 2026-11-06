@@ -1,963 +1,490 @@
-:root {
-    --bg: #060612;
-    --panel: rgba(10, 9, 28, 0.82);
-    --panel-strong: rgba(17, 12, 40, 0.96);
+/*
+ * FANTASYREALM - CHARACTER DETAILS
+ *
+ * Individual character display and approved reviews.
+ * Shared layout, header and footer use their own CSS.
+ */
 
-    --purple: #7c3aed;
-    --purple-light: #a855f7;
-    --purple-soft: #d8b4fe;
-
-    --text: #ffffff;
-    --muted: #c9c7d8;
-
-    --line: rgba(196, 131, 255, 0.42);
-}
-
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-body {
-    min-height: 100vh;
-
-    color: var(--text);
-
-    background:
-        radial-gradient(
-            circle at top,
-            rgba(124, 58, 237, 0.20),
-            transparent 35%
-        ),
-        linear-gradient(
-            180deg,
-            #090616,
-            var(--bg)
-        );
-
-    font-family: "Inter", sans-serif;
-}
-
-/* NAVBAR */
-
-.character-navbar {
-    min-height: 78px;
-
-    z-index: 20;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: relative;
-
-    padding: 0 6%;
-
-    background: rgba(6, 6, 18, 0.88);
-
-    border-bottom: 1px solid var(--line);
-
-    backdrop-filter: blur(16px);
-}
-
-.brand {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-
-    color: var(--text);
-
-    text-decoration: none;
-
-    font-family: "Cinzel", serif;
-    font-size: 1.25rem;
-    font-weight: 700;
-}
-
-.brand-mark {
-    color: var(--purple-light);
-}
-
-.nav-links {
-    display: flex;
-    align-items: center;
-    gap: 26px;
-}
-
-.nav-links a {
-    color: var(--muted);
-
-    text-decoration: none;
-
-    font-size: 0.92rem;
-
-    transition:
-        color 0.2s ease,
-        transform 0.2s ease;
-}
-
-.nav-links a:hover {
-    color: var(--text);
-}
-
-.nav-register {
-    padding: 9px 16px;
-
-    color: #ffffff !important;
-
-    background:
-        linear-gradient(
-            135deg,
-            var(--purple),
-            var(--purple-light)
-        );
-
-    border-radius: 8px;
-}
-
-.nav-username {
-    color: var(--purple-soft);
-
-    font-weight: 600;
-}
-
-
-/* PAGE */
+/* =========================================================
+   PAGE LAYOUT
+========================================================= */
 
 .character-page {
-    width: min(1200px, 92%);
-
-    margin: 0 auto;
-
-    padding: 60px 0 90px;
+	color: #f5f0ff;
+	font-family: "Inter", sans-serif;
 }
 
-.back-link {
-    display: inline-block;
-
-    margin-bottom: 28px;
-
-    color: var(--purple-soft);
-
-    text-decoration: none;
-
-    font-weight: 500;
-
-    transition: color 0.2s ease;
+.character-container {
+	box-sizing: border-box;
+	width: min(1200px, calc(100% - 40px));
+	margin: 0 auto;
+	padding: 46px 0 80px;
 }
 
-.back-link:hover {
-    color: #ffffff;
+.character-page [hidden] {
+	display: none !important;
 }
 
+.character-page .back-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 9px;
+	margin-bottom: 25px;
+	padding: 11px 20px;
 
-/* LOADING / ERROR */
+	border: 1px solid rgba(216, 180, 254, 0.4);
+	border-radius: 999px;
+
+	background: rgba(124, 58, 237, 0.12);
+	color: #eee3ff;
+
+	font-size: 13px;
+	font-weight: 600;
+	text-decoration: none;
+}
+
+.character-page .back-link:hover {
+	border-color: #d8b4fe;
+	background: rgba(124, 58, 237, 0.28);
+}
 
 .character-message {
-    padding: 30px;
+	padding: 30px;
+	border: 1px solid rgba(168, 85, 247, 0.42);
+	border-radius: 16px;
 
-    text-align: center;
-
-    color: var(--muted);
-
-    background: var(--panel);
-
-    border: 1px solid var(--line);
-    border-radius: 14px;
+	background: rgba(17, 12, 40, 0.9);
+	color: #c9c0da;
+	text-align: center;
 }
 
-
-/* MAIN CHARACTER CARD */
+/* =========================================================
+   MAIN CHARACTER CARD
+========================================================= */
 
 .character-content {
-    display: grid;
+	display: grid;
+	grid-template-columns:
+		minmax(0, 0.9fr) minmax(0, 1.1fr);
+	gap: 36px;
 
-    grid-template-columns:
-        minmax(320px, 0.9fr)
-        minmax(420px, 1.1fr);
+	padding: 34px;
 
-    gap: 50px;
+	border: 1px solid rgba(168, 85, 247, 0.42);
+	border-radius: 22px;
 
-    padding: 34px;
+	background: linear-gradient(145deg,
+			rgba(23, 14, 49, 0.96),
+			rgba(9, 7, 26, 0.94));
 
-    background:
-        linear-gradient(
-            135deg,
-            rgba(17, 12, 40, 0.94),
-            rgba(10, 9, 28, 0.86)
-        );
-
-    border: 1px solid var(--line);
-    border-radius: 22px;
-
-    box-shadow:
-        0 30px 70px rgba(0, 0, 0, 0.35);
-
-    backdrop-filter: blur(18px);
+	box-shadow:
+		0 18px 55px rgba(0, 0, 0, 0.3),
+		0 0 35px rgba(124, 58, 237, 0.13);
 }
 
-
-/* CHARACTER VISUAL */
+/* =========================================================
+   CHARACTER VISUAL
+========================================================= */
 
 .character-visual {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+	min-width: 0;
 }
 
 .character-stage {
-    position: relative;
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 
-    width: 100%;
-    min-height: 500px;
+	min-height: 480px;
+	height: 100%;
+	overflow: hidden;
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
+	border: 1px solid rgba(196, 131, 255, 0.28);
+	border-radius: 18px;
 
-    overflow: hidden;
-
-    background:
-        radial-gradient(
-            circle at center,
-            rgba(168, 85, 247, 0.25),
-            rgba(17, 12, 40, 0.25) 45%,
-            rgba(6, 6, 18, 0.85) 75%
-        );
-
-    border: 1px solid rgba(196, 131, 255, 0.25);
-    border-radius: 18px;
-}
-
-.character-stage::before {
-    content: "";
-
-    position: absolute;
-
-    width: 260px;
-    height: 260px;
-
-    background: rgba(124, 58, 237, 0.18);
-
-    border-radius: 50%;
-
-    filter: blur(60px);
+	background: radial-gradient(circle at center,
+			rgba(168, 85, 247, 0.25),
+			rgba(17, 12, 40, 0.25) 45%,
+			rgba(6, 6, 18, 0.85) 75%);
 }
 
 #character-image {
-    position: relative;
+	position: relative;
+	z-index: 2;
 
-    z-index: 2;
-
-    max-width: 90%;
-    max-height: 450px;
-
-    object-fit: contain;
+	max-width: 90%;
+	max-height: 450px;
+	object-fit: contain;
 }
 
-.stage-ring {
-    position: absolute;
-
-    bottom: 45px;
-
-    width: 240px;
-    height: 55px;
-
-    border: 2px solid rgba(216, 180, 254, 0.65);
-    border-radius: 50%;
-
-    box-shadow:
-        0 0 30px rgba(168, 85, 247, 0.45),
-        inset 0 0 25px rgba(124, 58, 237, 0.18);
-}
-
-
-/* DETAILS */
+/* =========================================================
+   CHARACTER IDENTITY AND DETAILS
+========================================================= */
 
 .character-details {
-    display: flex;
-    flex-direction: column;
+	min-width: 0;
 }
 
-.eyebrow {
-    margin-bottom: 8px;
+.character-details .eyebrow {
+	margin: 0 0 12px;
 
-    color: var(--purple-soft);
-
-    font-size: 0.76rem;
-    font-weight: 600;
-
-    letter-spacing: 0.13em;
+	color: #d8b4fe;
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.2em;
 }
 
 .character-details h1 {
-    margin-bottom: 12px;
+	margin: 0 0 14px;
 
-    font-family: "Cinzel", serif;
+	color: #faf4ff;
+	font-family: "Cinzel", serif;
+	font-size: clamp(30px, 4vw, 53px);
+	line-height: 1.2;
+	overflow-wrap: anywhere;
 
-    font-size: clamp(2.3rem, 5vw, 4.2rem);
-
-    line-height: 1.05;
+	text-shadow: 0 0 22px rgba(168, 85, 247, 0.3);
 }
 
 .character-meta {
-    color: var(--muted);
-
-    font-size: 1rem;
+	margin: 0;
+	color: #c9c0da;
+	font-size: 14px;
 }
 
 .character-meta strong {
-    color: var(--purple-soft);
+	color: #d8b4fe;
 }
 
 .character-date {
-    margin-top: 8px;
-
-    color: rgba(201, 199, 216, 0.72);
-
-    font-size: 0.86rem;
+	margin: 9px 0 0;
+	color: #b8adc9;
+	font-size: 12px;
 }
 
-
-/* DETAIL SECTIONS */
-
 .detail-section {
-    margin-top: 34px;
-
-    padding-top: 28px;
-
-    border-top: 1px solid rgba(196, 131, 255, 0.18);
+	margin-top: 32px;
+	padding-top: 26px;
+	border-top: 1px solid rgba(196, 131, 255, 0.24);
 }
 
 .detail-section h2 {
-    margin-bottom: 18px;
+	margin: 0 0 20px;
 
-    font-family: "Cinzel", serif;
-
-    font-size: 1.35rem;
+	color: #faf4ff;
+	font-family: "Cinzel", serif;
+	font-size: 22px;
 }
 
 .detail-grid {
-    display: grid;
-
-    grid-template-columns:
-        repeat(2, minmax(0, 1fr));
-
-    gap: 12px;
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 12px;
 }
 
 .detail-item {
-    padding: 15px;
+	min-width: 0;
+	padding: 15px;
 
-    background: rgba(6, 6, 18, 0.55);
-
-    border: 1px solid rgba(196, 131, 255, 0.20);
-    border-radius: 11px;
+	border: 1px solid rgba(196, 131, 255, 0.22);
+	border-radius: 11px;
+	background: rgba(6, 6, 18, 0.55);
 }
 
 .detail-item span {
-    display: block;
+	display: block;
+	margin-bottom: 7px;
 
-    margin-bottom: 5px;
-
-    color: var(--muted);
-
-    font-size: 0.76rem;
-
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
+	color: #bbb2cf;
+	font-size: 11px;
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
 }
 
 .detail-item strong {
-    color: #ffffff;
-
-    font-size: 0.98rem;
+	color: #fff;
+	font-size: 14px;
+	overflow-wrap: anywhere;
 }
 
-
-/* EQUIPMENT */
-
 .equipment-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
 }
 
 .equipment-list p {
-    padding: 11px 15px;
+	margin: 0;
+	padding: 11px 15px;
 
-    color: var(--purple-soft);
+	border: 1px solid rgba(168, 85, 247, 0.32);
+	border-radius: 9px;
 
-    background: rgba(124, 58, 237, 0.13);
-
-    border: 1px solid rgba(168, 85, 247, 0.32);
-    border-radius: 9px;
+	background: rgba(124, 58, 237, 0.13);
+	color: #d8b4fe;
+	font-size: 13px;
 }
 
+/* =========================================================
+   REVIEWS
+========================================================= */
 
-/* FOOTER */
+.review-section,
+.reviews-section {
+	padding: 27px 30px 30px;
 
-.footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+	border: 1px solid rgba(168, 85, 247, 0.38);
+	border-radius: 18px;
 
-    gap: 20px;
-
-    padding: 30px 6%;
-
-    color: var(--muted);
-
-    background: #05050e;
-
-    border-top: 1px solid rgba(196, 131, 255, 0.20);
-
-    font-size: 0.85rem;
+	background: linear-gradient(145deg,
+			rgba(23, 14, 49, 0.93),
+			rgba(9, 7, 26, 0.94));
 }
-
-.footer-brand {
-    color: var(--purple-soft);
-
-    font-family: "Cinzel", serif;
-}
-
-.footer-links {
-    display: flex;
-    gap: 20px;
-}
-
-.footer-links a {
-    color: var(--muted);
-
-    text-decoration: none;
-}
-
-.footer-links a:hover {
-    color: #ffffff;
-}
-
-
-/* TABLET */
-
-@media (max-width: 900px) {
-
-    .character-content {
-        grid-template-columns: 1fr;
-    }
-
-    .character-stage {
-        min-height: 420px;
-    }
-}
-
-
-/* MOBILE */
-
-@media (max-width: 680px) {
-
-    .character-navbar {
-        flex-direction: column;
-
-        gap: 16px;
-
-        padding: 18px;
-    }
-
-    .nav-links {
-        width: 100%;
-
-        justify-content: center;
-        flex-wrap: wrap;
-
-        gap: 14px;
-    }
-
-    .character-page {
-        padding-top: 35px;
-    }
-
-    .character-content {
-        padding: 18px;
-
-        gap: 30px;
-
-        border-radius: 16px;
-    }
-
-    .character-stage {
-        min-height: 330px;
-    }
-
-    .stage-ring {
-        width: 180px;
-    }
-
-    .detail-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .footer {
-        flex-direction: column;
-
-        text-align: center;
-    }
-}
-
-/* =========================
-   ACCOUNT SETTINGS
-========================= */
-
-.settings-menu {
-    position: relative;
-
-    display: flex;
-    align-items: center;
-}
-
-.settings-button {
-    width: 42px;
-    height: 42px;
-
-    display: grid;
-    place-items: center;
-
-    border: 1px solid rgba(216, 180, 254, 0.45);
-    border-radius: 50%;
-
-    background: rgba(17, 12, 40, 0.9);
-    color: var(--purple-soft);
-
-    font-size: 20px;
-    cursor: pointer;
-
-    transition:
-        background 0.2s ease,
-        border-color 0.2s ease;
-}
-
-.settings-button:hover {
-    border-color: var(--purple-light);
-    background: rgba(124, 58, 237, 0.28);
-}
-
-/* Positions the dropdown below the gear without moving page content. */
-
-.settings-dropdown {
-    position: absolute;
-    top: 52px;
-    right: 0;
-    z-index: 50;
-
-    min-width: 220px;
-    padding: 10px;
-
-    border: 1px solid rgba(196, 131, 255, 0.38);
-    border-radius: 14px;
-
-    background: rgba(10, 9, 28, 0.98);
-    backdrop-filter: blur(14px);
-
-    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.45);
-}
-
-/* Keeps dropdown text consistent with the other main pages. */
-
-.nav-links .settings-dropdown a,
-.settings-dropdown button {
-    width: 100%;
-
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-
-    padding: 12px 14px;
-
-    border: 0;
-    border-radius: 9px;
-
-    background: transparent;
-    color: var(--text);
-
-    font-family: "Inter", sans-serif;
-    font-size: 14px;
-    text-align: left;
-    text-decoration: none;
-
-    cursor: pointer;
-
-    transition:
-        background 0.2s ease,
-        color 0.2s ease;
-}
-
-.nav-links .settings-dropdown a:hover,
-.settings-dropdown button:hover {
-    background: rgba(124, 58, 237, 0.24);
-    color: var(--purple-soft);
-}
-
-.settings-dropdown button {
-    margin-top: 6px;
-
-    border-top: 1px solid rgba(196, 131, 255, 0.18);
-    border-radius: 0 0 9px 9px;
-
-    color: #f0c7ff;
-}
-
-/* Preserves hidden account controls and hides character content until loaded. */
-
-.nav-links [hidden],
-.character-content[hidden] {
-    display: none;
-}
-
-/* Makes keyboard focus visible on the settings controls. */
-
-.settings-button:focus-visible,
-.settings-dropdown a:focus-visible,
-.settings-dropdown button:focus-visible {
-    outline: 2px solid var(--purple-soft);
-    outline-offset: 3px;
-}
-
-/* =========================
-   CHARACTER REVIEW FORM
-========================= */
 
 .review-intro {
-    margin-bottom: 18px;
+	margin: 0 0 20px;
 
-    color: var(--muted);
-    font-size: 0.9rem;
-    line-height: 1.7;
+	color: #c9c0da;
+	font-size: 13px;
+	line-height: 1.7;
 }
 
 .review-intro a {
-    color: var(--purple-soft);
-    text-decoration: underline;
-    text-underline-offset: 3px;
+	color: #e5c3ff;
+	font-weight: 600;
+	text-decoration: underline;
+	text-underline-offset: 4px;
 }
 
 .review-form {
-    display: grid;
-    gap: 12px;
+	display: grid;
+	gap: 13px;
 }
 
 .review-form label {
-    color: var(--purple-soft);
-    font-size: 0.85rem;
-    font-weight: 600;
+	color: #d8b4fe;
+	font-size: 13px;
+	font-weight: 600;
 }
 
 .review-form select,
 .review-form textarea {
-    width: 100%;
-    min-width: 0;
-    padding: 13px 15px;
+	box-sizing: border-box;
 
-    border: 1px solid rgba(196, 131, 255, 0.4);
-    border-radius: 11px;
+	width: 100%;
+	min-width: 0;
+	padding: 13px 15px;
 
-    background: #0a091c;
-    color: var(--text);
+	border: 1px solid rgba(196, 131, 255, 0.4);
+	border-radius: 11px;
 
-    font-family: "Inter", sans-serif;
-    font-size: 0.9rem;
+	background: #0a091c;
+	color: #fff;
+
+	font-family: "Inter", sans-serif;
+	font-size: 14px;
 }
 
 .review-form select {
-    color-scheme: dark;
+	color-scheme: dark;
 }
 
 .review-form textarea {
-    min-height: 130px;
-    resize: vertical;
-    line-height: 1.6;
+	min-height: 130px;
+	resize: vertical;
+	line-height: 1.6;
 }
 
 .review-form textarea::placeholder {
-    color: #92889f;
+	color: #aaa0bf;
 }
 
 .review-form select:focus-visible,
 .review-form textarea:focus-visible {
-    outline: 2px solid var(--purple-light);
-    outline-offset: 2px;
+	outline: 2px solid #d8b4fe;
+	outline-offset: 2px;
 }
 
 #review-submit {
-    justify-self: start;
+	justify-self: start;
+	min-height: 46px;
+	margin-top: 6px;
+	padding: 12px 24px;
 
-    margin-top: 6px;
-    padding: 12px 22px;
+	border: 1px solid rgba(233, 213, 255, 0.75);
+	border-radius: 999px;
 
-    border: 1px solid rgba(216, 180, 254, 0.65);
-    border-radius: 999px;
+	background: linear-gradient(135deg, #6d28d9, #a855f7);
+	color: #fff;
 
-    background:
-        linear-gradient(
-            135deg,
-            var(--purple),
-            var(--purple-light)
-        );
-
-    color: var(--text);
-    font-family: "Inter", sans-serif;
-    font-size: 0.9rem;
-
-    cursor: pointer;
-
-    transition: box-shadow 0.2s ease;
+	font-family: "Inter", sans-serif;
+	font-size: 13px;
+	font-weight: 600;
+	cursor: pointer;
 }
 
-#review-submit:hover {
-    box-shadow: 0 0 22px rgba(168, 85, 247, 0.35);
-}
-
-#review-submit:focus-visible {
-    outline: 2px solid var(--purple-soft);
-    outline-offset: 3px;
+#review-submit:hover:not(:disabled) {
+	box-shadow: 0 0 24px rgba(168, 85, 247, 0.4);
 }
 
 #review-submit:disabled {
-    opacity: 0.6;
-    cursor: wait;
+	opacity: 0.6;
+	cursor: wait;
 }
 
-/* =========================
-   REVIEW SUBMISSION FEEDBACK
-========================= */
-
 .review-feedback {
-    margin-top: 16px;
-    padding: 13px 15px;
+	margin: 18px 0 0;
+	padding: 13px 15px;
 
-    border: 1px solid rgba(196, 131, 255, 0.35);
-    border-radius: 11px;
+	border: 1px solid rgba(196, 131, 255, 0.35);
+	border-radius: 11px;
 
-    background: rgba(124, 58, 237, 0.12);
-    color: var(--purple-soft);
+	background: rgba(124, 58, 237, 0.12);
+	color: #d8b4fe;
 
-    font-size: 0.85rem;
-    line-height: 1.6;
-    overflow-wrap: anywhere;
+	font-size: 13px;
+	line-height: 1.6;
+	overflow-wrap: anywhere;
 }
 
 .review-feedback-error {
-    border-color: rgba(248, 113, 113, 0.4);
-
-    background: rgba(127, 29, 29, 0.18);
-    color: #fecaca;
+	border-color: rgba(248, 113, 113, 0.45);
+	background: rgba(127, 29, 29, 0.18);
+	color: #fecaca;
 }
 
-/* Keeps session-controlled review elements hidden despite display rules. */
-
-.review-form[hidden],
-#review-login-notice[hidden],
-.review-feedback[hidden] {
-    display: none;
-}
-
-/* =========================
-   REVIEW FORM — MOBILE
-========================= */
-
-@media (max-width: 680px) {
-    #review-submit {
-        width: 100%;
-        justify-self: stretch;
-    }
-}
-
-/* =========================
+/* =========================================================
    APPROVED REVIEW CARDS
-========================= */
+========================================================= */
 
 .reviews-list {
-    display: grid;
-    gap: 16px;
+	display: grid;
+	gap: 16px;
 }
 
 .review-card {
-    min-width: 0;
-    padding: 20px;
+	min-width: 0;
+	padding: 20px;
 
-    border: 1px solid rgba(196, 131, 255, 0.28);
-    border-radius: 14px;
+	border: 1px solid rgba(196, 131, 255, 0.28);
+	border-radius: 14px;
 
-    background:
-        linear-gradient(
-            135deg,
-            rgba(17, 12, 40, 0.85),
-            rgba(6, 6, 18, 0.7)
-        );
+	background: rgba(6, 6, 18, 0.55);
 }
 
 .review-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 10px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: 10px;
 }
 
 .review-author {
-    color: var(--purple-soft);
-    font-size: 0.95rem;
-    font-weight: 600;
-
-    overflow-wrap: anywhere;
+	margin: 0;
+	color: #d8b4fe;
+	font-size: 15px;
+	font-weight: 600;
 }
 
 .review-rating {
-    color: #f5c96a;
-    font-size: 0.9rem;
-    white-space: nowrap;
+	margin: 0;
+	color: #f5c96a;
+	font-size: 14px;
+	white-space: nowrap;
 }
 
 .review-comment {
-    margin-top: 14px;
+	margin: 14px 0 0;
 
-    color: var(--text);
-    font-size: 0.9rem;
-    line-height: 1.7;
-
-    /* Preserves comment line breaks and wraps long text within the card. */
-
-    white-space: pre-wrap;
-    overflow-wrap: anywhere;
+	color: #f5f0ff;
+	font-size: 14px;
+	line-height: 1.7;
+	white-space: pre-wrap;
+	overflow-wrap: anywhere;
 }
 
 .review-date {
-    margin-top: 14px;
-
-    color: var(--muted);
-    font-size: 0.75rem;
+	margin: 14px 0 0;
+	color: #b8adc9;
+	font-size: 12px;
 }
 
-/* =========================
-   REVIEW CARDS — MOBILE
-========================= */
+/* =========================================================
+   ACCESSIBILITY AND RESPONSIVE DESIGN
+========================================================= */
 
-@media (max-width: 680px) {
-    .review-card {
-        padding: 16px;
-    }
-
-    .review-card-header {
-        align-items: flex-start;
-        flex-direction: column;
-    }
+.character-page a:focus-visible,
+.character-page button:focus-visible {
+	outline: 2px solid #edd5a8;
+	outline-offset: 4px;
 }
 
-/* =========================
-   HIDDEN STAFF NAVIGATION
-========================= */
+@media (max-width: 900px) {
+	.character-content {
+		grid-template-columns: 1fr;
+	}
 
-/* Overrides dropdown display styles for links hidden by the role check. */
-
-.nav-links .settings-dropdown a[hidden] {
-    display: none;
+	.character-stage {
+		min-height: 380px;
+	}
 }
 
-/* =========================
-   FANTASYREALM PREMIUM FOOTER
-========================= */
+@media (max-width: 600px) {
+	.character-container {
+		width: calc(100% - 24px);
+		padding: 30px 0 65px;
+	}
 
-.footer {
-    background: linear-gradient(
-        135deg,
-        #1b1038 0%,
-        #0c071b 55%,
-        #080513 100%
-    );
+	.character-content {
+		padding: 20px;
+		gap: 24px;
+	}
 
-    border-top: 1px solid rgba(180, 115, 255, 0.35);
+	.character-stage {
+		min-height: 300px;
+	}
 
-    box-shadow:
-        0 -8px 35px rgba(100, 35, 190, 0.12),
-        inset 0 1px rgba(255, 255, 255, 0.04);
+	.detail-grid {
+		grid-template-columns: 1fr;
+	}
 
-    padding: 35px 8%;
-    min-height: 110px;
+	.review-section,
+	.reviews-section {
+		padding: 22px 18px;
+	}
 
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 24px;
-
-    color: #a8a0bf;
+	#review-submit {
+		justify-self: stretch;
+	}
 }
 
-/* Branding */
+@media (prefers-reduced-motion: reduce) {
 
-.footer-brand {
-    font-family: "Cinzel", serif;
-    color: #f4eaff;
-    font-size: 19px;
-    font-weight: 700;
-    letter-spacing: 1px;
-
-    text-shadow: 0 0 18px rgba(178, 107, 255, 0.45);
+	.character-page *,
+	.character-page *::before,
+	.character-page *::after {
+		scroll-behavior: auto;
+		transition: none;
+	}
 }
 
-/* Copyright */
 
-.footer > p {
-    color: #9187a9;
-    font-size: 12px;
-}
+/*
+ * CHARACTER DETAIL - NEUTRAL DISPLAY STAGE
+ *
+ * A clean dark background keeps the entire character
+ * readable without competing with future equipment,
+ * clothing, weapons or accessories.
+ */
 
-/* Navigation links */
-
-.footer-links {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.footer-links a {
-    color: #c5b6dd;
-    text-decoration: none;
-    font-size: 13px;
-    font-weight: 500;
-
-    padding: 10px 15px;
-    border-radius: 10px;
-    border: 1px solid transparent;
-
-    transition:
-        color 0.2s ease,
-        background 0.2s ease,
-        border-color 0.2s ease,
-        box-shadow 0.2s ease,
-        transform 0.2s ease;
-}
-
-.footer-links a:hover,
-.footer-links a:focus-visible {
-    color: #ffffff;
-
-    background: rgba(147, 74, 238, 0.16);
-    border-color: rgba(185, 130, 255, 0.35);
-
-    box-shadow: 0 0 18px rgba(153, 76, 255, 0.14);
-
-    transform: translateY(-2px);
-}
-
-/* Mobile */
-
-@media (max-width: 760px) {
-    .footer {
-        flex-direction: column;
-        text-align: center;
-        padding: 32px 20px;
-        gap: 16px;
-    }
-
-    .footer-links {
-        justify-content: center;
-    }
+.character-page .character-stage {
+	background:
+		radial-gradient(ellipse at 50% 35%,
+			rgba(119, 64, 182, 0.15),
+			transparent 70%),
+		linear-gradient(180deg,
+			#201630 0%,
+			#0b091a 100%);
 }

@@ -1,0 +1,268 @@
+/*
+ * FANTASYREALM - LEGAL AND PRIVACY PAGES
+ *
+ * Shared presentation for legal notices and privacy information.
+ * The application background, header, footer and scrolling
+ * behavior are managed by their dedicated shared stylesheets.
+ */
+
+/* =========================================================
+   PAGE CONTAINER
+========================================================= */
+
+.legal-page {
+  padding: 60px 24px 90px;
+
+  color: #f5f0ff;
+  font-family: "Inter", sans-serif;
+}
+
+.legal-container {
+  width: min(900px, 100%);
+  margin: 0 auto;
+}
+
+/* =========================================================
+   PAGE INTRODUCTION
+========================================================= */
+
+.legal-intro {
+  margin-bottom: 36px;
+  text-align: center;
+}
+
+.legal-eyebrow {
+  margin-bottom: 12px;
+
+  color: #d8b4fe;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.35em;
+}
+
+.legal-intro h1 {
+  margin: 0;
+
+  color: #f8f2ff;
+  font-family: "Cinzel", serif;
+  font-size: clamp(32px, 5vw, 54px);
+  font-weight: 600;
+
+  text-shadow:
+    0 0 24px rgba(168, 85, 247, 0.45);
+}
+
+.legal-description {
+  max-width: 620px;
+  margin: 18px auto 0;
+
+  color: #c9c0da;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+/*
+ * PRIVACY POLICY METADATA
+ *
+ * Display the document revision date below its introduction.
+ */
+.legal-updated {
+  margin: 12px 0 0;
+
+  color: #b7a8ca;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* Emphasize data categories without changing body typography. */
+.legal-section strong {
+  color: #f0ddff;
+  font-weight: 600;
+}
+
+/* Decorative divider inspired by the homepage. */
+.legal-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 15px;
+  margin-top: 28px;
+
+  color: #edd5a8;
+  font-size: 18px;
+}
+
+.legal-divider span:first-child,
+.legal-divider span:last-child {
+  width: 90px;
+  height: 1px;
+
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(216, 180, 254, 0.8));
+}
+
+.legal-divider span:last-child {
+  transform: rotate(180deg);
+}
+
+/* =========================================================
+   LEGAL CONTENT SECTIONS
+========================================================= */
+
+.legal-section {
+  margin-bottom: 18px;
+  padding: 30px 36px;
+
+  border: 1px solid rgba(168, 85, 247, 0.28);
+  border-radius: 18px;
+
+  background:
+    linear-gradient(135deg,
+      rgba(17, 12, 40, 0.94),
+      rgba(10, 8, 28, 0.86));
+
+  box-shadow:
+    0 12px 32px rgba(0, 0, 0, 0.14),
+    inset 0 1px rgba(255, 255, 255, 0.03);
+}
+
+.legal-section h2 {
+  margin: 0 0 18px;
+
+  color: #e4caff;
+  font-family: "Cinzel", serif;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.legal-section p {
+  margin: 0 0 14px;
+
+  color: #d2c9df;
+  font-size: 14px;
+  line-height: 1.9;
+}
+
+.legal-section p:last-child {
+  margin-bottom: 0;
+}
+
+/* Keep links distinguishable from surrounding text. */
+.legal-section a {
+  color: #e5c3ff;
+  font-weight: 600;
+
+  text-decoration: underline;
+  text-decoration-color: rgba(216, 180, 254, 0.55);
+  text-underline-offset: 4px;
+
+  transition:
+    color 180ms ease,
+    text-decoration-color 180ms ease;
+}
+
+.legal-section a:hover {
+  color: #ffffff;
+  text-decoration-color: #ffffff;
+}
+
+.legal-section a:focus-visible,
+.legal-back-link:focus-visible {
+  outline: 2px solid #edd5a8;
+  outline-offset: 4px;
+}
+
+/* =========================================================
+   RETURN LINK
+========================================================= */
+
+.legal-actions {
+  display: flex;
+  justify-content: center;
+
+  margin-top: 36px;
+}
+
+.legal-back-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 12px;
+  padding: 13px 24px;
+
+  border: 1px solid rgba(216, 180, 254, 0.5);
+  border-radius: 999px;
+
+  background: rgba(124, 58, 237, 0.16);
+
+  color: #f5e8ff;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+
+  transition:
+    background 180ms ease,
+    border-color 180ms ease;
+}
+
+.legal-back-link:hover {
+  background: rgba(124, 58, 237, 0.3);
+  border-color: #d8b4fe;
+}
+
+/* =========================================================
+   RESPONSIVE DESIGN
+========================================================= */
+
+@media (max-width: 768px) {
+  .legal-page {
+    padding: 38px 16px 60px;
+  }
+
+  .legal-intro {
+    margin-bottom: 26px;
+  }
+
+  .legal-description {
+    font-size: 13px;
+  }
+
+  .legal-section {
+    padding: 24px 22px;
+    border-radius: 14px;
+  }
+
+  .legal-section h2 {
+    font-size: 19px;
+  }
+
+  .legal-section p {
+    font-size: 13px;
+    line-height: 1.8;
+  }
+}
+
+@media (max-width: 390px) {
+  .legal-page {
+    padding-inline: 12px;
+  }
+
+  .legal-section {
+    padding: 20px 16px;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .legal-section a,
+  .legal-back-link {
+    transition: none;
+  }
+}

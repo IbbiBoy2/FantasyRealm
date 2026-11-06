@@ -19,15 +19,6 @@ const characterEyeColor = document.getElementById('character-eye-color');
 
 const characterEquipment = document.getElementById('character-equipment');
 
-const loginLink = document.getElementById('login-link');
-const registerLink = document.getElementById('register-link');
-const usernameDisplay = document.getElementById('nav-username');
-const logoutLink = document.getElementById('logout-link');
-
-const settingsMenu = document.getElementById('settings-menu');
-const settingsButton = document.getElementById('settings-button');
-const settingsDropdown = document.getElementById('settings-dropdown');
-
 const reviewForm = document.getElementById('review-form');
 const reviewLoginNotice = document.getElementById('review-login-notice');
 const reviewRating = document.getElementById('review-rating');
@@ -38,21 +29,8 @@ const reviewFeedback = document.getElementById('review-feedback');
 const reviewsMessage = document.getElementById('reviews-message');
 const reviewsList = document.getElementById('reviews-list');
 
-const employeeDashboardLink =
-    document.getElementById('employee-dashboard-link');
-    
-    
-    // Create Admin Dashboard link
-const adminDashboardLink = document.createElement('a');
-
-adminDashboardLink.id = 'admin-dashboard-link';
-adminDashboardLink.href = 'admin-dashboard.html';
-adminDashboardLink.textContent = 'Admin Dashboard';
-adminDashboardLink.hidden = true;
-
-employeeDashboardLink.insertAdjacentElement(
-    'afterend',
-    adminDashboardLink
+const characterReviewsContent = document.getElementById(
+	'character-reviews-content'
 );
 
 // =========================
@@ -66,71 +44,53 @@ const characterId = params.get('id');
 // SESSION / NAVBAR
 // =========================
 
-// Public pages must support both logged-in and logged-out visitors.
-
+/*
+ * Check whether the current visitor may
+ * submit a review.
+ *
+ * The shared header manages navigation.
+ * Unauthenticated visitors can still read
+ * approved reviews and character details.
+ */
 async function loadSession() {
-    employeeDashboardLink.hidden = true;
+	reviewForm.hidden = true;
+	reviewLoginNotice.hidden = false;
 
-    try {
-        const response = await fetch(
-            '/FantasyRealm/Backend/api/session.php',
-            {
-                credentials: 'same-origin',
-                cache: 'no-store'
-            }
-        );
+	try {
+		const response = await fetch(
+			'/FantasyRealm/Backend/api/session.php',
+			{
+				credentials: 'same-origin',
+				cache: 'no-store',
+				headers: {
+					Accept: 'application/json'
+				}
+			}
+		);
 
-        if (!response.ok) {
-            throw new Error('Unable to verify session.');
-        }
+		if (!response.ok) {
+			throw new Error('Unable to verify session.');
+		}
 
-        const data = await response.json();
+		const data = await response.json();
 
-        // Show staff navigation only for employees and admins.
+		if (data.authenticated === true && data.user) {
+			reviewForm.hidden = false;
+			reviewLoginNotice.hidden = true;
+		} else {
+			reviewForm.reset();
+			reviewFeedback.textContent = '';
+			reviewFeedback.hidden = true;
+		}
 
-        employeeDashboardLink.hidden = !(
-            data.authenticated &&
-            ['EMPLOYEE', 'ADMIN'].includes(data.user?.role)
-        );
+	} catch (error) {
+		console.error('Unable to verify review permissions:', error);
 
-        // Only ADMIN accounts can see the link
-adminDashboardLink.hidden = !(
-    response.ok &&
-    data.authenticated &&
-    data.user?.role === 'ADMIN'
-);
-
-        if (data.authenticated) {
-            loginLink.hidden = true;
-            registerLink.hidden = true;
-
-            usernameDisplay.textContent = data.user.username;
-            usernameDisplay.hidden = false;
-
-            settingsMenu.hidden = false;
-            reviewForm.hidden = false;
-            reviewLoginNotice.hidden = true;
-        } else {
-            loginLink.hidden = false;
-            registerLink.hidden = false;
-
-            usernameDisplay.textContent = '';
-            usernameDisplay.hidden = true;
-
-            settingsMenu.hidden = true;
-            reviewForm.hidden = true;
-            reviewLoginNotice.hidden = false;
-
-            reviewForm.reset();
-            reviewFeedback.textContent = '';
-            reviewFeedback.hidden = true;
-
-            setSettingsOpen(false);
-        }
-
-    } catch (error) {
-        console.error('Unable to load session:', error);
-    }
+		// When session verification fails, keep
+		// the review form inaccessible.
+		reviewForm.hidden = true;
+		reviewLoginNotice.hidden = false;
+	}
 }
 
 // =========================
@@ -138,33 +98,33 @@ adminDashboardLink.hidden = !(
 // =========================
 
 async function loadCharacter() {
-    if (!characterId) {
-        showMessage('No character was selected.');
-        return;
-    }
+	if (!characterId) {
+		showMessage('No character was selected.');
+		return;
+	}
 
-    try {
-        const response = await fetch(
-            `/FantasyRealm/Backend/api/character.php?id=${encodeURIComponent(characterId)}`
-        );
+	try {
+		const response = await fetch(
+			`/FantasyRealm/Backend/api/character.php?id=${encodeURIComponent(characterId)}`
+		);
 
-        const data = await response.json();
+		const data = await response.json();
 
-        if (!response.ok || !data.success) {
-            showMessage(
-                data.message || 'Unable to load character.'
-            );
-            return;
-        }
+		if (!response.ok || !data.success) {
+			showMessage(
+				data.message || 'Unable to load character.'
+			);
+			return;
+		}
 
-        renderCharacter(data.character);
+		renderCharacter(data.character);
 
-        await loadReviews();
+		await loadReviews();
 
-    } catch (error) {
-        console.error('Unable to load character:', error);
-        showMessage('Unable to load character.');
-    }
+	} catch (error) {
+		console.error('Unable to load character:', error);
+		showMessage('Unable to load character.');
+	}
 }
 
 // =========================
@@ -172,62 +132,79 @@ async function loadCharacter() {
 // =========================
 
 function renderCharacter(character) {
-    characterName.textContent = character.name;
-    characterCreator.textContent = character.creator_username;
-    characterCreatedDate.textContent = character.created_at;
+	characterName.textContent = character.name;
+	characterCreator.textContent = character.creator_username;
+	characterCreatedDate.textContent = character.created_at;
 
-    characterGender.textContent =
-        character.gender || '—';
+	characterGender.textContent =
+		character.gender || '—';
 
-    characterSkin.textContent =
-        character.skin_color || '—';
+	characterSkin.textContent =
+		character.skin_color || '—';
 
-    characterHairStyle.textContent =
-        character.hair_style || '—';
+	characterHairStyle.textContent =
+		character.hair_style || '—';
 
-    characterHairColor.textContent =
-        character.hair_color || '—';
+	characterHairColor.textContent =
+		character.hair_color || '—';
 
-    characterEyeColor.textContent =
-        character.eye_color || '—';
+	characterEyeColor.textContent =
+		character.eye_color || '—';
 
-    if (character.image_path) {
-        characterImage.src = `../${character.image_path}`;
-        characterImage.alt = character.name;
-        characterImage.hidden = false;
-    }
+	if (character.image_path) {
+		characterImage.src = `../${character.image_path}`;
+		characterImage.alt = character.name;
+		characterImage.hidden = false;
+	}
 
-    // Remove old equipment safely.
+	/**
+	 * Display the complete character using its saved appearance.
+	 *
+	 * The shared renderer places a canvas inside the existing
+	 * character stage, preserving the page's layout and effects.
+	 *
+	 * The legacy image is hidden only after a successful render.
+	 */
+	window.FantasyRealmCharacterRenderer
+		.render(characterImage.parentElement, character)
+		.then((rendered) => {
+			if (rendered) {
+				characterImage.hidden = true;
+			}
+		});
 
-    characterEquipment.replaceChildren();
+	// Remove old equipment safely.
 
-    if (
-        Array.isArray(character.equipment) &&
-        character.equipment.length > 0
-    ) {
-        character.equipment.forEach((item) => {
-            const equipmentItem =
-                document.createElement('p');
+	characterEquipment.replaceChildren();
 
-            equipmentItem.textContent = item.name;
+	if (
+		Array.isArray(character.equipment) &&
+		character.equipment.length > 0
+	) {
+		character.equipment.forEach((item) => {
+			const equipmentItem =
+				document.createElement('p');
 
-            characterEquipment.appendChild(
-                equipmentItem
-            );
-        });
-    } else {
-        const emptyEquipment =
-            document.createElement('p');
+			equipmentItem.textContent = item.name;
 
-        emptyEquipment.textContent = 'No equipment.';
+			characterEquipment.appendChild(
+				equipmentItem
+			);
+		});
+	} else {
+		const emptyEquipment =
+			document.createElement('p');
 
-        characterEquipment.appendChild(
-            emptyEquipment
-        );
-    }
+		emptyEquipment.textContent = 'No equipment.';
 
-    characterMessage.hidden = true;
-    characterContent.hidden = false;
+		characterEquipment.appendChild(
+			emptyEquipment
+		);
+	}
+
+	characterMessage.hidden = true;
+	characterContent.hidden = false;
+	characterReviewsContent.hidden = false;
 }
 
 // =========================
@@ -235,127 +212,25 @@ function renderCharacter(character) {
 // =========================
 
 function showMessage(message) {
-    characterMessage.textContent = message;
-    characterMessage.hidden = false;
-    characterContent.hidden = true;
+	characterMessage.textContent = message;
+	characterMessage.hidden = false;
+	characterContent.hidden = true;
+	characterReviewsContent.hidden = true;
 }
-
-// =========================
-// SETTINGS MENU
-// =========================
-
-function setSettingsOpen(isOpen) {
-    settingsDropdown.hidden = !isOpen;
-
-    settingsButton.setAttribute(
-        'aria-expanded',
-        String(isOpen)
-    );
-}
-
-settingsButton.addEventListener('click', () => {
-    setSettingsOpen(settingsDropdown.hidden);
-});
-
-// Close dropdown when clicking outside.
-
-document.addEventListener('click', (event) => {
-    if (!settingsMenu.contains(event.target)) {
-        setSettingsOpen(false);
-    }
-});
-
-// Close dropdown with Escape.
-
-document.addEventListener('keydown', (event) => {
-    if (
-        event.key === 'Escape' &&
-        !settingsDropdown.hidden
-    ) {
-        setSettingsOpen(false);
-        settingsButton.focus();
-    }
-});
-
-// =========================
-// SECURE LOGOUT
-// =========================
-
-logoutLink.addEventListener('click', async (event) => {
-    event.preventDefault();
-
-    try {
-        // Get the current PHP session and CSRF token.
-
-        const sessionResponse = await fetch(
-            '/FantasyRealm/Backend/api/session.php',
-            {
-                credentials: 'same-origin',
-                cache: 'no-store'
-            }
-        );
-
-        if (!sessionResponse.ok) {
-            throw new Error('Unable to retrieve session.');
-        }
-
-        const sessionData = await sessionResponse.json();
-
-        // If already logged out, update the navbar.
-
-        if (!sessionData.authenticated) {
-            await loadSession();
-            return;
-        }
-
-        if (typeof sessionData.csrf_token !== 'string') {
-            throw new Error('Missing CSRF token.');
-        }
-
-        // Send the protected logout request.
-
-        const response = await fetch(
-            '/FantasyRealm/Backend/api/logout.php',
-            {
-                method: 'POST',
-                credentials: 'same-origin',
-                headers: {
-                    'Accept': 'application/json',
-                    'X-CSRF-Token': sessionData.csrf_token
-                }
-            }
-        );
-
-        const data = await response.json();
-
-        if (!response.ok || !data.success) {
-            throw new Error(
-                data.message || 'Logout failed.'
-            );
-        }
-
-        // Reload to display Login/Register again.
-
-        window.location.reload();
-
-    } catch (error) {
-        console.error('Unable to logout:', error);
-    }
-});
 
 // =========================
 // REVIEW FEEDBACK
 // =========================
 
 function showReviewFeedback(message, isError = false) {
-    reviewFeedback.textContent = message;
+	reviewFeedback.textContent = message;
 
-    reviewFeedback.classList.toggle(
-        'review-feedback-error',
-        isError
-    );
+	reviewFeedback.classList.toggle(
+		'review-feedback-error',
+		isError
+	);
 
-    reviewFeedback.hidden = false;
+	reviewFeedback.hidden = false;
 }
 
 // =========================
@@ -365,166 +240,166 @@ function showReviewFeedback(message, isError = false) {
 let reviewSubmissionInProgress = false;
 
 reviewForm.addEventListener('submit', async (event) => {
-    event.preventDefault();
+	event.preventDefault();
 
-    if (reviewSubmissionInProgress) {
-        return;
-    }
+	if (reviewSubmissionInProgress) {
+		return;
+	}
 
-    const id = Number(characterId);
-    const rating = Number(reviewRating.value);
-    const comment = reviewComment.value.trim();
+	const id = Number(characterId);
+	const rating = Number(reviewRating.value);
+	const comment = reviewComment.value.trim();
 
-    // Validate character ID.
+	// Validate character ID.
 
-    if (!Number.isSafeInteger(id) || id <= 0) {
-        showReviewFeedback('Invalid character ID.', true);
-        return;
-    }
+	if (!Number.isSafeInteger(id) || id <= 0) {
+		showReviewFeedback('Invalid character ID.', true);
+		return;
+	}
 
-    // Validate rating.
+	// Validate rating.
 
-    if (
-        !Number.isInteger(rating) ||
-        rating < 1 ||
-        rating > 5
-    ) {
-        showReviewFeedback(
-            'Choose a rating from 1 to 5.',
-            true
-        );
-        return;
-    }
+	if (
+		!Number.isInteger(rating) ||
+		rating < 1 ||
+		rating > 5
+	) {
+		showReviewFeedback(
+			'Choose a rating from 1 to 5.',
+			true
+		);
+		return;
+	}
 
-    // Validate review comment.
+	// Validate review comment.
 
-    if (
-        comment === '' ||
-        Array.from(comment).length > 2000
-    ) {
-        showReviewFeedback(
-            'Enter a comment of 1 to 2000 characters.',
-            true
-        );
-        return;
-    }
+	if (
+		comment === '' ||
+		Array.from(comment).length > 2000
+	) {
+		showReviewFeedback(
+			'Enter a comment of 1 to 2000 characters.',
+			true
+		);
+		return;
+	}
 
-    reviewSubmissionInProgress = true;
+	reviewSubmissionInProgress = true;
 
-    reviewSubmit.disabled = true;
-    reviewSubmit.textContent = 'Submitting...';
+	reviewSubmit.disabled = true;
+	reviewSubmit.textContent = 'Submitting...';
 
-    reviewFeedback.textContent = '';
-    reviewFeedback.hidden = true;
+	reviewFeedback.textContent = '';
+	reviewFeedback.hidden = true;
 
-    try {
-        // =========================
-        // REVIEW CSRF PROTECTION
-        // =========================
+	try {
+		// =========================
+		// REVIEW CSRF PROTECTION
+		// =========================
 
-        const sessionResponse = await fetch(
-            '/FantasyRealm/Backend/api/session.php',
-            {
-                credentials: 'same-origin',
-                cache: 'no-store'
-            }
-        );
+		const sessionResponse = await fetch(
+			'/FantasyRealm/Backend/api/session.php',
+			{
+				credentials: 'same-origin',
+				cache: 'no-store'
+			}
+		);
 
-        if (!sessionResponse.ok) {
-            throw new Error('Unable to retrieve session.');
-        }
+		if (!sessionResponse.ok) {
+			throw new Error('Unable to retrieve session.');
+		}
 
-        const sessionData = await sessionResponse.json();
+		const sessionData = await sessionResponse.json();
 
-        if (!sessionData.authenticated) {
-            await loadSession();
+		if (!sessionData.authenticated) {
+			await loadSession();
 
-            showReviewFeedback(
-                'Please log in to submit a review.',
-                true
-            );
+			showReviewFeedback(
+				'Please log in to submit a review.',
+				true
+			);
 
-            return;
-        }
+			return;
+		}
 
-        if (typeof sessionData.csrf_token !== 'string') {
-            throw new Error(
-                'Unable to verify session security.'
-            );
-        }
+		if (typeof sessionData.csrf_token !== 'string') {
+			throw new Error(
+				'Unable to verify session security.'
+			);
+		}
 
-        // =========================
-        // SUBMIT REVIEW
-        // =========================
+		// =========================
+		// SUBMIT REVIEW
+		// =========================
 
-        const response = await fetch(
-            '/FantasyRealm/Backend/api/submit-review.php',
-            {
-                method: 'POST',
-                credentials: 'same-origin',
+		const response = await fetch(
+			'/FantasyRealm/Backend/api/submit-review.php',
+			{
+				method: 'POST',
+				credentials: 'same-origin',
 
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'X-CSRF-Token': sessionData.csrf_token
-                },
+				headers: {
+					'Content-Type': 'application/json',
+					'Accept': 'application/json',
+					'X-CSRF-Token': sessionData.csrf_token
+				},
 
-                body: JSON.stringify({
-                    character_id: id,
-                    rating: rating,
-                    comment: comment
-                })
-            }
-        );
+				body: JSON.stringify({
+					character_id: id,
+					rating: rating,
+					comment: comment
+				})
+			}
+		);
 
-        const data = await response.json();
+		const data = await response.json();
 
-        // Session expired.
+		// Session expired.
 
-        if (response.status === 401) {
-            await loadSession();
+		if (response.status === 401) {
+			await loadSession();
 
-            showReviewFeedback(
-                'Please log in to submit a review.',
-                true
-            );
+			showReviewFeedback(
+				'Please log in to submit a review.',
+				true
+			);
 
-            return;
-        }
+			return;
+		}
 
-        // Handle backend errors.
+		// Handle backend errors.
 
-        if (!response.ok || !data.success) {
-            showReviewFeedback(
-                data.message || 'Unable to submit your review.',
-                true
-            );
+		if (!response.ok || !data.success) {
+			showReviewFeedback(
+				data.message || 'Unable to submit your review.',
+				true
+			);
 
-            return;
-        }
+			return;
+		}
 
-        // Review successfully submitted.
+		// Review successfully submitted.
 
-        reviewForm.reset();
+		reviewForm.reset();
 
-        showReviewFeedback(
-            'Your review has been submitted and is waiting for employee approval.'
-        );
+		showReviewFeedback(
+			'Your review has been submitted and is waiting for employee approval.'
+		);
 
-    } catch (error) {
-        console.error('Unable to submit review:', error);
+	} catch (error) {
+		console.error('Unable to submit review:', error);
 
-        showReviewFeedback(
-            'Unable to confirm submission. Please check before submitting again.',
-            true
-        );
+		showReviewFeedback(
+			'Unable to confirm submission. Please check before submitting again.',
+			true
+		);
 
-    } finally {
-        reviewSubmissionInProgress = false;
+	} finally {
+		reviewSubmissionInProgress = false;
 
-        reviewSubmit.disabled = false;
-        reviewSubmit.textContent = 'Submit Review';
-    }
+		reviewSubmit.disabled = false;
+		reviewSubmit.textContent = 'Submit Review';
+	}
 });
 
 // =========================
@@ -532,46 +407,46 @@ reviewForm.addEventListener('submit', async (event) => {
 // =========================
 
 async function loadReviews() {
-    reviewsList.replaceChildren();
+	reviewsList.replaceChildren();
 
-    reviewsMessage.textContent = 'Loading reviews...';
-    reviewsMessage.hidden = false;
+	reviewsMessage.textContent = 'Loading reviews...';
+	reviewsMessage.hidden = false;
 
-    try {
-        const response = await fetch(
-            `/FantasyRealm/Backend/api/reviews.php?character_id=${encodeURIComponent(characterId)}`
-        );
+	try {
+		const response = await fetch(
+			`/FantasyRealm/Backend/api/reviews.php?character_id=${encodeURIComponent(characterId)}`
+		);
 
-        const data = await response.json();
+		const data = await response.json();
 
-        if (!response.ok || !data.success) {
-            reviewsMessage.textContent =
-                data.message || 'Unable to load reviews.';
+		if (!response.ok || !data.success) {
+			reviewsMessage.textContent =
+				data.message || 'Unable to load reviews.';
 
-            return;
-        }
+			return;
+		}
 
-        if (data.reviews.length === 0) {
-            reviewsMessage.textContent =
-                'No approved reviews yet.';
+		if (data.reviews.length === 0) {
+			reviewsMessage.textContent =
+				'No approved reviews yet.';
 
-            return;
-        }
+			return;
+		}
 
-        data.reviews.forEach((review) => {
-            reviewsList.appendChild(
-                createReviewCard(review)
-            );
-        });
+		data.reviews.forEach((review) => {
+			reviewsList.appendChild(
+				createReviewCard(review)
+			);
+		});
 
-        reviewsMessage.hidden = true;
+		reviewsMessage.hidden = true;
 
-    } catch (error) {
-        console.error('Unable to load reviews:', error);
+	} catch (error) {
+		console.error('Unable to load reviews:', error);
 
-        reviewsMessage.textContent =
-            'Unable to load reviews.';
-    }
+		reviewsMessage.textContent =
+			'Unable to load reviews.';
+	}
 }
 
 // =========================
@@ -581,48 +456,48 @@ async function loadReviews() {
 // Uses textContent to protect against XSS.
 
 function createReviewCard(review) {
-    const card = document.createElement('article');
-    card.className = 'review-card';
+	const card = document.createElement('article');
+	card.className = 'review-card';
 
-    const header = document.createElement('div');
-    header.className = 'review-card-header';
+	const header = document.createElement('div');
+	header.className = 'review-card-header';
 
-    const username = document.createElement('h3');
-    username.className = 'review-author';
-    username.textContent = review.reviewer_username;
+	const username = document.createElement('h3');
+	username.className = 'review-author';
+	username.textContent = review.reviewer_username;
 
-    const rating = document.createElement('p');
-    rating.className = 'review-rating';
+	const rating = document.createElement('p');
+	rating.className = 'review-rating';
 
-    const stars = document.createElement('span');
-    stars.setAttribute('aria-hidden', 'true');
+	const stars = document.createElement('span');
+	stars.setAttribute('aria-hidden', 'true');
 
-    stars.textContent =
-        '★'.repeat(review.rating) +
-        '☆'.repeat(5 - review.rating);
+	stars.textContent =
+		'★'.repeat(review.rating) +
+		'☆'.repeat(5 - review.rating);
 
-    const score = document.createElement('span');
-    score.textContent = ` ${review.rating}/5`;
+	const score = document.createElement('span');
+	score.textContent = ` ${review.rating}/5`;
 
-    rating.appendChild(stars);
-    rating.appendChild(score);
+	rating.appendChild(stars);
+	rating.appendChild(score);
 
-    const comment = document.createElement('p');
-    comment.className = 'review-comment';
-    comment.textContent = review.comment;
+	const comment = document.createElement('p');
+	comment.className = 'review-comment';
+	comment.textContent = review.comment;
 
-    const date = document.createElement('p');
-    date.className = 'review-date';
-    date.textContent = `Posted: ${review.created_at}`;
+	const date = document.createElement('p');
+	date.className = 'review-date';
+	date.textContent = `Posted: ${review.created_at}`;
 
-    header.appendChild(username);
-    header.appendChild(rating);
+	header.appendChild(username);
+	header.appendChild(rating);
 
-    card.appendChild(header);
-    card.appendChild(comment);
-    card.appendChild(date);
+	card.appendChild(header);
+	card.appendChild(comment);
+	card.appendChild(date);
 
-    return card;
+	return card;
 }
 
 // =========================

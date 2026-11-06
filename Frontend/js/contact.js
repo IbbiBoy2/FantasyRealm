@@ -1,319 +1,207 @@
-document.addEventListener('DOMContentLoaded', () => {
-
-// =========================
-// DOM REFERENCES
-// =========================
-
-const contactForm = document.getElementById('contact-form');
-
-const usernameInput = document.getElementById('username');
-const emailInput = document.getElementById('email');
-const messageInput = document.getElementById('message');
-
-const formMessage = document.getElementById('form-message');
-const sendButton = document.getElementById('send-button');
-
-const loginLink = document.getElementById('login-link');
-const registerLink = document.getElementById('register-link');
-const usernameDisplay = document.getElementById('nav-username');
-const logoutLink = document.getElementById('logout-link');
-
-const settingsMenu = document.getElementById('settings-menu');
-const settingsButton = document.getElementById('settings-button');
-const settingsDropdown = document.getElementById('settings-dropdown');
-
-const employeeDashboardLink =
-    document.getElementById('employee-dashboard-link');
-
-    // Create Admin Dashboard link
-const adminDashboardLink = document.createElement('a');
-
-adminDashboardLink.id = 'admin-dashboard-link';
-adminDashboardLink.href = 'admin-dashboard.html';
-adminDashboardLink.textContent = 'Admin Dashboard';
-adminDashboardLink.hidden = true;
-
-employeeDashboardLink.insertAdjacentElement(
-    'afterend',
-    adminDashboardLink
-);
-
-// =========================
-// SETTINGS MENU
-// =========================
-
-// Keeps dropdown visibility and its accessibility state synchronized.
-
-function setSettingsOpen(isOpen) {
-    settingsDropdown.hidden = !isOpen;
-
-    settingsButton.setAttribute(
-        'aria-expanded',
-        String(isOpen)
-    );
-}
-
-settingsButton.addEventListener('click', () => {
-    setSettingsOpen(settingsDropdown.hidden);
-});
-
-// Closes the dropdown when clicking outside the settings container.
-
-document.addEventListener('click', (event) => {
-    if (!settingsMenu.contains(event.target)) {
-        setSettingsOpen(false);
-    }
-});
-
-// Returns keyboard focus to the gear when Escape closes the dropdown.
-
-document.addEventListener('keydown', (event) => {
-    if (
-        event.key === 'Escape' &&
-        !settingsDropdown.hidden
-    ) {
-        setSettingsOpen(false);
-        settingsButton.focus();
-    }
-});
-
-// =========================
-// SESSION / NAVBAR
-// =========================
-
-// Logged-in users get their username and email prefilled automatically.
-
-async function loadSession() {
-
-        employeeDashboardLink.hidden = true;
-
-    try {
-        const response = await fetch(
-            '/FantasyRealm/Backend/api/session.php'
-        );
-
-        const data = await response.json();
-
-        // Shows staff navigation only after a successful authenticated role check.
-
-employeeDashboardLink.hidden = !(
-    response.ok &&
-    data.authenticated &&
-    ['EMPLOYEE', 'ADMIN'].includes(data.user?.role)
-);
-
-// Only show this link to administrators
-adminDashboardLink.hidden = !(
-    response.ok &&
-    data.authenticated &&
-    data.user?.role === 'ADMIN'
-);
-
-        if (!response.ok) {
-            throw new Error('Unable to verify session.');
-        }
-
-        if (data.authenticated) {
-            loginLink.hidden = true;
-            registerLink.hidden = true;
-
-            usernameDisplay.textContent = data.user.username;
-            usernameDisplay.hidden = false;
-
-            settingsMenu.hidden = false;
-
-            usernameInput.value = data.user.username;
-            emailInput.value = data.user.email;
-        } else {
-            loginLink.hidden = false;
-            registerLink.hidden = false;
-
-            usernameDisplay.textContent = '';
-            usernameDisplay.hidden = true;
-
-            settingsMenu.hidden = true;
-            setSettingsOpen(false);
-        }
-
-    } catch (error) {
-        console.error('Unable to load session:', error);
-    }
-}
-
-// =========================
-// CONTACT FORM SUBMISSION
-// =========================
-
-// Sends the contact form data as JSON to the REST API.
-
-contactForm.addEventListener(
-    'submit',
-    async (event) => {
-        event.preventDefault();
-
-        const contactData = {
-            username: usernameInput.value.trim(),
-            email: emailInput.value.trim(),
-            message: messageInput.value.trim()
-        };
-
-// Basic client-side validation before sending the request.
-
-       if (
-    contactData.email === '' ||
-    contactData.message === ''
-) {
-            showMessage(
-                'Please fill in all fields.'
-            );
-
-            return;
-        }
-
-
-        sendButton.disabled = true;
-        sendButton.textContent = 'Sending...';
-
-        hideMessage();
-
-// The backend performs the final validation and stores the message with PDO.
-
-        try {
-            const response = await fetch(
-                '/FantasyRealm/Backend/api/contact.php',
-                {
-                    method: 'POST',
-
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-
-                    body: JSON.stringify(
-                        contactData
-                    )
-                }
-            );
-
-
-            const data = await response.json();
-
-
-            if (!response.ok || !data.success) {
-                showMessage(
-                    data.message ||
-                    'Unable to send your message.'
-                );
-
-                return;
-            }
-
-
-            showMessage(
-                'Your message has been sent successfully.'
-            );
-
-            messageInput.value = '';
-
-
-        } catch (error) {
-            console.error(
-                'Unable to send contact message:',
-                error
-            );
-
-            showMessage(
-                'Unable to send your message.'
-            );
-
-        } finally {
-            sendButton.disabled = false;
-            sendButton.textContent = 'Send Message';
-        }
-    }
-);
-
-// =========================
-// LOGOUT
-// =========================
-
-// Redirects only after the REST API confirms the PHP session has ended.
-
-logoutLink.addEventListener('click', async () => {
-    try {
-
-// =========================
-// CSRF PROTECTION
-// =========================
-
-const sessionResponse = await fetch(
-    '/FantasyRealm/Backend/api/session.php',
-    {
-        credentials: 'same-origin',
-        cache: 'no-store'
-    }
-);
-
-const sessionData = await sessionResponse.json();
-
-if (
-    !sessionResponse.ok ||
-    !sessionData.authenticated ||
-    typeof sessionData.csrf_token !== 'string'
-) {
-    throw new Error('Unable to verify session security.');
-}
-
-        const response = await fetch(
-            '/FantasyRealm/Backend/api/logout.php',
-            {
-                method: 'POST',
-headers: {
-    'Accept': 'application/json',
-    'X-CSRF-Token': sessionData.csrf_token
-}
-            }
-        );
-
-        const data = await response.json();
-
-        if (!response.ok || !data.success) {
-            showMessage(
-                data.message || 'Unable to log out. Please try again.'
-            );
-            return;
-        }
-
-        window.location.href = 'index.html';
-
-    } catch (error) {
-        console.error('Unable to logout:', error);
-
-        showMessage(
-            'Unable to log out. Please try again.'
-        );
-    }
-});
-
-// =========================
-// FORM FEEDBACK
-// =========================
-
-function showMessage(message) {
-    formMessage.textContent = message;
-    formMessage.hidden = false;
-}
-
-
-function hideMessage() {
-    formMessage.textContent = '';
-    formMessage.hidden = true;
-}
-
-// =========================
-// INITIALIZATION
-// =========================
-
-loadSession();
-
-});
+/*
+ * FANTASYREALM - CONTACT PAGE
+ *
+ * Handles contact form validation, authenticated user
+ * prefill, submission feedback and the message counter.
+ *
+ * Shared navigation and logout are managed by header.js.
+ * All submitted values are validated again by the API.
+ */
+
+(() => {
+	'use strict';
+
+	const CONTACT_URL = '/FantasyRealm/Backend/api/contact.php';
+	const SESSION_URL = '/FantasyRealm/Backend/api/session.php';
+
+	const form = document.getElementById('contact-form');
+
+	if (!form) {
+		return;
+	}
+
+	const usernameInput = document.getElementById('username');
+	const emailInput = document.getElementById('email');
+	const messageInput = document.getElementById('message');
+
+	const messageCounter = document.getElementById('message-counter');
+	const formMessage = document.getElementById('form-message');
+	const sendButton = document.getElementById('send-button');
+
+	const MAX_MESSAGE_LENGTH = 2000;
+
+	/*
+	 * Display user-facing feedback using textContent.
+	 * No server response is ever interpreted as HTML.
+	 */
+	function showFeedback(message, type) {
+		formMessage.textContent = message;
+		formMessage.dataset.type = type;
+		formMessage.hidden = false;
+	}
+
+	function clearFeedback() {
+		formMessage.textContent = '';
+		formMessage.hidden = true;
+		delete formMessage.dataset.type;
+	}
+
+	/*
+	 * Keep the visible character counter synchronized
+	 * with the message entered by the visitor.
+	 */
+	function updateMessageCounter() {
+		const length = Array.from(messageInput.value).length;
+
+		messageCounter.textContent =
+			`${length} / ${MAX_MESSAGE_LENGTH} characters`;
+	}
+
+	messageInput.addEventListener('input', updateMessageCounter);
+
+	/*
+	 * Prefill account information for authenticated users.
+	 * Visitors can enter their contact details manually.
+	 */
+	async function prefillAuthenticatedUser() {
+		try {
+			const response = await fetch(SESSION_URL, {
+				credentials: 'same-origin',
+				cache: 'no-store',
+				headers: {
+					'Accept': 'application/json'
+				}
+			});
+
+			if (!response.ok) {
+				return;
+			}
+
+			const session = await response.json();
+
+			if (!session.authenticated || !session.user) {
+				return;
+			}
+
+			// Do not overwrite values already entered by the user.
+			if (!usernameInput.value) {
+				usernameInput.value = session.user.username || '';
+			}
+
+			if (!emailInput.value) {
+				emailInput.value = session.user.email || '';
+			}
+
+		} catch (error) {
+			console.error(
+				'Unable to prefill contact details:',
+				error
+			);
+		}
+	}
+
+	/*
+	 * Submit the message as JSON.
+	 * The button stays disabled until the request completes.
+	 */
+	async function submitContactForm(event) {
+		event.preventDefault();
+
+		if (sendButton.disabled) {
+			return;
+		}
+
+		clearFeedback();
+
+		const username = usernameInput.value.trim();
+		const email = emailInput.value.trim();
+		const message = messageInput.value.trim();
+
+		if (!email || !message) {
+			showFeedback(
+				'Please provide your email address and a message.',
+				'error'
+			);
+			return;
+		}
+
+		if (!emailInput.checkValidity()) {
+			showFeedback(
+				'Please enter a valid email address.',
+				'error'
+			);
+			emailInput.focus();
+			return;
+		}
+
+		if (Array.from(message).length > MAX_MESSAGE_LENGTH) {
+			showFeedback(
+				'Your message must contain no more than 2000 characters.',
+				'error'
+			);
+			messageInput.focus();
+			return;
+		}
+
+		const payload = {
+			username,
+			email,
+			message
+		};
+
+		sendButton.disabled = true;
+		sendButton.textContent = 'Sending...';
+
+		try {
+			const response = await fetch(CONTACT_URL, {
+				method: 'POST',
+				credentials: 'same-origin',
+				headers: {
+					'Content-Type': 'application/json',
+					'Accept': 'application/json'
+				},
+				body: JSON.stringify(payload)
+			});
+
+			const result = await response.json();
+
+			if (!response.ok || !result.success) {
+				showFeedback(
+					result.message ||
+					'Unable to submit your message. Please try again.',
+					'error'
+				);
+				return;
+			}
+
+			showFeedback(
+				'Your message has been received successfully.',
+				'success'
+			);
+
+			// Preserve contact details for a subsequent enquiry.
+			messageInput.value = '';
+			updateMessageCounter();
+
+		} catch (error) {
+			console.error(
+				'Contact form submission failed:',
+				error
+			);
+
+			showFeedback(
+				'A connection error occurred. Please try again.',
+				'error'
+			);
+
+		} finally {
+			sendButton.disabled = false;
+			sendButton.textContent = 'Send Message';
+		}
+	}
+
+	form.addEventListener('submit', submitContactForm);
+
+	updateMessageCounter();
+	prefillAuthenticatedUser();
+})();

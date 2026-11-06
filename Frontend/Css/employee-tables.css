@@ -1,0 +1,121 @@
+/* =========================================================
+   FANTASYREALM - EMPLOYEE DATA TABLES
+   Compact, keyboard-accessible lists for staff workspaces.
+   ========================================================= */
+
+/* Override the previous card grid only for transformed lists. */
+.employee-table-host {
+  display: block;
+  min-width: 0;
+}
+
+.employee-table-scroll {
+  width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  border: 1px solid rgba(168, 85, 247, 0.35);
+  border-radius: 16px;
+  background: #15102d;
+}
+
+.employee-table-scroll:focus-visible {
+  outline: 3px solid #d8b4fe;
+  outline-offset: 3px;
+}
+
+.employee-data-table {
+  width: 100%;
+  min-width: 780px;
+  border-collapse: collapse;
+  color: #f9f4ff;
+  font-family: Inter, sans-serif;
+  font-size: 13px;
+  text-align: left;
+}
+
+.employee-data-table thead {
+  background: #281943;
+}
+
+.employee-data-table th,
+.employee-data-table td {
+  padding: 13px 15px;
+  vertical-align: middle;
+  border-bottom: 1px solid rgba(168, 85, 247, 0.18);
+}
+
+.employee-data-table th {
+  color: #e9d5ff;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.employee-data-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.employee-data-table tbody tr:nth-child(even) {
+  background: rgba(168, 85, 247, 0.06);
+}
+
+.employee-data-table tbody tr:hover {
+  background: rgba(168, 85, 247, 0.12);
+}
+
+.employee-data-table h3 {
+  margin: 0;
+  font: 600 14px Inter, sans-serif;
+  color: #fff;
+}
+
+.employee-table-comment {
+  max-width: 260px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.employee-table-actions {
+  min-width: 200px;
+}
+
+.employee-data-table .employee-card-actions {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 8px;
+  margin: 0;
+}
+
+.employee-data-table .employee-button-primary,
+.employee-data-table .employee-button-secondary,
+.employee-data-table .employee-button-danger {
+  min-height: 34px;
+  padding: 7px 11px;
+  white-space: nowrap;
+  font-size: 12px;
+}
+
+.employee-data-table .employee-status {
+  white-space: nowrap;
+}
+
+.employee-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
+
+@media (max-width: 768px) {
+
+  .employee-data-table th,
+  .employee-data-table td {
+    padding: 11px 12px;
+  }
+}

@@ -1,0 +1,79 @@
+<!--
+    FANTASYREALM - SHARED HEADER TEMPLATE
+
+    This file defines the navigation structure used across
+    the application. Session-dependent links are hidden
+    until the server confirms the current user.
+-->
+<template id="fantasyrealm-header-template">
+  <a class="brand" href="index.html">
+    <span class="brand-mark" aria-hidden="true">✦</span>
+
+    <span class="brand-content">
+      <span class="brand-name">FantasyRealm</span>
+      <span class="brand-tagline">FORGE YOUR LEGEND</span>
+    </span>
+  </a>
+
+  <!-- Mobile navigation toggle. -->
+  <button
+    id="mobile-menu-button"
+    class="mobile-menu-button"
+    type="button"
+    aria-label="Open navigation menu"
+    aria-controls="main-navigation"
+    aria-expanded="false"
+  >
+    <span aria-hidden="true">☰</span>
+  </button>
+
+  <nav
+    id="main-navigation"
+    class="nav-links"
+    aria-label="Main navigation"
+    data-mobile-open="false"
+  >
+    <a href="index.html">Home</a>
+    <a href="character-gallery.html">Characters</a>
+
+    <a id="header-create-link" href="create-character.html" hidden> Create </a>
+
+    <a id="login-link" href="login.html"> Login </a>
+
+    <a id="register-link" class="nav-register" href="register.html">
+      Register
+    </a>
+
+    <!-- Account menu for authenticated users. -->
+    <div id="settings-menu" class="settings-menu" hidden>
+      <button
+        id="settings-button"
+        class="settings-button account-trigger"
+        type="button"
+        aria-controls="settings-dropdown"
+        aria-expanded="false"
+        aria-haspopup="true"
+      >
+        <span id="nav-username" class="nav-username"></span>
+
+        <span class="account-chevron" aria-hidden="true"> ▾ </span>
+      </button>
+
+      <div id="settings-dropdown" class="settings-dropdown" hidden>
+        <a id="character-settings-link" href="dashboard.html" hidden>
+          Character Settings
+        </a>
+
+        <a id="employee-dashboard-link" href="employee-dashboard.html" hidden>
+          Employee Dashboard
+        </a>
+
+        <a id="admin-dashboard-link" href="admin-dashboard.html" hidden>
+          Admin Dashboard
+        </a>
+
+        <button id="logout-link" type="button">Logout</button>
+      </div>
+    </div>
+  </nav>
+</template>

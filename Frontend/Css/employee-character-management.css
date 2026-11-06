@@ -1,0 +1,42 @@
+/* =========================================================
+   FANTASYREALM - STAFF CHARACTER DELETION
+   The shared dashboard defines cards, buttons, and dialogs.
+   This file adds only the new section's missing styles.
+========================================================= */
+
+/* Keep the character search panel consistent with player search. */
+#employee-manage-characters .employee-search-panel {
+  margin-bottom: 18px;
+}
+
+#employee-character-search {
+  width: 100%;
+  max-width: 540px;
+}
+
+/* Ensure the deletion reason is accessible and comfortable to edit. */
+.staff-character-delete-dialog label {
+  display: block;
+  margin: 16px 0 8px;
+  font-weight: 600;
+  color: #f9f4ff;
+}
+
+.staff-character-delete-dialog textarea {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 110px;
+  padding: 12px;
+  border: 1px solid rgba(168, 85, 247, .55);
+  border-radius: 10px;
+  background: #17102b;
+  color: #fff;
+  font: inherit;
+  resize: vertical;
+}
+
+.staff-character-delete-dialog textarea:focus-visible {
+  outline: 2px solid #c084fc;
+  outline-offset: 2px;
+}

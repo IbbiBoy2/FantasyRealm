@@ -1,638 +1,438 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+  <head>
+    <!-- Page-specific assets and shared FantasyRealm components. -->
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <meta
+      content="FantasyRealm employee moderation and management workspace."
+      name="description"
+    />
     <title>Employee Dashboard | FantasyRealm</title>
-
-    <!-- =========================
-         FONTS AND PAGE ASSETS
-    ========================= -->
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
+    <link href="../assets/favicon.svg" rel="icon" type="image/svg+xml" />
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
     <link
-        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600&display=swap"
-        rel="stylesheet"
-    >
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&amp;family=Inter:wght@400;500;600&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link href="../Css/employee-dashboard.css" rel="stylesheet" />
+    <link href="../Css/header.css" rel="stylesheet" />
+    <link href="../Css/footer.css" rel="stylesheet" />
+    <link href="../Css/accessibility.css" rel="stylesheet" />
+    <link href="../Css/layout.css" rel="stylesheet" />
+    <link href="../Css/employee-character-management.css" rel="stylesheet" />
+    <link href="../Css/employee-tables.css" rel="stylesheet" />
+    <link href="../Css/employee-accessory-images.css" rel="stylesheet" />
+    <!-- Equipment upload styles. -->
+    <link href="../Css/equipment-upload.css" rel="stylesheet" />
+    <!-- Staff-only contact message inbox. -->
+    <link href="../Css/employee-contact-messages.css" rel="stylesheet" />
+    <script defer="" src="../js/components/header.js"></script>
+    <script defer="" src="../js/components/footer.js"></script>
+    <script defer="" src="../js/employee-dashboard.js"></script>
+    <!-- Add gender and replacement-body upload to the staff equipment form. -->
+    <script defer src="../js/components/equipment-upload.js"></script>
+    <script defer="" src="../js/employee-character-management.js"></script>
+    <script defer="" src="../js/employee-tables.js"></script>
+    <!-- Display contact submissions to active employees and administrators. -->
+    <script defer src="../js/employee-contact-messages.js"></script>
+    <script defer src="../js/employee-section-navigation.js"></script>
+  </head>
 
-    <link rel="stylesheet" href="../Css/dashboard.css">
-    <link rel="stylesheet" href="../Css/employee-dashboard.css">
-
-    <script src="../js/employee-dashboard.js" defer></script>
-    <link rel="stylesheet" href="../Css/accessibility.css">
-</head>
-
-<body>
-    <a class="skip-link" href="#main-content">Skip to main content</a>
-
-    <!-- =========================
-         MAIN NAVIGATION
-    ========================= -->
-
-    <header class="dashboard-navbar">
-        <a class="brand" href="index.html">
-            <span class="brand-mark">✦</span>
-            <span>FantasyRealm</span>
-        </a>
-
-        <nav class="nav-links" aria-label="Main navigation">
-            <a href="index.html">Home</a>
-            <a href="character-gallery.html">Characters</a>
-
-            <span id="nav-username" class="nav-username"></span>
-
-            <!-- =========================
-                 ACCOUNT SETTINGS
-            ========================= -->
-
-            <div id="settings-menu" class="settings-menu" hidden>
-                <button
-                    id="settings-button"
-                    class="settings-button"
-                    type="button"
-                    aria-label="Open settings"
-                    aria-controls="settings-dropdown"
-                    aria-expanded="false"
-                >
-                    ⚙
-                </button>
-
-                <div
-                    id="settings-dropdown"
-                    class="settings-dropdown"
-                    hidden
-                >
-                    <a href="dashboard.html">
-                        Character Settings
-                    </a>
-
-                    <button id="logout-link" type="button">
-                        Logout
-                    </button>
-                </div>
-            </div>
-        </nav>
-    </header>
-
-    <main tabindex="-1" id="main-content" class="dashboard-page">
-
-        <!-- =========================
-             ACCESS AND LOADING FEEDBACK
-        ========================= -->
-
+  <body class="app-layout" data-page="employee">
+    <a class="skip-link" href="#main-content"> Skip to main content </a>
+    <!-- Shared header is populated by header.js; no local navigation duplication. -->
+    <header class="app-header" id="site-header"></header>
+    <!-- Employee workspace; access is verified before protected content is shown. -->
+    <main class="app-main employee-page" id="main-content" tabindex="-1">
+      <div class="employee-container">
         <p
-            id="employee-message"
-            class="dashboard-message"
-            role="status"
-            aria-live="polite"
-        >
-            Checking employee access...
-        </p>
-
-        <!-- Content appears only after the protected API authorizes access. -->
-
-        <div id="employee-content" hidden>
-
-            <!-- =========================
-                 EMPLOYEE WELCOME
-            ========================= -->
-
-            <section class="dashboard-header">
-                <div>
-                    <p class="section-label">
-                        STAFF AREA
-                    </p>
-
-                    <h1>
-                        Welcome,
-                        <span id="employee-username">Employee</span>
-                    </h1>
-
-                    <p class="dashboard-intro">
-                        Review community activity and manage FantasyRealm.
-                    </p>
-
-                    <p id="employee-role" class="employee-role"></p>
-                </div>
-            </section>
-
-            <!-- =========================
-                 EMPLOYEE STATISTICS
-            ========================= -->
-
-            <section
-                class="dashboard-stats"
-                aria-label="Employee dashboard statistics"
-            >
-                <article class="stat-card">
-                    <span>Pending Characters</span>
-                    <strong id="pending-characters-count">0</strong>
-                </article>
-
-                <article class="stat-card">
-                    <span>Pending Reviews</span>
-                    <strong id="pending-reviews-count">0</strong>
-                </article>
-
-                <article class="stat-card">
-                    <span>Active Accessories</span>
-                    <strong id="active-accessories-count">0</strong>
-                </article>
-
-                <article class="stat-card">
-                    <span>Player Accounts</span>
-                    <strong id="player-accounts-count">0</strong>
-                </article>
-            </section>
-
-            <!-- =========================
-                 STAFF WORKSPACE
-            ========================= -->
-
-            <section class="characters-section">
-                <div class="section-heading">
-                    <p class="section-label">STAFF WORKSPACE</p>
-                    <h2>Management Tools</h2>
-                </div>
-
-<!-- =========================
-     CHARACTER NAME MODERATION
-========================= -->
-
-<section
-    class="characters-section"
-    aria-labelledby="character-moderation-title"
->
-    <div class="section-heading">
-        <p class="section-label">
-            MODERATION QUEUE
-        </p>
-
-        <h2 id="character-moderation-title">
-            Character Names
-        </h2>
-    </div>
-
-    <p class="dashboard-intro">
-        Approve suitable character names or reject them with an explanation.
-        Approved characters stay private until their owners share them.
-    </p>
-
-    <!-- JavaScript displays loading, empty and error messages here. -->
-
-    <p
-        id="pending-characters-message"
-        class="dashboard-message"
-        role="status"
-        aria-live="polite"
-    >
-        Loading pending characters...
-    </p>
-
-    <div
-        id="pending-characters-list"
-        class="moderation-list"
-    ></div>
-</section>
-
-<!-- =========================
-     REVIEW MODERATION QUEUE
-========================= -->
-
-<section
-    class="characters-section review-moderation-section"
-    aria-labelledby="review-moderation-title"
->
-    <div class="section-heading">
-        <p class="section-label">
-            COMMUNITY FEEDBACK
-        </p>
-
-        <h2 id="review-moderation-title">
-            Pending Reviews
-        </h2>
-    </div>
-
-    <p class="dashboard-intro">
-        Review submitted ratings and comments.
-        Only approved reviews appear publicly.
-    </p>
-
-    <!-- JavaScript displays loading, empty and error messages here. -->
-
-    <p
-        id="pending-reviews-message"
-        class="dashboard-message"
-        role="status"
-        aria-live="polite"
-    >
-        Loading pending reviews...
-    </p>
-
-    <div
-        id="pending-reviews-list"
-        class="moderation-list"
-    ></div>
-</section>
-
-<!-- =========================
-     ACCESSORY MANAGEMENT
-========================= -->
-
-<section
-    class="characters-section accessory-management-section"
-    aria-labelledby="accessory-management-title"
->
-    <div class="section-heading">
-        <p class="section-label">
-            CUSTOMIZATION CATALOGUE
-        </p>
-
-        <h2 id="accessory-management-title">
-            Manage Accessories
-        </h2>
-    </div>
-
-    <p class="dashboard-intro">
-        Add customization items and manage their availability.
-        Items used by saved characters can be disabled, but not deleted.
-    </p>
-
-    <!-- =========================
-         ADD ACCESSORY FORM
-    ========================= -->
-
-    <form id="accessory-form" class="accessory-form">
-        <div class="accessory-field">
-            <label for="accessory-name">
-                Item name
-            </label>
-
-            <input
-                id="accessory-name"
-                name="name"
-                type="text"
-                maxlength="100"
-                placeholder="Enter an item name..."
-                required
-            >
-        </div>
-
-        <div class="accessory-field">
-            <label for="accessory-type">
-                Item type
-            </label>
-
-            <select id="accessory-type" name="type" required>
-                <option value="">Choose a type</option>
-                <option value="weapon">Weapon</option>
-                <option value="armor">Armor</option>
-                <option value="clothing">Clothing</option>
-                <option value="accessory">Accessory</option>
-            </select>
-        </div>
-
-        <button
-            id="accessory-add-button"
-            class="character-action"
-            type="submit"
-        >
-            ✦ Add Item
-        </button>
-    </form>
-
-    <!-- Displays feedback for adding, enabling and disabling items. -->
-
-    <p
-        id="accessory-feedback"
-        class="accessory-feedback"
-        role="status"
-        aria-live="polite"
-        hidden
-    ></p>
-
-    <!-- =========================
-         ACCESSORY CATALOGUE
-    ========================= -->
-
-    <p
-        id="accessories-message"
-        class="dashboard-message"
-        role="status"
-        aria-live="polite"
-    >
-        Loading accessories...
-    </p>
-
-    <div id="accessories-list" class="accessories-list"></div>
-</section>
-
-<!-- =========================
-     PLAYER ACCOUNT MANAGEMENT
-========================= -->
-
-<section
-    class="characters-section user-management-section"
-    aria-labelledby="user-management-title"
->
-    <div class="section-heading">
-        <p class="section-label">
-            PLAYER ACCOUNTS
-        </p>
-
-        <h2 id="user-management-title">
-            Manage Users
-        </h2>
-    </div>
-
-    <p class="dashboard-intro">
-        Suspend or reactivate player accounts.
-        Permanently deleting an account also removes its characters
-        and related reviews.
-    </p>
-
-    <!-- Displays feedback after an account action. -->
-
-    <p
-        id="user-management-feedback"
-        class="accessory-feedback"
-        role="status"
-        aria-live="polite"
-        hidden
-    ></p>
-
-    <!-- JavaScript loads ordinary USER accounts into this list. -->
-
-    <p
-        id="users-message"
-        class="dashboard-message"
-        role="status"
-        aria-live="polite"
-    >
-        Loading player accounts...
-    </p>
-
-    <div id="managed-users-list" class="moderation-list"></div>
-</section>
-
-    </main>
-
-    <!-- =========================
-     CHARACTER MODERATION DIALOG
-========================= -->
-
-<dialog
-    id="moderation-dialog"
-    class="moderation-dialog"
-    aria-labelledby="moderation-dialog-title"
-    aria-describedby="moderation-dialog-description"
->
-    <form id="moderation-form" class="moderation-form">
-        <p class="section-label">
-            CHARACTER NAME REVIEW
-        </p>
-
-        <h2 id="moderation-dialog-title">
-            Review Character Name
-        </h2>
-
-        <p
-            id="moderation-dialog-description"
-            class="moderation-description"
+          class="employee-feedback"
+          hidden=""
+          id="employee-message"
+          role="alert"
         ></p>
-
-        <!-- JavaScript shows this field and makes it required for rejection. -->
-
-        <div id="rejection-reason-field" hidden>
-            <label for="rejection-reason">
-                Rejection reason
-            </label>
-
-            <textarea
-                id="rejection-reason"
-                name="rejection_reason"
-                rows="4"
-                maxlength="1000"
-                placeholder="Explain why this character name was rejected..."
-            ></textarea>
-
-            <p class="moderation-hint">
-                The character owner will be able to read this explanation.
+        <div hidden="" id="employee-content">
+          <!-- Employee identity, quick links and introduction. -->
+          <section class="employee-hero">
+            <p class="employee-eyebrow">STAFF WORKSPACE</p>
+            <h1>Employee Dashboard</h1>
+            <p>
+              Welcome,
+              <strong id="employee-username"> Employee </strong>
+              . Review submissions, manage items, and help keep the community
+              safe.
             </p>
-        </div>
-
-        <p
-            id="moderation-error"
-            class="moderation-error"
-            role="alert"
-            hidden
-        ></p>
-
-        <div class="moderation-dialog-actions">
-            <button
-                id="moderation-cancel"
-                class="character-action"
+            <p class="employee-role" id="employee-role"></p>
+            <nav aria-label="Dashboard sections" class="employee-jump-links">
+              <a href="#employee-characters"> Characters </a>
+              <a href="#employee-reviews"> Reviews </a>
+              <a href="#employee-accessories"> Accessories </a>
+              <a href="#employee-users"> Players </a>
+            </nav>
+          </section>
+          <!-- Overview counters loaded from the staff API. -->
+          <section aria-label="Dashboard statistics" class="employee-stats">
+            <article>
+              <span> Pending Characters </span>
+              <strong id="pending-characters-count"> — </strong>
+            </article>
+            <article>
+              <span> Pending Reviews </span>
+              <strong id="pending-reviews-count"> — </strong>
+            </article>
+            <article>
+              <span> Active Accessories </span>
+              <strong id="active-accessories-count"> — </strong>
+            </article>
+            <article>
+              <span> Player Accounts </span>
+              <strong id="player-accounts-count"> — </strong>
+            </article>
+          </section>
+          <!-- Character name moderation queue. -->
+          <section
+            aria-labelledby="character-moderation-title"
+            class="employee-section"
+            id="employee-characters"
+          >
+            <div class="employee-section-head">
+              <div>
+                <p class="employee-eyebrow">CONTENT MODERATION</p>
+                <h2 id="character-moderation-title">Pending Character Names</h2>
+                <p>
+                  Review character submissions and provide a reason when
+                  rejecting a name.
+                </p>
+              </div>
+              <button
+                class="employee-button-secondary"
+                data-refresh="characters"
                 type="button"
-            >
-                Cancel
-            </button>
+              >
+                Refresh
+              </button>
+            </div>
+            <p
+              class="employee-feedback"
+              hidden=""
+              id="pending-characters-message"
+              role="status"
+            ></p>
+            <div class="employee-card-grid" id="pending-characters-list"></div>
+          </section>
+          <!-- Community review moderation queue. -->
+          <section
+            aria-labelledby="review-moderation-title"
+            class="employee-section"
+            id="employee-reviews"
+          >
+            <div class="employee-section-head">
+              <div>
+                <p class="employee-eyebrow">COMMUNITY MODERATION</p>
+                <h2 id="review-moderation-title">Pending Reviews</h2>
+                <p>Approve or reject reviews before they become visible.</p>
+              </div>
+              <button
+                class="employee-button-secondary"
+                data-refresh="reviews"
+                type="button"
+              >
+                Refresh
+              </button>
+            </div>
+            <p
+              class="employee-feedback"
+              hidden=""
+              id="pending-reviews-message"
+              role="status"
+            ></p>
+            <div class="employee-card-grid" id="pending-reviews-list"></div>
+          </section>
+          <!-- Accessory catalogue creation and management. -->
+          <section
+            aria-labelledby="accessory-management-title"
+            class="employee-section"
+            id="employee-accessories"
+          >
+            <div class="employee-section-head">
+              <div>
+                <p class="employee-eyebrow">ITEM LIBRARY</p>
+                <h2 id="accessory-management-title">Accessory Management</h2>
+                <p>
+                  Add equipment, change availability, or delete unused items.
+                </p>
+              </div>
+              <button
+                class="employee-button-secondary"
+                data-refresh="accessories"
+                type="button"
+              >
+                Refresh
+              </button>
+            </div>
+            <div class="employee-panel">
+              <h3>Add New Item</h3>
+              <form class="employee-add-form" id="accessory-form">
+                <div>
+                  <label for="accessory-name"> Item name </label>
+                  <input
+                    id="accessory-name"
+                    maxlength="100"
+                    placeholder="e.g. Moonstone Staff"
+                    required=""
+                  />
+                </div>
+                <div>
+                  <label for="accessory-type"> Type </label>
+                  <select id="accessory-type" required="">
+                    <option value="">Select type</option>
+                    <option value="weapon">Weapon</option>
+                    <option value="armor">Armor</option>
+                    <option value="clothing">Clothing</option>
+                    <option value="accessory">Accessory</option>
+                  </select>
+                </div>
 
-            <button
-                id="moderation-submit"
-                class="character-action"
-                type="submit"
-            >
-                Confirm
-            </button>
+                <!-- Artwork for the accessory catalogue. -->
+                <div>
+                  <label for="accessory-image">Accessory image</label>
+
+                  <input
+                    id="accessory-image"
+                    name="image"
+                    type="file"
+                    accept="image/png,image/jpeg,image/webp"
+                    aria-describedby="accessory-image-hint"
+                    required
+                  />
+
+                  <small id="accessory-image-hint">
+                    Transparent PNG or WebP recommended. Maximum 2 MB.
+                  </small>
+                </div>
+
+                <button
+                  class="employee-button-primary"
+                  id="accessory-add-button"
+                  type="submit"
+                >
+                  Add Item
+                </button>
+              </form>
+              <p
+                class="employee-feedback"
+                hidden=""
+                id="accessory-feedback"
+                role="status"
+              ></p>
+            </div>
+            <p
+              class="employee-feedback"
+              hidden=""
+              id="accessories-message"
+              role="status"
+            ></p>
+            <div class="employee-card-grid" id="accessories-list"></div>
+          </section>
+          <!-- Player account suspension and deletion. -->
+          <section
+            aria-labelledby="user-management-title"
+            class="employee-section"
+            id="employee-users"
+          >
+            <div class="employee-section-head">
+              <div>
+                <p class="employee-eyebrow">ACCOUNT MODERATION</p>
+                <h2 id="user-management-title">Player Accounts</h2>
+                <p>
+                  Suspend, reactivate, or delete player accounts. Staff accounts
+                  cannot be managed here.
+                </p>
+              </div>
+              <button
+                class="employee-button-secondary"
+                data-refresh="users"
+                type="button"
+              >
+                Refresh
+              </button>
+            </div>
+            <div class="employee-panel employee-search-panel">
+              <label for="employee-player-search">
+                Search players by name, email or ID
+              </label>
+              <input
+                id="employee-player-search"
+                placeholder="Search player accounts..."
+                type="search"
+              />
+            </div>
+            <p
+              class="employee-feedback"
+              hidden=""
+              id="user-management-feedback"
+              role="status"
+            ></p>
+            <p
+              class="employee-feedback"
+              hidden=""
+              id="users-message"
+              role="status"
+            ></p>
+            <div class="employee-card-grid" id="managed-users-list"></div>
+          </section>
         </div>
-    </form>
-</dialog>
-
-<!-- =========================
-     REVIEW MODERATION DIALOG
-========================= -->
-
-<dialog
-    id="review-moderation-dialog"
-    class="moderation-dialog"
-    aria-labelledby="review-moderation-dialog-title"
-    aria-describedby="review-moderation-dialog-description"
->
-    <form
-        id="review-moderation-form"
-        class="moderation-form"
+      </div>
+    </main>
+    <!-- Confirmation and required rejection reason for character moderation. -->
+    <dialog
+      aria-labelledby="moderation-dialog-title"
+      class="employee-dialog"
+      id="moderation-dialog"
     >
-        <p class="section-label">
-            COMMUNITY REVIEW MODERATION
-        </p>
-
-        <h2 id="review-moderation-dialog-title">
-            Review Decision
-        </h2>
-
-        <p
-            id="review-moderation-dialog-description"
-            class="moderation-description"
-        ></p>
-
-        <!-- Plain-text preview of the review being moderated. -->
-
-        <blockquote
-            id="review-moderation-preview"
-            class="moderation-review-comment"
-        ></blockquote>
-
-        <p
-            id="review-moderation-error"
-            class="moderation-error"
-            role="alert"
-            hidden
-        ></p>
-
-        <div class="moderation-dialog-actions">
-            <button
-                id="review-moderation-cancel"
-                class="character-action"
-                type="button"
-            >
-                Cancel
-            </button>
-
-            <button
-                id="review-moderation-submit"
-                class="character-action"
-                type="submit"
-            >
-                Confirm
-            </button>
+      <form id="moderation-form">
+        <h2 id="moderation-dialog-title">Moderate Character</h2>
+        <p id="moderation-dialog-description"></p>
+        <div hidden="" id="rejection-reason-field">
+          <label for="rejection-reason"> Rejection reason </label>
+          <textarea
+            id="rejection-reason"
+            maxlength="1000"
+            placeholder="Explain the reason for rejection..."
+            rows="4"
+          ></textarea>
         </div>
-    </form>
-</dialog>
-
-<!-- =========================
-     ACCESSORY DELETION DIALOG
-========================= -->
-
-<dialog
-    id="accessory-delete-dialog"
-    class="moderation-dialog"
-    aria-labelledby="accessory-delete-title"
-    aria-describedby="accessory-delete-description"
->
-    <form id="accessory-delete-form" class="moderation-form">
-        <p class="section-label">
-            CUSTOMIZATION CATALOGUE
-        </p>
-
-        <h2 id="accessory-delete-title">
-            Delete Accessory
-        </h2>
-
         <p
-            id="accessory-delete-description"
-            class="moderation-description"
+          class="employee-feedback"
+          hidden=""
+          id="moderation-error"
+          role="alert"
         ></p>
-
-        <p
-            id="accessory-delete-error"
-            class="moderation-error"
-            role="alert"
-            hidden
-        ></p>
-
-        <div class="moderation-dialog-actions">
-            <button
-                id="accessory-delete-cancel"
-                class="character-action"
-                type="button"
-            >
-                Cancel
-            </button>
-
-            <button
-                id="accessory-delete-submit"
-                class="character-action moderation-reject"
-                type="submit"
-            >
-                Permanently Delete
-            </button>
+        <div class="employee-dialog-actions">
+          <button
+            class="employee-button-secondary"
+            id="moderation-cancel"
+            type="button"
+          >
+            Cancel
+          </button>
+          <button
+            class="employee-button-primary"
+            id="moderation-submit"
+            type="submit"
+          >
+            Confirm
+          </button>
         </div>
-    </form>
-</dialog>
-
-<!-- =========================
-     PLAYER ACCOUNT ACTION DIALOG
-========================= -->
-
-<dialog
-    id="user-action-dialog"
-    class="moderation-dialog"
-    aria-labelledby="user-action-title"
-    aria-describedby="user-action-description"
->
-    <form id="user-action-form" class="moderation-form">
-        <p class="section-label">
-            PLAYER ACCOUNT MANAGEMENT
-        </p>
-
-        <h2 id="user-action-title">
-            Confirm Account Action
-        </h2>
-
-        <!-- JavaScript names the account and explains the selected action. -->
-
+      </form>
+    </dialog>
+    <!-- Confirmation dialog for review moderation. -->
+    <dialog
+      aria-labelledby="review-moderation-dialog-title"
+      class="employee-dialog"
+      id="review-moderation-dialog"
+    >
+      <form id="review-moderation-form">
+        <h2 id="review-moderation-dialog-title">Moderate Review</h2>
+        <p id="review-moderation-dialog-description"></p>
+        <blockquote id="review-moderation-preview"></blockquote>
         <p
-            id="user-action-description"
-            class="moderation-description"
+          class="employee-feedback"
+          hidden=""
+          id="review-moderation-error"
+          role="alert"
         ></p>
-
-        <p
-            id="user-action-error"
-            class="moderation-error"
-            role="alert"
-            hidden
-        ></p>
-
-        <div class="moderation-dialog-actions">
-            <button
-                id="user-action-cancel"
-                class="character-action"
-                type="button"
-            >
-                Cancel
-            </button>
-
-            <button
-                id="user-action-submit"
-                class="character-action"
-                type="submit"
-            >
-                Confirm
-            </button>
+        <div class="employee-dialog-actions">
+          <button
+            class="employee-button-secondary"
+            id="review-moderation-cancel"
+            type="button"
+          >
+            Cancel
+          </button>
+          <button
+            class="employee-button-primary"
+            id="review-moderation-submit"
+            type="submit"
+          >
+            Confirm
+          </button>
         </div>
-    </form>
-</dialog>
-
-    <!-- =========================
-         SITE FOOTER
-    ========================= -->
-
-    <footer class="footer">
-        <div class="footer-brand">✦ FantasyRealm</div>
-
-        <p>© 2026 FantasyRealm. All rights reserved.</p>
-
-<div class="footer-links">
-    <a href="index.html">Home</a>
-    <a href="legal-notice.html">Legal Notice</a>
-    <a href="privacy.html">Privacy Policy</a>
-    <a href="contact.html">Contact</a>
-</div>
-    </footer>
-
-</body>
+      </form>
+    </dialog>
+    <!-- Permanent accessory deletion confirmation. -->
+    <dialog
+      aria-labelledby="accessory-delete-title"
+      class="employee-dialog"
+      id="accessory-delete-dialog"
+    >
+      <form id="accessory-delete-form">
+        <h2 id="accessory-delete-title">Delete Accessory</h2>
+        <p id="accessory-delete-description"></p>
+        <p class="employee-dialog-note">
+          This action cannot be undone. Items used by characters cannot be
+          deleted.
+        </p>
+        <p
+          class="employee-feedback"
+          hidden=""
+          id="accessory-delete-error"
+          role="alert"
+        ></p>
+        <div class="employee-dialog-actions">
+          <button
+            class="employee-button-secondary"
+            id="accessory-delete-cancel"
+            type="button"
+          >
+            Cancel
+          </button>
+          <button
+            class="employee-button-danger"
+            id="accessory-delete-submit"
+            type="submit"
+          >
+            Permanently Delete
+          </button>
+        </div>
+      </form>
+    </dialog>
+    <!-- Account action confirmation: suspend, reactivate, or delete. -->
+    <dialog
+      aria-labelledby="user-action-title"
+      class="employee-dialog"
+      id="user-action-dialog"
+    >
+      <form id="user-action-form">
+        <h2 id="user-action-title">Manage Player</h2>
+        <p id="user-action-description"></p>
+        <p
+          class="employee-feedback"
+          hidden=""
+          id="user-action-error"
+          role="alert"
+        ></p>
+        <div class="employee-dialog-actions">
+          <button
+            class="employee-button-secondary"
+            id="user-action-cancel"
+            type="button"
+          >
+            Cancel
+          </button>
+          <button
+            class="employee-button-primary"
+            id="user-action-submit"
+            type="submit"
+          >
+            Confirm
+          </button>
+        </div>
+      </form>
+    </dialog>
+    <!-- Shared footer is populated by footer.js. -->
+    <footer class="app-footer" id="site-footer"></footer>
+  </body>
 </html>

@@ -1,75 +1,126 @@
-const forgotForm = document.getElementById('forgot-form');
-const emailInput = document.getElementById('email');
-const formMessage = document.getElementById('form-message');
-const forgotButton = document.getElementById('forgot-button');
 
-const devResetLink = document.getElementById('dev-reset-link');
-const resetLink = document.getElementById('reset-link');
+/*
+ * FANTASYREALM - PASSWORD RECOVERY CONTROLLER
+ *
+ * Submits an email address and username to the recovery API.
+ * Reset tokens must never be returned to the browser by
+ * this endpoint or exposed in developer-only links.
+ */
 
-devResetLink.hidden = true;
+(() => {
+	'use strict';
 
-forgotForm.addEventListener('submit', async (event) => {
-    event.preventDefault();
+	const RECOVERY_URL =
+		'/FantasyRealm/Backend/api/forgot-password.php';
 
-    const email = emailInput.value.trim();
+	const form = document.getElementById('forgot-form');
 
-    formMessage.hidden = true;
-    formMessage.textContent = '';
+	if (!form) {
+		return;
+	}
 
-    devResetLink.hidden = true;
-    resetLink.removeAttribute('href');
+	const emailInput = document.getElementById('email');
+	const usernameInput = document.getElementById('username');
 
-    if (email === '') {
-        showMessage('Please enter your email address.');
-        return;
-    }
+	const formMessage = document.getElementById('form-message');
+	const submitButton = document.getElementById('forgot-button');
 
-    forgotButton.disabled = true;
-    forgotButton.textContent = 'Creating reset link...';
+	function showMessage(message, type) {
+		formMessage.textContent = message;
+		formMessage.dataset.type = type;
+		formMessage.hidden = false;
+	}
 
-    try {
-        const response = await fetch(
-            '/FantasyRealm/Backend/api/forgot-password.php',
-            {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({
-                    email: email
-                })
-            }
-        );
+	function clearMessage() {
+		formMessage.textContent = '';
+		formMessage.hidden = true;
+		delete formMessage.dataset.type;
+	}
 
-        const data = await response.json();
+	async function requestPasswordRecovery(event) {
+		event.preventDefault();
 
-        if (!response.ok || !data.success) {
-            showMessage(
-                data.message || 'Unable to process the password reset request.'
-            );
-            return;
-        }
+		if (submitButton.disabled) {
+			return;
+		}
 
-        showMessage(data.message);
+		clearMessage();
 
-        if (data.reset_url) {
-            resetLink.href = data.reset_url;
-            devResetLink.hidden = false;
-        }
+		const email = emailInput.value.trim();
+		const username = usernameInput.value.trim();
 
-    } catch (error) {
-        console.error('Forgot password request failed:', error);
+		if (!email || !username) {
+			showMessage(
+				'Please enter your email address and username.',
+				'error'
+			);
+			return;
+		}
 
-        showMessage('Unable to connect to the server.');
-    } finally {
-        forgotButton.disabled = false;
-        forgotButton.textContent = 'Send Reset Link';
-    }
-});
+		if (!emailInput.checkValidity()) {
+			showMessage(
+				'Please enter a valid email address.',
+				'error'
+			);
+			emailInput.focus();
+			return;
+		}
 
+		submitButton.disabled = true;
+		submitButton.textContent = 'Submitting request...';
 
-function showMessage(message) {
-    formMessage.textContent = message;
-    formMessage.hidden = false;
-}
+		try {
+			const response = await fetch(RECOVERY_URL, {
+				method: 'POST',
+				credentials: 'same-origin',
+				cache: 'no-store',
+				headers: {
+					'Content-Type': 'application/json',
+					'Accept': 'application/json'
+				},
+				body: JSON.stringify({
+					email,
+					username
+				})
+			});
+
+			const result = await response.json();
+
+			if (!response.ok || result.success !== true) {
+				showMessage(
+					result.message ||
+					'Unable to process your request.',
+					'error'
+				);
+				return;
+			}
+
+			showMessage(
+				'If the details match an account, ' +
+				'recovery instructions will be sent by email.',
+				'success'
+			);
+
+			form.reset();
+
+		} catch (error) {
+			console.error(
+				'Password recovery request failed:',
+				error
+			);
+
+			showMessage(
+				'Unable to connect to the server. ' +
+				'Please try again later.',
+				'error'
+			);
+
+		} finally {
+			submitButton.disabled = false;
+			submitButton.textContent =
+				'Send Recovery Instructions';
+		}
+	}
+
+	form.addEventListener('submit', requestPasswordRecovery);
+})();

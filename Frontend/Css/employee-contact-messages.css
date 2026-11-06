@@ -1,0 +1,84 @@
+/*
+ * FANTASYREALM - STAFF CONTACT INBOX
+ * Reuses existing employee dashboard colors and panels.
+ */
+.employee-contact-section .employee-contact-search {
+  margin-bottom: 16px;
+}
+
+.employee-contact-section .employee-contact-search label {
+  display: grid;
+  gap: 8px;
+  max-width: 480px;
+  font-weight: 600;
+}
+
+.employee-contact-section .employee-contact-search input {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 14px;
+  color: #f4ecff;
+  border: 1px solid rgba(196, 131, 255, 0.48);
+  background: rgba(8, 6, 27, 0.8);
+  border-radius: 10px;
+}
+
+.employee-contact-section .employee-contact-search input:focus-visible,
+.employee-contact-section .employee-contact-details summary:focus-visible {
+  outline: 2px solid #d8b4fe;
+  outline-offset: 3px;
+}
+
+.employee-contact-list {
+  display: grid;
+  gap: 14px;
+}
+
+.employee-contact-message {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.employee-contact-message-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.employee-contact-message h3 {
+  margin: 0;
+}
+
+.employee-contact-message a {
+  color: #d8b4fe;
+}
+
+.employee-contact-details {
+  margin-top: 12px;
+}
+
+.employee-contact-details summary {
+  width: fit-content;
+  cursor: pointer;
+  color: #e9d5ff;
+  font-weight: 600;
+}
+
+.employee-contact-body {
+  margin: 12px 0 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  line-height: 1.6;
+  color: #f5edff;
+}
+
+.employee-contact-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 18px;
+}

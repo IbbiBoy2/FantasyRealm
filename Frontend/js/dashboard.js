@@ -3,37 +3,37 @@
 // =========================
 
 const usernameDisplay =
-    document.getElementById('nav-username');
+	document.getElementById('nav-username');
 
 const dashboardUsername =
-    document.getElementById('dashboard-username');
+	document.getElementById('dashboard-username');
 
 const logoutLink =
-    document.getElementById('logout-link');
+	document.getElementById('logout-link');
 
 const characterList =
-    document.getElementById('character-list');
+	document.getElementById('character-list');
 
 const dashboardMessage =
-    document.getElementById('dashboard-message');
+	document.getElementById('dashboard-message');
 
 const totalCount =
-    document.getElementById('total-count');
+	document.getElementById('total-count');
 
 const pendingCount =
-    document.getElementById('pending-count');
+	document.getElementById('pending-count');
 
 const approvedCount =
-    document.getElementById('approved-count');
+	document.getElementById('approved-count');
 
 const rejectedCount =
-    document.getElementById('rejected-count');
+	document.getElementById('rejected-count');
 
 const deletedCharacterList =
-document.getElementById('deleted-character-list');
+	document.getElementById('deleted-character-list');
 
 const deletedMessage =
-    document.getElementById('deleted-message');
+	document.getElementById('deleted-message');
 
 const settingsMenu = document.getElementById('settings-menu');
 const settingsButton = document.getElementById('settings-button');
@@ -55,9 +55,9 @@ const deleteCancel = document.getElementById('delete-cancel');
 const deleteSubmit = document.getElementById('delete-submit');
 
 const employeeDashboardLink =
-    document.getElementById('employee-dashboard-link');
+	document.getElementById('employee-dashboard-link');
 
-    // Create Admin Dashboard link
+// Create Admin Dashboard link
 const adminDashboardLink = document.createElement('a');
 
 adminDashboardLink.id = 'admin-dashboard-link';
@@ -66,8 +66,8 @@ adminDashboardLink.textContent = 'Admin Dashboard';
 adminDashboardLink.hidden = true;
 
 employeeDashboardLink.insertAdjacentElement(
-    'afterend',
-    adminDashboardLink
+	'afterend',
+	adminDashboardLink
 );
 
 // =========================
@@ -78,53 +78,53 @@ employeeDashboardLink.insertAdjacentElement(
 
 async function loadSession() {
 
-        employeeDashboardLink.hidden = true;
+	employeeDashboardLink.hidden = true;
 
-    try {
-        const response = await fetch(
-            '/FantasyRealm/Backend/api/session.php'
-        );
+	try {
+		const response = await fetch(
+			'/FantasyRealm/Backend/api/session.php'
+		);
 
-        const data = await response.json();
+		const data = await response.json();
 
-        // Shows staff navigation only after a successful authenticated role check.
+		// Shows staff navigation only after a successful authenticated role check.
 
-employeeDashboardLink.hidden = !(
-    response.ok &&
-    data.authenticated &&
-    ['EMPLOYEE', 'ADMIN'].includes(data.user?.role)
-);
+		employeeDashboardLink.hidden = !(
+			response.ok &&
+			data.authenticated &&
+			['EMPLOYEE', 'ADMIN'].includes(data.user?.role)
+		);
 
-// Show Admin Dashboard only to ADMIN accounts
-adminDashboardLink.hidden = !(
-    response.ok &&
-    data.authenticated &&
-    data.user?.role === 'ADMIN'
-);
+		// Show Admin Dashboard only to ADMIN accounts
+		adminDashboardLink.hidden = !(
+			response.ok &&
+			data.authenticated &&
+			data.user?.role === 'ADMIN'
+		);
 
-        if (!response.ok) {
-            throw new Error('Unable to verify session.');
-        }
+		if (!response.ok) {
+			throw new Error('Unable to verify session.');
+		}
 
-        if (!data.authenticated) {
-            window.location.href = 'login.html';
-            return false;
-        }
+		if (!data.authenticated) {
+			window.location.href = 'login.html';
+			return false;
+		}
 
-        usernameDisplay.textContent = data.user.username;
-        dashboardUsername.textContent = data.user.username;
+		usernameDisplay.textContent = data.user.username;
+		dashboardUsername.textContent = data.user.username;
 
-        settingsMenu.hidden = false;
+		settingsMenu.hidden = false;
 
-        return true;
+		return true;
 
-    } catch (error) {
-        console.error('Unable to load session:', error);
+	} catch (error) {
+		console.error('Unable to load session:', error);
 
-        window.location.href = 'login.html';
+		window.location.href = 'login.html';
 
-        return false;
-    }
+		return false;
+	}
 }
 
 // =========================
@@ -132,41 +132,41 @@ adminDashboardLink.hidden = !(
 // =========================
 
 async function loadCharacters() {
-    try {
-        const response = await fetch(
-            '/FantasyRealm/Backend/api/my-characters.php'
-        );
+	try {
+		const response = await fetch(
+			'/FantasyRealm/Backend/api/my-characters.php'
+		);
 
-        const data = await response.json();
+		const data = await response.json();
 
-        if (response.status === 401) {
-            window.location.href = 'login.html';
-            return;
-        }
+		if (response.status === 401) {
+			window.location.href = 'login.html';
+			return;
+		}
 
-        if (!response.ok || !data.success) {
-            showMessage(
-                data.message ||
-                'Unable to load your characters.'
-            );
+		if (!response.ok || !data.success) {
+			showMessage(
+				data.message ||
+				'Unable to load your characters.'
+			);
 
-            return;
-        }
+			return;
+		}
 
-        updateStatistics(data.characters);
+		updateStatistics(data.characters);
 
-        renderCharacters(data.characters);
+		renderCharacters(data.characters);
 
-    } catch (error) {
-        console.error(
-            'Unable to load characters:',
-            error
-        );
+	} catch (error) {
+		console.error(
+			'Unable to load characters:',
+			error
+		);
 
-        showMessage(
-            'Unable to load your characters.'
-        );
-    }
+		showMessage(
+			'Unable to load your characters.'
+		);
+	}
 }
 
 // =========================
@@ -174,34 +174,34 @@ async function loadCharacters() {
 // =========================
 
 async function loadDeletedCharacters() {
-    try {
-        const response = await fetch(
-            '/FantasyRealm/Backend/api/deleted-characters.php'
-        );
+	try {
+		const response = await fetch(
+			'/FantasyRealm/Backend/api/deleted-characters.php'
+		);
 
-        const data = await response.json();
+		const data = await response.json();
 
-        if (!response.ok || !data.success) {
-            showDeletedMessage(
-                data.message ||
-                'Unable to load deleted characters.'
-            );
+		if (!response.ok || !data.success) {
+			showDeletedMessage(
+				data.message ||
+				'Unable to load deleted characters.'
+			);
 
-            return;
-        }
+			return;
+		}
 
-        renderDeletedCharacters(data.characters);
+		renderDeletedCharacters(data.characters);
 
-    } catch (error) {
-        console.error(
-            'Unable to load deleted characters:',
-            error
-        );
+	} catch (error) {
+		console.error(
+			'Unable to load deleted characters:',
+			error
+		);
 
-        showDeletedMessage(
-            'Unable to load deleted characters.'
-        );
-    }
+		showDeletedMessage(
+			'Unable to load deleted characters.'
+		);
+	}
 }
 
 // =========================
@@ -209,35 +209,35 @@ async function loadDeletedCharacters() {
 // =========================
 
 function updateStatistics(characters) {
-    const pending =
-        characters.filter(
-            character =>
-                character.status === 'PENDING'
-        ).length;
+	const pending =
+		characters.filter(
+			character =>
+				character.status === 'PENDING'
+		).length;
 
-    const approved =
-        characters.filter(
-            character =>
-                character.status === 'APPROVED'
-        ).length;
+	const approved =
+		characters.filter(
+			character =>
+				character.status === 'APPROVED'
+		).length;
 
-    const rejected =
-        characters.filter(
-            character =>
-                character.status === 'REJECTED'
-        ).length;
+	const rejected =
+		characters.filter(
+			character =>
+				character.status === 'REJECTED'
+		).length;
 
-    totalCount.textContent =
-        characters.length;
+	totalCount.textContent =
+		characters.length;
 
-    pendingCount.textContent =
-        pending;
+	pendingCount.textContent =
+		pending;
 
-    approvedCount.textContent =
-        approved;
+	approvedCount.textContent =
+		approved;
 
-    rejectedCount.textContent =
-        rejected;
+	rejectedCount.textContent =
+		rejected;
 }
 
 
@@ -246,258 +246,284 @@ function updateStatistics(characters) {
 // =========================
 
 function renderCharacters(characters) {
-    characterList.innerHTML = '';
+	characterList.innerHTML = '';
 
-    if (characters.length === 0) {
-        showMessage(
-            'You have not created any characters yet.'
-        );
+	if (characters.length === 0) {
+		showMessage(
+			'You have not created any characters yet.'
+		);
 
-        return;
-    }
+		return;
+	}
 
-    dashboardMessage.hidden = true;
+	dashboardMessage.hidden = true;
 
-    characters.forEach(character => {
-        const card =
-            createCharacterCard(character);
+	characters.forEach(character => {
+		const card =
+			createCharacterCard(character);
 
-        characterList.appendChild(card);
-    });
+		characterList.appendChild(card);
+	});
 }
 
 function createCharacterCard(character) {
-    const card =
-        document.createElement('article');
+	const card =
+		document.createElement('article');
 
-    card.className =
-        'dashboard-character-card';
+	card.className =
+		'dashboard-character-card';
 
 
-    // Character preview
+	// Character preview
 
-    const preview =
-        document.createElement('div');
+	const preview =
+		document.createElement('div');
 
-    preview.className =
-        'character-preview';
+	preview.className =
+		'character-preview';
 
 
-    if (character.image_path) {
-        const image =
-            document.createElement('img');
+	if (character.image_path) {
+		const image =
+			document.createElement('img');
 
-        image.src =
-            `../${character.image_path}`;
+		image.src =
+			`../${character.image_path}`;
 
-        image.alt =
-            character.name;
+		image.alt =
+			character.name;
 
-        preview.appendChild(image);
+		preview.appendChild(image);
 
-    } else {
-        const placeholder =
-            document.createElement('span');
+	} else {
+		const placeholder =
+			document.createElement('span');
 
-        placeholder.className =
-            'character-placeholder';
+		placeholder.className =
+			'character-placeholder';
 
-        placeholder.textContent =
-            '✦';
+		placeholder.textContent =
+			'✦';
 
-        preview.appendChild(placeholder);
-    }
+		preview.appendChild(placeholder);
+	}
 
+	/**
+	 * Render the character using its saved appearance settings.
+	 *
+	 * The old image or placeholder remains visible while
+	 * the PNG layers are loading.
+	 *
+	 * Once the full character has been rendered successfully,
+	 * remove the legacy preview to avoid duplicate artwork.
+	 */
+	window.FantasyRealmCharacterRenderer
+		.render(preview, character)
+		.then((rendered) => {
+			if (rendered) {
+				preview
+					.querySelectorAll('img, .character-placeholder')
+					.forEach((node) => node.remove());
+			}
+		});
 
-    // Character information
+	// Character information
 
-    const body =
-        document.createElement('div');
+	const body =
+		document.createElement('div');
 
-    body.className =
-        'character-card-body';
+	body.className =
+		'character-card-body';
 
 
-    const name =
-        document.createElement('h3');
+	const name =
+		document.createElement('h3');
 
-    name.textContent =
-        character.name;
+	name.textContent =
+		character.name;
 
 
-    const details =
-        document.createElement('p');
+	const details =
+		document.createElement('p');
 
-    details.className =
-        'character-meta';
+	details.className =
+		'character-meta';
 
-    details.textContent =
-        `${character.gender} • ${character.hair_style} hair • ${character.eye_color} eyes`;
+	details.textContent =
+		`${character.gender} • ${character.hair_style} hair • ${character.eye_color} eyes`;
 
 
-    const visibility =
-        document.createElement('p');
+	const visibility =
+		document.createElement('p');
 
-    visibility.className =
-        'character-meta';
+	visibility.className =
+		'character-meta';
 
-    visibility.textContent =
-        character.shared
-            ? 'Visibility: Shared'
-            : 'Visibility: Private';
+	visibility.textContent =
+		character.shared
+			? 'Visibility: Shared'
+			: 'Visibility: Private';
 
 
-    const status =
-        document.createElement('span');
+	const status =
+		document.createElement('span');
 
-    status.className =
-        `status-badge ${getStatusClass(character.status)}`;
+	status.className =
+		`status-badge ${getStatusClass(character.status)}`;
 
-    status.textContent =
-        character.status;
+	status.textContent =
+		character.status;
 
 
-    body.appendChild(name);
-    body.appendChild(details);
-    body.appendChild(visibility);
-    body.appendChild(status);
+	body.appendChild(name);
+	body.appendChild(details);
+	body.appendChild(visibility);
+	body.appendChild(status);
 
-    // Shows the employee's explanation to the owner of a rejected character.
+	// Shows the employee's explanation to the owner of a rejected character.
 
-if (
-    character.status === 'REJECTED' &&
-    character.rejection_reason
-) {
-    const rejectionReason = document.createElement('p');
+	if (
+		character.status === 'REJECTED' &&
+		character.rejection_reason
+	) {
+		const rejectionReason = document.createElement('p');
 
-    rejectionReason.className = 'rejection-reason';
-    rejectionReason.textContent =
-        `Rejection reason: ${character.rejection_reason}`;
+		rejectionReason.className = 'rejection-reason';
+		rejectionReason.textContent =
+			`Rejection reason: ${character.rejection_reason}`;
 
-    body.appendChild(rejectionReason);
-}
+		body.appendChild(rejectionReason);
+	}
 
 
-    // Character management actions
+	// Character management actions
 
-const actions =
-    document.createElement('div');
+	const actions =
+		document.createElement('div');
 
-actions.className =
-    'character-actions';
+	actions.className =
+		'character-actions';
 
+	/** Open the editor only for an approved character owned by this user. */
+	if (character.status === 'APPROVED') {
+		const editLink = document.createElement('a');
+		editLink.className = 'character-action';
+		editLink.href = `create-character.html?edit=${encodeURIComponent(character.id)}`;
+		editLink.textContent = 'Edit';
+		actions.appendChild(editLink);
+	}
 
-// View is available for approved + shared characters.
+	// View is available for approved + shared characters.
 
-if (
-    character.status === 'APPROVED' &&
-    character.shared
-) {
-    const viewLink =
-        document.createElement('a');
+	if (
+		character.status === 'APPROVED' &&
+		character.shared
+	) {
+		const viewLink =
+			document.createElement('a');
 
-    viewLink.className =
-        'character-action';
+		viewLink.className =
+			'character-action';
 
-    viewLink.href =
-        `character.html?id=${encodeURIComponent(character.id)}`;
+		viewLink.href =
+			`character.html?id=${encodeURIComponent(character.id)}`;
 
-    viewLink.textContent =
-        'View';
+		viewLink.textContent =
+			'View';
 
-    actions.appendChild(viewLink);
-}
+		actions.appendChild(viewLink);
+	}
 
 
-// Delete button
+	// Delete button
 
-const deleteButton =
-    document.createElement('button');
+	const deleteButton =
+		document.createElement('button');
 
-deleteButton.type =
-    'button';
+	deleteButton.type =
+		'button';
 
-deleteButton.className =
-    'character-action';
+	deleteButton.className =
+		'character-action';
 
-deleteButton.textContent =
-    'Delete';
+	deleteButton.textContent =
+		'Delete';
 
-deleteButton.addEventListener(
-    'click',
-    () => deleteCharacter(character)
-);
+	deleteButton.addEventListener(
+		'click',
+		() => deleteCharacter(character)
+	);
 
-// Opens duplication for this character using a new name.
+	// Opens duplication for this character using a new name.
 
-const duplicateButton = document.createElement('button');
+	const duplicateButton = document.createElement('button');
 
-duplicateButton.type = 'button';
-duplicateButton.className = 'character-action';
-duplicateButton.textContent = 'Duplicate';
+	duplicateButton.type = 'button';
+	duplicateButton.className = 'character-action';
+	duplicateButton.textContent = 'Duplicate';
 
-duplicateButton.addEventListener('click', async () => {
-    duplicateButton.disabled = true;
+	duplicateButton.addEventListener('click', async () => {
+		duplicateButton.disabled = true;
 
-    try {
-        await duplicateCharacter(character);
-    } finally {
-        duplicateButton.disabled = false;
-    }
-});
+		try {
+			await duplicateCharacter(character);
+		} finally {
+			duplicateButton.disabled = false;
+		}
+	});
 
-// Owners can share approved characters or unshare an existing shared character.
+	// Owners can share approved characters or unshare an existing shared character.
 
-if (character.status === 'APPROVED' || character.shared) {
-    const shareButton = document.createElement('button');
+	if (character.status === 'APPROVED' || character.shared) {
+		const shareButton = document.createElement('button');
 
-    shareButton.type = 'button';
-    shareButton.className = 'character-action';
+		shareButton.type = 'button';
+		shareButton.className = 'character-action';
 
-    shareButton.textContent = character.shared
-        ? 'Unshare'
-        : 'Share';
+		shareButton.textContent = character.shared
+			? 'Unshare'
+			: 'Share';
 
-    shareButton.addEventListener('click', async () => {
-        shareButton.disabled = true;
+		shareButton.addEventListener('click', async () => {
+			shareButton.disabled = true;
 
-        try {
-            await setCharacterVisibility(
-                character,
-                !character.shared
-            );
-        } finally {
-            shareButton.disabled = false;
-        }
-    });
+			try {
+				await setCharacterVisibility(
+					character,
+					!character.shared
+				);
+			} finally {
+				shareButton.disabled = false;
+			}
+		});
 
-    actions.appendChild(shareButton);
-}
+		actions.appendChild(shareButton);
+	}
 
-actions.appendChild(duplicateButton);
+	actions.appendChild(duplicateButton);
 
-actions.appendChild(deleteButton);
+	actions.appendChild(deleteButton);
 
-body.appendChild(actions);
+	body.appendChild(actions);
 
 
-    card.appendChild(preview);
-    card.appendChild(body);
+	card.appendChild(preview);
+	card.appendChild(body);
 
-    return card;
+	return card;
 }
 
 
 function getStatusClass(status) {
-    if (status === 'APPROVED') {
-        return 'status-approved';
-    }
+	if (status === 'APPROVED') {
+		return 'status-approved';
+	}
 
-    if (status === 'REJECTED') {
-        return 'status-rejected';
-    }
+	if (status === 'REJECTED') {
+		return 'status-rejected';
+	}
 
-    return 'status-pending';
+	return 'status-pending';
 }
 
 // =========================
@@ -507,66 +533,66 @@ function getStatusClass(status) {
 // Sends the desired visibility to the API, then refreshes cards and actions.
 
 async function setCharacterVisibility(character, shared) {
-    try {
-                // SECURITY: Retrieve the current CSRF token.
-        const sessionResponse = await fetch(
-            '/FantasyRealm/Backend/api/session.php',
-            {
-                credentials: 'same-origin',
-                cache: 'no-store'
-            }
-        );
+	try {
+		// SECURITY: Retrieve the current CSRF token.
+		const sessionResponse = await fetch(
+			'/FantasyRealm/Backend/api/session.php',
+			{
+				credentials: 'same-origin',
+				cache: 'no-store'
+			}
+		);
 
-        const sessionData = await sessionResponse.json();
+		const sessionData = await sessionResponse.json();
 
-        if (
-            !sessionResponse.ok ||
-            !sessionData.authenticated ||
-            typeof sessionData.csrf_token !== 'string'
-        ) {
-            alert('Your session has expired. Please log in again.');
-            return;
-        }
+		if (
+			!sessionResponse.ok ||
+			!sessionData.authenticated ||
+			typeof sessionData.csrf_token !== 'string'
+		) {
+			alert('Your session has expired. Please log in again.');
+			return;
+		}
 
-        const response = await fetch(
-            '/FantasyRealm/Backend/api/share-character.php',
-            {
-                method: 'POST',
-headers: {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
-    'X-CSRF-Token': sessionData.csrf_token
-},
-                body: JSON.stringify({
-                    character_id: character.id,
-                    shared: shared
-                })
-            }
-        );
+		const response = await fetch(
+			'/FantasyRealm/Backend/api/share-character.php',
+			{
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'Accept': 'application/json',
+					'X-CSRF-Token': sessionData.csrf_token
+				},
+				body: JSON.stringify({
+					character_id: character.id,
+					shared: shared
+				})
+			}
+		);
 
-        const data = await response.json();
+		const data = await response.json();
 
-        if (response.status === 401) {
-            window.location.href = 'login.html';
-            return;
-        }
+		if (response.status === 401) {
+			window.location.href = 'login.html';
+			return;
+		}
 
-        if (!response.ok || !data.success) {
-            alert(
-                data.message || 'Unable to update character visibility.'
-            );
-            return;
-        }
+		if (!response.ok || !data.success) {
+			alert(
+				data.message || 'Unable to update character visibility.'
+			);
+			return;
+		}
 
-        await loadCharacters();
+		await loadCharacters();
 
-    } catch (error) {
-        console.error('Unable to update visibility:', error);
+	} catch (error) {
+		console.error('Unable to update visibility:', error);
 
-        alert(
-            'Unable to confirm the change. Refresh the dashboard before trying again.'
-        );
-    }
+		alert(
+			'Unable to confirm the change. Refresh the dashboard before trying again.'
+		);
+	}
 }
 
 // =========================
@@ -581,20 +607,20 @@ let duplicationInProgress = false;
 // Opens the dialog instead of the browser's plain prompt.
 
 function duplicateCharacter(character) {
-    if (duplicateDialog.open || duplicationInProgress) {
-        return;
-    }
+	if (duplicateDialog.open || duplicationInProgress) {
+		return;
+	}
 
-    duplicateSource = character;
+	duplicateSource = character;
 
-    duplicateForm.reset();
-    duplicateError.textContent = '';
-    duplicateError.hidden = true;
+	duplicateForm.reset();
+	duplicateError.textContent = '';
+	duplicateError.hidden = true;
 
-    duplicateNameInput.setCustomValidity('');
+	duplicateNameInput.setCustomValidity('');
 
-    duplicateDialog.showModal();
-    duplicateNameInput.focus();
+	duplicateDialog.showModal();
+	duplicateNameInput.focus();
 }
 
 // =========================
@@ -602,28 +628,28 @@ function duplicateCharacter(character) {
 // =========================
 
 duplicateCancel.addEventListener('click', () => {
-    if (!duplicationInProgress) {
-        duplicateDialog.close();
-    }
+	if (!duplicationInProgress) {
+		duplicateDialog.close();
+	}
 });
 
 // Prevents closing with Escape while the API request is processing.
 
 duplicateDialog.addEventListener('cancel', (event) => {
-    if (duplicationInProgress) {
-        event.preventDefault();
-    }
+	if (duplicationInProgress) {
+		event.preventDefault();
+	}
 });
 
 duplicateDialog.addEventListener('close', () => {
-    duplicateSource = null;
+	duplicateSource = null;
 });
 
 duplicateNameInput.addEventListener('input', () => {
-    duplicateNameInput.setCustomValidity('');
+	duplicateNameInput.setCustomValidity('');
 
-    duplicateError.textContent = '';
-    duplicateError.hidden = true;
+	duplicateError.textContent = '';
+	duplicateError.hidden = true;
 });
 
 // =========================
@@ -631,112 +657,112 @@ duplicateNameInput.addEventListener('input', () => {
 // =========================
 
 duplicateForm.addEventListener('submit', async (event) => {
-    event.preventDefault();
+	event.preventDefault();
 
-    if (!duplicateSource || duplicationInProgress) {
-        return;
-    }
+	if (!duplicateSource || duplicationInProgress) {
+		return;
+	}
 
-    const name = duplicateNameInput.value.trim();
+	const name = duplicateNameInput.value.trim();
 
-    if (name === '' || Array.from(name).length > 50) {
-        duplicateNameInput.setCustomValidity(
-            'Enter a character name of 1 to 50 characters.'
-        );
+	if (name === '' || Array.from(name).length > 50) {
+		duplicateNameInput.setCustomValidity(
+			'Enter a character name of 1 to 50 characters.'
+		);
 
-        duplicateNameInput.reportValidity();
-        return;
-    }
+		duplicateNameInput.reportValidity();
+		return;
+	}
 
-    const sourceId = duplicateSource.id;
+	const sourceId = duplicateSource.id;
 
-    duplicationInProgress = true;
+	duplicationInProgress = true;
 
-    duplicateSubmit.disabled = true;
-    duplicateCancel.disabled = true;
-    duplicateNameInput.disabled = true;
+	duplicateSubmit.disabled = true;
+	duplicateCancel.disabled = true;
+	duplicateNameInput.disabled = true;
 
-    duplicateSubmit.textContent = 'Duplicating...';
+	duplicateSubmit.textContent = 'Duplicating...';
 
-    duplicateError.textContent = '';
-    duplicateError.hidden = true;
+	duplicateError.textContent = '';
+	duplicateError.hidden = true;
 
-    try {
-// SECURITY: Retrieve the current CSRF token.
-const sessionResponse = await fetch(
-    '/FantasyRealm/Backend/api/session.php',
-    {
-        credentials: 'same-origin',
-        cache: 'no-store'
-    }
-);
+	try {
+		// SECURITY: Retrieve the current CSRF token.
+		const sessionResponse = await fetch(
+			'/FantasyRealm/Backend/api/session.php',
+			{
+				credentials: 'same-origin',
+				cache: 'no-store'
+			}
+		);
 
-const sessionData = await sessionResponse.json();
+		const sessionData = await sessionResponse.json();
 
-if (
-    !sessionResponse.ok ||
-    !sessionData.authenticated ||
-    typeof sessionData.csrf_token !== 'string'
-) {
-    throw new Error('Unable to verify session security.');
-}
+		if (
+			!sessionResponse.ok ||
+			!sessionData.authenticated ||
+			typeof sessionData.csrf_token !== 'string'
+		) {
+			throw new Error('Unable to verify session security.');
+		}
 
-        const response = await fetch(
-            '/FantasyRealm/Backend/api/duplicate-character.php',
-            {
-                method: 'POST',
-headers: {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
-    'X-CSRF-Token': sessionData.csrf_token
-},
-                body: JSON.stringify({
-                    character_id: sourceId,
-                    name: name
-                })
-            }
-        );
+		const response = await fetch(
+			'/FantasyRealm/Backend/api/duplicate-character.php',
+			{
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'Accept': 'application/json',
+					'X-CSRF-Token': sessionData.csrf_token
+				},
+				body: JSON.stringify({
+					character_id: sourceId,
+					name: name
+				})
+			}
+		);
 
-        const data = await response.json();
+		const data = await response.json();
 
-        if (response.status === 401) {
-            window.location.href = 'login.html';
-            return;
-        }
+		if (response.status === 401) {
+			window.location.href = 'login.html';
+			return;
+		}
 
-        if (!response.ok || !data.success) {
-            duplicateError.textContent =
-                data.message || 'Unable to duplicate character.';
+		if (!response.ok || !data.success) {
+			duplicateError.textContent =
+				data.message || 'Unable to duplicate character.';
 
-            duplicateError.hidden = false;
-            return;
-        }
+			duplicateError.hidden = false;
+			return;
+		}
 
-        duplicateDialog.close();
+		duplicateDialog.close();
 
-        await loadCharacters();
+		await loadCharacters();
 
-    } catch (error) {
-        console.error('Unable to duplicate character:', error);
+	} catch (error) {
+		console.error('Unable to duplicate character:', error);
 
-        duplicateError.textContent =
-            'Unable to confirm duplication. Close this dialog and refresh the dashboard before trying again.';
+		duplicateError.textContent =
+			'Unable to confirm duplication. Close this dialog and refresh the dashboard before trying again.';
 
-        duplicateError.hidden = false;
+		duplicateError.hidden = false;
 
-    } finally {
-        duplicationInProgress = false;
+	} finally {
+		duplicationInProgress = false;
 
-        duplicateSubmit.disabled = false;
-        duplicateCancel.disabled = false;
-        duplicateNameInput.disabled = false;
+		duplicateSubmit.disabled = false;
+		duplicateCancel.disabled = false;
+		duplicateNameInput.disabled = false;
 
-        duplicateSubmit.textContent = '✦ Duplicate Character';
+		duplicateSubmit.textContent = '✦ Duplicate Character';
 
-        if (duplicateDialog.open) {
-            duplicateNameInput.focus();
-        }
-    }
+		if (duplicateDialog.open) {
+			duplicateNameInput.focus();
+		}
+	}
 });
 
 // =========================
@@ -749,40 +775,40 @@ let deletionTarget = null;
 let deletionInProgress = false;
 
 function openDeleteDialog(character, permanent) {
-    if (deleteDialog.open || deletionInProgress) {
-        return;
-    }
+	if (deleteDialog.open || deletionInProgress) {
+		return;
+	}
 
-    deletionTarget = {
-        id: character.id,
-        permanent: permanent
-    };
+	deletionTarget = {
+		id: character.id,
+		permanent: permanent
+	};
 
-    deleteError.textContent = '';
-    deleteError.hidden = true;
+	deleteError.textContent = '';
+	deleteError.hidden = true;
 
-    deleteDialogTitle.textContent = permanent
-        ? 'Permanently Delete Character'
-        : 'Delete Character';
+	deleteDialogTitle.textContent = permanent
+		? 'Permanently Delete Character'
+		: 'Delete Character';
 
-    deleteDialogDescription.textContent = permanent
-        ? `Permanently delete "${character.name}"? This removes the character and its related data. This action cannot be undone.`
-        : `Move "${character.name}" to Deleted Characters? You can restore it later.`;
+	deleteDialogDescription.textContent = permanent
+		? `Permanently delete "${character.name}"? This removes the character and its related data. This action cannot be undone.`
+		: `Move "${character.name}" to Deleted Characters? You can restore it later.`;
 
-    deleteSubmit.textContent = permanent
-        ? 'Permanently Delete'
-        : 'Move to Deleted Characters';
+	deleteSubmit.textContent = permanent
+		? 'Permanently Delete'
+		: 'Move to Deleted Characters';
 
-    deleteDialog.showModal();
+	deleteDialog.showModal();
 
-    // Starts keyboard focus on the non-destructive action.
-    deleteCancel.focus();
+	// Starts keyboard focus on the non-destructive action.
+	deleteCancel.focus();
 }
 
 // Keeps the existing card button handlers connected to the new dialog.
 
 function deleteCharacter(character) {
-    openDeleteDialog(character, false);
+	openDeleteDialog(character, false);
 }
 
 // =========================
@@ -790,19 +816,19 @@ function deleteCharacter(character) {
 // =========================
 
 deleteCancel.addEventListener('click', () => {
-    if (!deletionInProgress) {
-        deleteDialog.close();
-    }
+	if (!deletionInProgress) {
+		deleteDialog.close();
+	}
 });
 
 deleteDialog.addEventListener('cancel', (event) => {
-    if (deletionInProgress) {
-        event.preventDefault();
-    }
+	if (deletionInProgress) {
+		event.preventDefault();
+	}
 });
 
 deleteDialog.addEventListener('close', () => {
-    deletionTarget = null;
+	deletionTarget = null;
 });
 
 // =========================
@@ -812,103 +838,103 @@ deleteDialog.addEventListener('close', () => {
 // Calls the existing PHP endpoint for the selected deletion mode.
 
 deleteForm.addEventListener('submit', async (event) => {
-    event.preventDefault();
+	event.preventDefault();
 
-    if (!deletionTarget || deletionInProgress) {
-        return;
-    }
+	if (!deletionTarget || deletionInProgress) {
+		return;
+	}
 
-    const target = deletionTarget;
-    const originalButtonText = deleteSubmit.textContent;
+	const target = deletionTarget;
+	const originalButtonText = deleteSubmit.textContent;
 
-    const endpoint = target.permanent
-        ? '/FantasyRealm/Backend/api/permanent-delete-character.php'
-        : '/FantasyRealm/Backend/api/delete-character.php';
+	const endpoint = target.permanent
+		? '/FantasyRealm/Backend/api/permanent-delete-character.php'
+		: '/FantasyRealm/Backend/api/delete-character.php';
 
-    deletionInProgress = true;
+	deletionInProgress = true;
 
-    deleteSubmit.disabled = true;
-    deleteCancel.disabled = true;
-    deleteSubmit.textContent = 'Deleting...';
+	deleteSubmit.disabled = true;
+	deleteCancel.disabled = true;
+	deleteSubmit.textContent = 'Deleting...';
 
-    deleteError.textContent = '';
-    deleteError.hidden = true;
+	deleteError.textContent = '';
+	deleteError.hidden = true;
 
-    try {
+	try {
 
-// SECURITY: Retrieve the current CSRF token.
-const sessionResponse = await fetch(
-    '/FantasyRealm/Backend/api/session.php',
-    {
-        credentials: 'same-origin',
-        cache: 'no-store'
-    }
-);
+		// SECURITY: Retrieve the current CSRF token.
+		const sessionResponse = await fetch(
+			'/FantasyRealm/Backend/api/session.php',
+			{
+				credentials: 'same-origin',
+				cache: 'no-store'
+			}
+		);
 
-const sessionData = await sessionResponse.json();
+		const sessionData = await sessionResponse.json();
 
-if (
-    !sessionResponse.ok ||
-    !sessionData.authenticated ||
-    typeof sessionData.csrf_token !== 'string'
-) {
-    throw new Error('Unable to verify session security.');
-}
-// SECURITY: Send CSRF token with character deletion.
-const response = await fetch(endpoint, {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'X-CSRF-Token': sessionData.csrf_token
-    },
-            body: JSON.stringify({
-                character_id: target.id
-            })
-        });
+		if (
+			!sessionResponse.ok ||
+			!sessionData.authenticated ||
+			typeof sessionData.csrf_token !== 'string'
+		) {
+			throw new Error('Unable to verify session security.');
+		}
+		// SECURITY: Send CSRF token with character deletion.
+		const response = await fetch(endpoint, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				'Accept': 'application/json',
+				'X-CSRF-Token': sessionData.csrf_token
+			},
+			body: JSON.stringify({
+				character_id: target.id
+			})
+		});
 
-        const data = await response.json();
+		const data = await response.json();
 
-        if (response.status === 401) {
-            window.location.href = 'login.html';
-            return;
-        }
+		if (response.status === 401) {
+			window.location.href = 'login.html';
+			return;
+		}
 
-        if (!response.ok || !data.success) {
-            deleteError.textContent =
-                data.message || 'Unable to delete character.';
+		if (!response.ok || !data.success) {
+			deleteError.textContent =
+				data.message || 'Unable to delete character.';
 
-            deleteError.hidden = false;
-            return;
-        }
+			deleteError.hidden = false;
+			return;
+		}
 
-        deleteDialog.close();
+		deleteDialog.close();
 
-        if (!target.permanent) {
-            await loadCharacters();
-        }
+		if (!target.permanent) {
+			await loadCharacters();
+		}
 
-        await loadDeletedCharacters();
+		await loadDeletedCharacters();
 
-    } catch (error) {
-        console.error('Unable to delete character:', error);
+	} catch (error) {
+		console.error('Unable to delete character:', error);
 
-        deleteError.textContent =
-            'Unable to confirm deletion. Close this dialog and refresh the dashboard before trying again.';
+		deleteError.textContent =
+			'Unable to confirm deletion. Close this dialog and refresh the dashboard before trying again.';
 
-        deleteError.hidden = false;
+		deleteError.hidden = false;
 
-    } finally {
-        deletionInProgress = false;
+	} finally {
+		deletionInProgress = false;
 
-        deleteSubmit.disabled = false;
-        deleteCancel.disabled = false;
-        deleteSubmit.textContent = originalButtonText;
+		deleteSubmit.disabled = false;
+		deleteCancel.disabled = false;
+		deleteSubmit.textContent = originalButtonText;
 
-        if (deleteDialog.open) {
-            deleteCancel.focus();
-        }
-    }
+		if (deleteDialog.open) {
+			deleteCancel.focus();
+		}
+	}
 });
 
 // =========================
@@ -916,157 +942,169 @@ const response = await fetch(endpoint, {
 // =========================
 
 function renderDeletedCharacters(characters) {
-    deletedCharacterList.innerHTML = '';
+	deletedCharacterList.innerHTML = '';
 
-    if (characters.length === 0) {
-        showDeletedMessage(
-            'No deleted characters.'
-        );
+	if (characters.length === 0) {
+		showDeletedMessage(
+			'No deleted characters.'
+		);
 
-        return;
-    }
+		return;
+	}
 
-    deletedMessage.hidden = true;
+	deletedMessage.hidden = true;
 
-    characters.forEach(character => {
-        const card =
-            createDeletedCharacterCard(character);
-            
+	characters.forEach(character => {
+		const card =
+			createDeletedCharacterCard(character);
 
-            
 
-        deletedCharacterList.appendChild(card);
-    });
+
+
+		deletedCharacterList.appendChild(card);
+	});
 }
 
 
 function createDeletedCharacterCard(character) {
-    const card =
-        document.createElement('article');
+	const card =
+		document.createElement('article');
 
-    card.className =
-        'dashboard-character-card';
-
-
-    const preview =
-        document.createElement('div');
-
-    preview.className =
-        'character-preview';
+	card.className =
+		'dashboard-character-card';
 
 
-    const placeholder =
-        document.createElement('span');
+	const preview =
+		document.createElement('div');
 
-    placeholder.className =
-        'character-placeholder';
-
-    placeholder.textContent =
-        '✦';
-
-    preview.appendChild(placeholder);
+	preview.className =
+		'character-preview';
 
 
-    const body =
-        document.createElement('div');
+	const placeholder =
+		document.createElement('span');
 
-    body.className =
-        'character-card-body';
+	placeholder.className =
+		'character-placeholder';
 
+	placeholder.textContent =
+		'✦';
 
-    const name =
-        document.createElement('h3');
+	preview.appendChild(placeholder);
 
-    name.textContent =
-        character.name;
+	/**
+	 * Display deleted characters using their preserved appearance.
+	 *
+	 * The character is only hidden from the active dashboard:
+	 * its appearance settings remain available for restoration.
+	 */
+	window.FantasyRealmCharacterRenderer
+		.render(preview, character)
+		.then((rendered) => {
+			if (rendered) {
+				placeholder.remove();
+			}
+		});
 
+	const body =
+		document.createElement('div');
 
-    const details =
-        document.createElement('p');
-
-    details.className =
-        'character-meta';
-
-    details.textContent =
-        `${character.gender} • ${character.hair_style} hair • ${character.eye_color} eyes`;
-
-
-    const deletedDate =
-        document.createElement('p');
-
-    deletedDate.className =
-        'character-meta';
-
-    deletedDate.textContent =
-        `Deleted: ${character.deleted_at}`;
+	body.className =
+		'character-card-body';
 
 
-    body.appendChild(name);
-    body.appendChild(details);
-    body.appendChild(deletedDate);
+	const name =
+		document.createElement('h3');
+
+	name.textContent =
+		character.name;
 
 
-    const actions =
-        document.createElement('div');
+	const details =
+		document.createElement('p');
 
-    actions.className =
-        'character-actions';
+	details.className =
+		'character-meta';
 
-
-    const restoreButton =
-        document.createElement('button');
-
-    restoreButton.type =
-        'button';
-
-    restoreButton.className =
-        'character-action';
-
-    restoreButton.textContent =
-        'Restore';
-
-    restoreButton.addEventListener(
-        'click',
-        () => restoreCharacter(character)
-    );
-
-    actions.appendChild(restoreButton);
+	details.textContent =
+		`${character.gender} • ${character.hair_style} hair • ${character.eye_color} eyes`;
 
 
-    const permanentDeleteButton =
-        document.createElement('button');
+	const deletedDate =
+		document.createElement('p');
 
-    permanentDeleteButton.type =
-        'button';
+	deletedDate.className =
+		'character-meta';
 
-    permanentDeleteButton.className =
-        'character-action';
-
-    permanentDeleteButton.textContent =
-        'Permanently Delete';
-
-    permanentDeleteButton.addEventListener(
-        'click',
-        () => permanentlyDeleteCharacter(character)
-    );
-
-    actions.appendChild(permanentDeleteButton);
+	deletedDate.textContent =
+		`Deleted: ${character.deleted_at}`;
 
 
-    body.appendChild(actions);
+	body.appendChild(name);
+	body.appendChild(details);
+	body.appendChild(deletedDate);
 
-    card.appendChild(preview);
-    card.appendChild(body);
 
-    return card;
+	const actions =
+		document.createElement('div');
+
+	actions.className =
+		'character-actions';
+
+	const restoreButton =
+		document.createElement('button');
+
+	restoreButton.type =
+		'button';
+
+	restoreButton.className =
+		'character-action';
+
+	restoreButton.textContent =
+		'Restore';
+
+	restoreButton.addEventListener(
+		'click',
+		() => restoreCharacter(character)
+	);
+
+	actions.appendChild(restoreButton);
+
+
+	const permanentDeleteButton =
+		document.createElement('button');
+
+	permanentDeleteButton.type =
+		'button';
+
+	permanentDeleteButton.className =
+		'character-action';
+
+	permanentDeleteButton.textContent =
+		'Permanently Delete';
+
+	permanentDeleteButton.addEventListener(
+		'click',
+		() => permanentlyDeleteCharacter(character)
+	);
+
+	actions.appendChild(permanentDeleteButton);
+
+
+	body.appendChild(actions);
+
+	card.appendChild(preview);
+	card.appendChild(body);
+
+	return card;
 }
 
 function showDeletedMessage(message) {
-    deletedMessage.textContent =
-        message;
+	deletedMessage.textContent =
+		message;
 
-    deletedMessage.hidden =
-        false;
+	deletedMessage.hidden =
+		false;
 }
 
 // =========================
@@ -1074,74 +1112,74 @@ function showDeletedMessage(message) {
 // =========================
 
 async function restoreCharacter(character) {
-    try {
-                // SECURITY: Retrieve the current CSRF token.
-        const sessionResponse = await fetch(
-            '/FantasyRealm/Backend/api/session.php',
-            {
-                credentials: 'same-origin',
-                cache: 'no-store'
-            }
-        );
+	try {
+		// SECURITY: Retrieve the current CSRF token.
+		const sessionResponse = await fetch(
+			'/FantasyRealm/Backend/api/session.php',
+			{
+				credentials: 'same-origin',
+				cache: 'no-store'
+			}
+		);
 
-        const sessionData = await sessionResponse.json();
+		const sessionData = await sessionResponse.json();
 
-        if (
-            !sessionResponse.ok ||
-            !sessionData.authenticated ||
-            typeof sessionData.csrf_token !== 'string'
-        ) {
-            throw new Error('Unable to verify session security.');
-        }
+		if (
+			!sessionResponse.ok ||
+			!sessionData.authenticated ||
+			typeof sessionData.csrf_token !== 'string'
+		) {
+			throw new Error('Unable to verify session security.');
+		}
 
-        const response = await fetch(
-            '/FantasyRealm/Backend/api/restore-character.php',
-            {
-                method: 'POST',
+		const response = await fetch(
+			'/FantasyRealm/Backend/api/restore-character.php',
+			{
+				method: 'POST',
 
-// Send the CSRF token to authorize character restoration.
-headers: {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
-    'X-CSRF-Token': sessionData.csrf_token
-},
+				// Send the CSRF token to authorize character restoration.
+				headers: {
+					'Content-Type': 'application/json',
+					'Accept': 'application/json',
+					'X-CSRF-Token': sessionData.csrf_token
+				},
 
-                body: JSON.stringify({
-                    character_id: character.id
-                })
-            }
-        );
+				body: JSON.stringify({
+					character_id: character.id
+				})
+			}
+		);
 
-        const data =
-            await response.json();
-
-
-        if (!response.ok || !data.success) {
-
-            alert(
-                data.message ||
-                'Unable to restore character.'
-            );
-
-            return;
-        }
+		const data =
+			await response.json();
 
 
-        await loadCharacters();
-        await loadDeletedCharacters();
+		if (!response.ok || !data.success) {
+
+			alert(
+				data.message ||
+				'Unable to restore character.'
+			);
+
+			return;
+		}
 
 
-    } catch (error) {
+		await loadCharacters();
+		await loadDeletedCharacters();
 
-        console.error(
-            'Unable to restore character:',
-            error
-        );
 
-        alert(
-            'Unable to restore character.'
-        );
-    }
+	} catch (error) {
+
+		console.error(
+			'Unable to restore character:',
+			error
+		);
+
+		alert(
+			'Unable to restore character.'
+		);
+	}
 }
 
 // =========================
@@ -1151,7 +1189,7 @@ headers: {
 // Opens the shared dialog with the permanent-deletion warning.
 
 function permanentlyDeleteCharacter(character) {
-    openDeleteDialog(character, true);
+	openDeleteDialog(character, true);
 }
 
 // =========================
@@ -1159,11 +1197,11 @@ function permanentlyDeleteCharacter(character) {
 // =========================
 
 function showMessage(message) {
-    dashboardMessage.textContent =
-        message;
+	dashboardMessage.textContent =
+		message;
 
-    dashboardMessage.hidden =
-        false;
+	dashboardMessage.hidden =
+		false;
 }
 
 // =========================
@@ -1173,36 +1211,36 @@ function showMessage(message) {
 // Keeps dropdown visibility and its accessibility state synchronized.
 
 function setSettingsOpen(isOpen) {
-    settingsDropdown.hidden = !isOpen;
+	settingsDropdown.hidden = !isOpen;
 
-    settingsButton.setAttribute(
-        'aria-expanded',
-        String(isOpen)
-    );
+	settingsButton.setAttribute(
+		'aria-expanded',
+		String(isOpen)
+	);
 }
 
 settingsButton.addEventListener('click', () => {
-    setSettingsOpen(settingsDropdown.hidden);
+	setSettingsOpen(settingsDropdown.hidden);
 });
 
 // Closes the dropdown when clicking outside the settings container.
 
 document.addEventListener('click', (event) => {
-    if (!settingsMenu.contains(event.target)) {
-        setSettingsOpen(false);
-    }
+	if (!settingsMenu.contains(event.target)) {
+		setSettingsOpen(false);
+	}
 });
 
 // Returns keyboard focus to the gear when Escape closes the dropdown.
 
 document.addEventListener('keydown', (event) => {
-    if (
-        event.key === 'Escape' &&
-        !settingsDropdown.hidden
-    ) {
-        setSettingsOpen(false);
-        settingsButton.focus();
-    }
+	if (
+		event.key === 'Escape' &&
+		!settingsDropdown.hidden
+	) {
+		setSettingsOpen(false);
+		settingsButton.focus();
+	}
 });
 
 // =========================
@@ -1212,60 +1250,60 @@ document.addEventListener('keydown', (event) => {
 // Redirects only after the REST API confirms the PHP session has ended.
 
 logoutLink.addEventListener('click', async () => {
-    try {
-      
-// =========================
-// CSRF PROTECTION
-// =========================
+	try {
 
-// Retrieve the current session security token.
-const sessionResponse = await fetch(
-    '/FantasyRealm/Backend/api/session.php',
-    {
-        credentials: 'same-origin',
-        cache: 'no-store'
-    }
-);
+		// =========================
+		// CSRF PROTECTION
+		// =========================
 
-const sessionData = await sessionResponse.json();
+		// Retrieve the current session security token.
+		const sessionResponse = await fetch(
+			'/FantasyRealm/Backend/api/session.php',
+			{
+				credentials: 'same-origin',
+				cache: 'no-store'
+			}
+		);
 
-if (
-    !sessionResponse.ok ||
-    !sessionData.authenticated ||
-    typeof sessionData.csrf_token !== 'string'
-) {
-    throw new Error('Unable to verify session security.');
-}
+		const sessionData = await sessionResponse.json();
 
-        const response = await fetch(
-            '/FantasyRealm/Backend/api/logout.php',
-            {
-                method: 'POST',
-headers: {
-    'Accept': 'application/json',
-    'X-CSRF-Token': sessionData.csrf_token
-}
-            }
-        );
+		if (
+			!sessionResponse.ok ||
+			!sessionData.authenticated ||
+			typeof sessionData.csrf_token !== 'string'
+		) {
+			throw new Error('Unable to verify session security.');
+		}
 
-        const data = await response.json();
+		const response = await fetch(
+			'/FantasyRealm/Backend/api/logout.php',
+			{
+				method: 'POST',
+				headers: {
+					'Accept': 'application/json',
+					'X-CSRF-Token': sessionData.csrf_token
+				}
+			}
+		);
 
-        if (!response.ok || !data.success) {
-            alert(
-                data.message || 'Unable to log out. Please try again.'
-            );
-            return;
-        }
+		const data = await response.json();
 
-        window.location.href = 'index.html';
+		if (!response.ok || !data.success) {
+			alert(
+				data.message || 'Unable to log out. Please try again.'
+			);
+			return;
+		}
 
-    } catch (error) {
-        console.error('Unable to logout:', error);
+		window.location.href = 'index.html';
 
-        alert(
-            'Unable to log out. Please try again.'
-        );
-    }
+	} catch (error) {
+		console.error('Unable to logout:', error);
+
+		alert(
+			'Unable to log out. Please try again.'
+		);
+	}
 });
 
 
@@ -1274,15 +1312,15 @@ headers: {
 // =========================
 
 async function initializeDashboard() {
-    const authenticated =
-        await loadSession();
+	const authenticated =
+		await loadSession();
 
-    if (!authenticated) {
-        return;
-    }
+	if (!authenticated) {
+		return;
+	}
 
-    await loadCharacters();
-    await loadDeletedCharacters();
+	await loadCharacters();
+	await loadDeletedCharacters();
 }
 
 initializeDashboard();

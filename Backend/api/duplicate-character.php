@@ -243,15 +243,37 @@ try {
 
     $pdo->commit();
 
+    // Record the duplicated character's saved customization.
+    $historyLogged = false;
+
+    try {
+        require_once __DIR__ . '/character-history-logger.php';
+
+        recordCharacterHistory(
+            $pdo,
+            $newCharacterId,
+            'character.duplicated',
+            $characterId
+        );
+
+        $historyLogged = true;
+    } catch (Throwable $historyError) {
+        error_log(
+            'FantasyRealm: Character duplication history logging failed: ' .
+            $historyError->getMessage()
+        );
+    }
+
     http_response_code(201);
 
     echo json_encode([
         'success' => true,
         'message' => 'Character duplicated successfully.',
-        'character_id' => $newCharacterId
+        'character_id' => $newCharacterId,
+        'history_logged' => $historyLogged
     ]);
 
-// =========================
+    // =========================
 // TRANSACTION ERROR HANDLING
 // =========================
 

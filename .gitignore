@@ -12,6 +12,10 @@ node_modules/
 # Work folder
 /Work/
 
+# FantasyRealm Docker local/production secrets
+.local/
+.private/
+
 # Logs
 *.log
 

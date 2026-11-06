@@ -1,79 +1,222 @@
-const registerForm = document.getElementById('register-form');
-const formMessage = document.getElementById('form-message');
-const registerButton = document.getElementById('register-button');
+/*
+ * FANTASYREALM - REGISTRATION CONTROLLER
+ *
+ * Validates registration input, submits it to
+ * the PHP API, and displays accessible feedback.
+ *
+ * The server remains the source of truth for
+ * password rules and account uniqueness.
+ */
 
+(() => {
+	'use strict';
 
-registerForm.addEventListener('submit', async (event) => {
-    event.preventDefault();
+	const REGISTER_URL = '/FantasyRealm/Backend/api/register.php';
 
-    const username = document.getElementById('username').value.trim();
-    const email = document.getElementById('email').value.trim();
-    const password = document.getElementById('password').value;
-    const passwordConfirm = document.getElementById('password-confirm').value;
+	const form = document.getElementById('register-form');
 
-    formMessage.hidden = true;
-    formMessage.textContent = '';
+	if (!form) {
+		return;
+	}
 
-    if (
-        username === '' ||
-        email === '' ||
-        password === '' ||
-        passwordConfirm === ''
-    ) {
-        showMessage('Please fill in all fields.');
-        return;
-    }
+	const usernameInput = document.getElementById('username');
+	const emailInput = document.getElementById('email');
+	const passwordInput = document.getElementById('password');
+	const confirmInput = document.getElementById('password-confirm');
 
-    if (password !== passwordConfirm) {
-        showMessage('Passwords do not match.');
-        return;
-    }
+	const messageElement = document.getElementById('form-message');
+	const registerButton = document.getElementById('register-button');
 
-    registerButton.disabled = true;
-    registerButton.textContent = 'Creating account...';
+	/*
+	 * Display server messages as text, never as HTML.
+	 */
+	function showMessage(message, type = 'error') {
+		messageElement.textContent = message;
+		messageElement.dataset.type = type;
+		messageElement.hidden = false;
 
-    try {
-        const response = await fetch(
-            '/FantasyRealm/Backend/api/register.php',
-            {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({
-                    username: username,
-                    email: email,
-                    password: password,
-                    password_confirm: passwordConfirm
-                })
-            }
-        );
+		messageElement.setAttribute(
+			'role',
+			type === 'error' ? 'alert' : 'status'
+		);
+	}
 
-        const data = await response.json();
+	function clearMessage() {
+		messageElement.textContent = '';
+		messageElement.hidden = true;
+		delete messageElement.dataset.type;
+	}
 
-        if (!response.ok || !data.success) {
-            showMessage(
-                data.message || 'Registration failed.'
-            );
-            return;
-        }
+	/*
+	 * Configure both password visibility buttons.
+	 */
+	function setupPasswordToggle(inputId, buttonId) {
+		const input = document.getElementById(inputId);
+		const button = document.getElementById(buttonId);
 
-        showMessage('Account created successfully.');
+		if (!input || !button) {
+			return;
+		}
 
-        registerForm.reset();
+		button.addEventListener('click', () => {
+			const visible = input.type === 'password';
 
-    } catch (error) {
-        console.error('Registration request failed:', error);
+			input.type = visible ? 'text' : 'password';
+			button.textContent = visible ? 'Hide' : 'Show';
 
-        showMessage('Unable to connect to the server.');
-    } finally {
-        registerButton.disabled = false;
-        registerButton.textContent = 'Create Account';
-    }
-});
+			button.setAttribute(
+				'aria-pressed',
+				String(visible)
+			);
 
+			const fieldName = inputId === 'password'
+				? 'password'
+				: 'confirmation password';
 
-function showMessage(message) {
-    formMessage.textContent = message;
-}
+			button.setAttribute(
+				'aria-label',
+				`${visible ? 'Hide' : 'Show'} ${fieldName}`
+			);
+		});
+	}
+
+	setupPasswordToggle('password', 'toggle-password');
+
+	setupPasswordToggle(
+		'password-confirm',
+		'toggle-password-confirm'
+	);
+
+	/*
+	 * Mirror server password requirements to
+	 * improve feedback before submission.
+	 */
+	function validatePassword(password) {
+		const byteLength = new TextEncoder().encode(password).length;
+
+		if (
+			Array.from(password).length < 12 ||
+			byteLength > 72
+		) {
+			return 'Password must contain at least 12 characters and no more than 72 bytes.';
+		}
+
+		if (
+			!/[A-Z]/.test(password) ||
+			!/[a-z]/.test(password) ||
+			!/[0-9]/.test(password) ||
+			!/[^\p{L}\p{N}\s]/u.test(password)
+		) {
+			return 'Password must include an uppercase letter, a lowercase letter, a number and a special character.';
+		}
+
+		return null;
+	}
+
+	/*
+	 * Submit the registration form.
+	 */
+	async function handleRegister(event) {
+		event.preventDefault();
+
+		if (registerButton.disabled) {
+			return;
+		}
+
+		clearMessage();
+
+		const username = usernameInput.value.trim();
+		const email = emailInput.value.trim();
+		const password = passwordInput.value;
+		const passwordConfirm = confirmInput.value;
+
+		if (!username || !email || !password || !passwordConfirm) {
+			showMessage('Please fill in all fields.');
+			return;
+		}
+
+		if (!emailInput.checkValidity()) {
+			showMessage('Please enter a valid email address.');
+			emailInput.focus();
+			return;
+		}
+
+		const passwordError = validatePassword(password);
+
+		if (passwordError !== null) {
+			showMessage(passwordError);
+			passwordInput.focus();
+			return;
+		}
+
+		if (password !== passwordConfirm) {
+			showMessage('Passwords do not match.');
+			confirmInput.focus();
+			return;
+		}
+
+		registerButton.disabled = true;
+		registerButton.textContent = 'Creating account...';
+
+		try {
+			const response = await fetch(REGISTER_URL, {
+				method: 'POST',
+				credentials: 'same-origin',
+				cache: 'no-store',
+				headers: {
+					'Content-Type': 'application/json',
+					'Accept': 'application/json'
+				},
+				body: JSON.stringify({
+					username,
+					email,
+					password,
+					password_confirm: passwordConfirm
+				})
+			});
+
+			const result = await response.json();
+
+			if (!response.ok || result.success !== true) {
+				showMessage(
+					result.message ||
+					'Unable to create your account. Please try again.'
+				);
+				return;
+			}
+
+			/*
+			 * Clear sensitive values and hide the form.
+			 * The user can then follow the existing Login link.
+			 */
+			form.reset();
+			form.hidden = true;
+
+			showMessage(
+				'Account created successfully! You can now log in.',
+				'success'
+			);
+
+			messageElement.focus();
+
+		} catch (error) {
+			console.error('Registration request failed:', error);
+
+			showMessage(
+				'Unable to connect to the server. Please try again.'
+			);
+
+		} finally {
+			registerButton.disabled = false;
+			registerButton.textContent = 'Create Account';
+		}
+	}
+
+	/*
+	 * Make the confirmation message focusable
+	 * after a successful registration.
+	 */
+	messageElement.setAttribute('tabindex', '-1');
+
+	form.addEventListener('submit', handleRegister);
+})();
