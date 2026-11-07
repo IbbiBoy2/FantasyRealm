@@ -1,0 +1,201 @@
+/*
+ * FANTASYREALM - SHARED FOOTER
+ *
+ * Provides a consistent dark fantasy footer across pages.
+ *
+ * The application grid controls its position and height.
+ * This stylesheet controls only the footer presentation.
+ */
+
+.app-footer {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+  padding: 12px 5%;
+
+  border-top: 1px solid rgba(180, 115, 255, 0.35);
+
+  background:
+    linear-gradient(135deg,
+      #1b1038 0%,
+      #0c071b 55%,
+      #080513 100%);
+
+  color: #a8a0bf;
+
+  box-shadow:
+    0 -8px 35px rgba(100, 35, 190, 0.12),
+    inset 0 1px rgba(255, 255, 255, 0.04);
+}
+
+/* Keep the brand visually consistent with the shared header. */
+.app-footer .footer-brand {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 10px;
+  flex-shrink: 0;
+
+  color: #f4eaff;
+
+  font-family: "Cinzel", serif;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+
+  white-space: nowrap;
+
+  text-shadow: 0 0 18px rgba(178, 107, 255, 0.45);
+}
+
+.app-footer .footer-brand-mark {
+  color: #edd5a8;
+  font-size: 24px;
+
+  text-shadow:
+    0 0 12px rgba(237, 213, 168, 0.45),
+    0 0 20px rgba(168, 85, 247, 0.3);
+}
+
+/* Copyright stays readable without competing with navigation. */
+.app-footer .footer-copyright {
+  margin: 0;
+
+  color: #a8a0bf;
+
+  font-family: "Inter", sans-serif;
+  font-size: 12px;
+  line-height: 1.4;
+
+  text-align: center;
+}
+
+/* Legal and contact links remain available on every page. */
+.app-footer .footer-links {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+
+  gap: 4px;
+}
+
+.app-footer .footer-links a {
+  display: inline-flex;
+  align-items: center;
+
+  padding: 8px 10px;
+
+  border: 1px solid transparent;
+  border-radius: 9px;
+
+  color: #c5b6dd;
+
+  font-family: "Inter", sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  text-decoration: none;
+
+  white-space: nowrap;
+
+  transition:
+    color 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.app-footer .footer-links a:hover {
+  color: #ffffff;
+
+  background: rgba(147, 74, 238, 0.16);
+  border-color: rgba(185, 130, 255, 0.35);
+}
+
+/* Provide a visible focus indicator for keyboard users. */
+.app-footer .footer-links a:focus-visible {
+  outline: 2px solid #edd5a8;
+  outline-offset: 2px;
+}
+
+/*
+ * Highlight the current footer destination.
+ * A persistent underline distinguishes the active page
+ * from hover and keyboard focus states.
+ */
+.app-footer .footer-links a[aria-current="page"] {
+  color: #f1d9ff;
+
+  text-decoration: underline;
+  text-decoration-color: #c084fc;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 6px;
+
+  background: rgba(124, 58, 237, 0.16);
+}
+
+/*
+ * Prevent the footer from hiding focusable content
+ * when the layout becomes narrow.
+ */
+@media (max-width: 1100px) {
+  .app-footer {
+    gap: 8px;
+    padding-inline: 16px;
+  }
+
+  .app-footer .footer-brand {
+    font-size: 15px;
+  }
+
+  .app-footer .footer-links a {
+    padding: 6px;
+    font-size: 11px;
+  }
+}
+
+/* Use a compact two-row layout on mobile screens. */
+@media (max-width: 768px) {
+  .app-footer {
+    flex-direction: column;
+    justify-content: center;
+
+    gap: 3px;
+    padding: 5px 8px;
+  }
+
+  .app-footer .footer-brand {
+    gap: 5px;
+    font-size: 13px;
+  }
+
+  .app-footer .footer-brand-mark {
+    font-size: 16px;
+  }
+
+  .app-footer .footer-copyright {
+    font-size: 9px;
+  }
+
+  .app-footer .footer-links {
+    justify-content: center;
+    gap: 3px;
+  }
+
+  .app-footer .footer-links a {
+    padding: 3px 5px;
+    font-size: 10px;
+  }
+}
+
+/* Reduce decorative transitions when requested. */
+@media (prefers-reduced-motion: reduce) {
+  .app-footer .footer-links a {
+    transition: none;
+  }
+}

@@ -1,1176 +1,614 @@
-/* =========================
-   COLOR VARIABLES
-========================= */
+/*
+ * FANTASYREALM - PUBLIC CHARACTER GALLERY
+ *
+ * Gallery-specific layout, filters and character cards.
+ * The shared header, footer and application shell
+ * are styled by their dedicated stylesheets.
+ */
 
-:root {
-    --bg: #05050f;
-    --panel: rgba(8, 8, 25, 0.9);
-    --panel-soft: rgba(18, 10, 42, 0.82);
+/* =========================================================
+   PAGE AND HERO
+========================================================= */
 
-    --purple: #7c3aed;
-    --purple-light: #a855f7;
-    --purple-soft: #d8b4fe;
-
-    --text: #ffffff;
-    --muted: #bbb6c9;
-    --line: rgba(184, 112, 255, 0.5);
+.gallery-page {
+	color: #f5f0ff;
+	font-family: "Inter", sans-serif;
 }
-
-/* =========================
-   RESET AND BASE STYLES
-========================= */
-
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-html {
-    scroll-behavior: smooth;
-}
-
-body {
-    min-height: 100vh;
-    overflow-x: hidden;
-
-    font-family: "Inter", sans-serif;
-    color: var(--text);
-
-    background:
-        linear-gradient(
-            rgba(4, 3, 15, 0.72),
-            rgba(4, 3, 15, 0.94)
-        ),
-        url("../assets/backgrounds/gallery-galaxy.png")
-        center/cover fixed;
-}
-
-a {
-    color: inherit;
-    text-decoration: none;
-}
-
-/* =========================
-   MAIN NAVIGATION
-========================= */
-
-.gallery-navbar {
-    position: absolute;
-    inset: 0 0 auto 0;
-    z-index: 20;
-
-    height: 76px;
-    padding: 0 5%;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    border-bottom: 1px solid rgba(216, 180, 254, 0.18);
-
-    background: rgba(5, 5, 18, 0.6);
-    backdrop-filter: blur(12px);
-}
-
-.brand,
-.footer-brand {
-    display: flex;
-    align-items: center;
-    gap: 11px;
-
-    font-family: "Cinzel", serif;
-    letter-spacing: 0.03em;
-}
-
-.brand {
-    font-size: 23px;
-}
-
-.brand-mark {
-    color: var(--purple-soft);
-    font-size: 31px;
-
-    text-shadow:
-        0 0 10px #a855f7,
-        0 0 24px #7c3aed;
-}
-
-.nav-links {
-    display: flex;
-    align-items: center;
-    gap: 50px;
-}
-
-.nav-links a {
-    font-size: 19px;
-    color: #f8f4ff;
-}
-
-.nav-links .active {
-    color: var(--purple-soft);
-}
-
-.nav-register {
-    padding: 10px 20px;
-
-    border: 1px solid rgba(233, 213, 255, 0.82);
-    border-radius: 999px;
-
-background: linear-gradient(135deg, #6d28d9, #7c3aed);
-
-    box-shadow: 0 0 20px rgba(168, 85, 247, 0.35);
-}
-
-/* =========================
-   ACCOUNT SETTINGS
-========================= */
-
-.settings-menu {
-    position: relative;
-
-    display: flex;
-    align-items: center;
-}
-
-.settings-button {
-    width: 42px;
-    height: 42px;
-
-    display: grid;
-    place-items: center;
-
-    border: 1px solid rgba(216, 180, 254, 0.45);
-    border-radius: 50%;
-
-    background: rgba(17, 12, 40, 0.9);
-    color: var(--purple-soft);
-
-    font-size: 20px;
-    cursor: pointer;
-
-    transition:
-        background 0.2s ease,
-        border-color 0.2s ease;
-}
-
-.settings-button:hover {
-    border-color: var(--purple-light);
-    background: rgba(124, 58, 237, 0.28);
-}
-
-/* Positions the dropdown below the gear using its container as a reference. */
-
-.settings-dropdown {
-    position: absolute;
-    top: 52px;
-    right: 0;
-    z-index: 50;
-
-    min-width: 220px;
-    padding: 10px;
-
-    border: 1px solid rgba(196, 131, 255, 0.38);
-    border-radius: 14px;
-
-    background: rgba(10, 9, 28, 0.98);
-    backdrop-filter: blur(14px);
-
-    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.45);
-}
-
-.settings-dropdown a,
-.settings-dropdown button {
-    width: 100%;
-
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-
-    padding: 12px 14px;
-
-    border: 0;
-    border-radius: 9px;
-
-    background: transparent;
-    color: var(--text);
-
-    font-family: "Inter", sans-serif;
-    font-size: 14px;
-    text-align: left;
-
-    cursor: pointer;
-
-    transition:
-        background 0.2s ease,
-        color 0.2s ease;
-}
-
-.settings-dropdown a:hover,
-.settings-dropdown button:hover {
-    background: rgba(124, 58, 237, 0.24);
-    color: var(--purple-soft);
-}
-
-.settings-dropdown button {
-    margin-top: 6px;
-
-    border-top: 1px solid rgba(196, 131, 255, 0.18);
-    border-radius: 0 0 9px 9px;
-
-    color: #f0c7ff;
-}
-
-/* Keeps the HTML hidden attribute effective despite other display rules. */
-
-.nav-links [hidden] {
-    display: none;
-}
-
-/* Shows which settings control has keyboard focus. */
-
-.settings-button:focus-visible,
-.settings-dropdown a:focus-visible,
-.settings-dropdown button:focus-visible {
-    outline: 2px solid var(--purple-soft);
-    outline-offset: 3px;
-}
-
-/* =========================
-   GALLERY INTRODUCTION
-========================= */
 
 .gallery-hero {
-    min-height: 360px;
-    padding: 130px 5% 70px;
+	position: relative;
+	display: flex;
+	align-items: flex-end;
 
-    display: flex;
-    align-items: flex-end;
+	min-height: 310px;
+	padding: 70px 5% 90px;
 
-    position: relative;
+	border-bottom: 1px solid rgba(168, 85, 247, 0.2);
 
-    background:
-        linear-gradient(
-            180deg,
-            rgba(5, 4, 18, 0.22),
-            rgba(5, 4, 18, 0.92)
-        ),
-        url("../assets/backgrounds/gallery-galaxy.png")
-        center 42%/cover no-repeat;
-
-    border-bottom: 1px solid rgba(168, 85, 247, 0.2);
+	background:
+		linear-gradient(180deg,
+			rgba(5, 4, 18, 0.24),
+			rgba(5, 4, 18, 0.92)),
+		url("../assets/backgrounds/gallery-galaxy.png") center 42% / cover no-repeat;
 }
 
 .gallery-hero::after {
-    content: "";
+	content: "";
+	position: absolute;
+	inset: 0;
 
-    position: absolute;
-    inset: 0;
+	background: radial-gradient(circle at 78% 18%,
+			rgba(168, 85, 247, 0.24),
+			transparent 32%);
 
-    background:
-        radial-gradient(
-            circle at 78% 18%,
-            rgba(168, 85, 247, 0.24),
-            transparent 30%
-        );
-
-    pointer-events: none;
+	pointer-events: none;
 }
 
 .gallery-hero-copy {
-    position: relative;
-    z-index: 2;
-
-    width: min(740px, 100%);
+	position: relative;
+	z-index: 1;
+	width: min(760px, 100%);
 }
 
-.eyebrow {
-    margin-bottom: 10px;
+.gallery-page .eyebrow {
+	margin: 0 0 12px;
 
-    color: var(--purple-soft);
-    font-size: 10px;
-    letter-spacing: 0.32em;
+	color: #d8b4fe;
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.28em;
 }
 
 .gallery-hero h1,
-.gallery-topbar h2,
+.gallery-heading h2,
 .character-info h3 {
-    font-family: "Cinzel", serif;
+	font-family: "Cinzel", serif;
 }
 
 .gallery-hero h1 {
-    font-size: clamp(48px, 6vw, 82px);
-    line-height: 1;
+	margin: 0;
 
-    text-shadow: 0 0 30px rgba(168, 85, 247, 0.4);
+	color: #faf4ff;
+	font-size: clamp(38px, 6vw, 70px);
+	line-height: 1.15;
+
+	text-shadow: 0 0 30px rgba(168, 85, 247, 0.4);
 }
 
-.gallery-hero-copy > p:last-child {
-    margin-top: 16px;
+.gallery-hero-copy>p:last-child {
+	margin: 18px 0 0;
 
-    color: #d0cbd9;
-    font-size: 16px;
+	color: #ded5ec;
+	font-size: 15px;
+	line-height: 1.8;
 }
 
-/* =========================
-   GALLERY PANEL
-========================= */
+/* =========================================================
+   GALLERY CONTAINER
+========================================================= */
 
 .gallery-shell {
-    width: min(1600px, 94%);
-    margin: -28px auto 70px;
+	box-sizing: border-box;
 
-    position: relative;
-    z-index: 5;
+	position: relative;
+	z-index: 2;
 
-    padding: 30px;
+	width: min(1500px, calc(100% - 40px));
+	margin: -36px auto 80px;
+	padding: 32px;
 
-    border: 1px solid rgba(168, 85, 247, 0.45);
-    border-radius: 22px;
+	border: 1px solid rgba(168, 85, 247, 0.42);
+	border-radius: 22px;
 
-    background:
-        linear-gradient(
-            145deg,
-            rgba(5, 6, 20, 0.96),
-            rgba(11, 7, 30, 0.92)
-        );
+	background: linear-gradient(145deg,
+			rgba(17, 12, 40, 0.96),
+			rgba(8, 7, 26, 0.95));
 
-    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.34);
+	box-shadow:
+		0 24px 65px rgba(0, 0, 0, 0.3),
+		0 0 35px rgba(124, 58, 237, 0.11);
 }
 
 .gallery-topbar {
-    margin-bottom: 28px;
-
-    display: flex;
-    align-items: end;
-    justify-content: space-between;
-    gap: 24px;
+	margin-bottom: 24px;
 }
 
-.gallery-topbar h2 {
-    font-size: 31px;
+.gallery-heading h2 {
+	margin: 0 0 10px;
+
+	font-size: clamp(25px, 4vw, 34px);
+	font-weight: 600;
 }
 
-/* =========================
-   ADDITIONAL GALLERY CONTROLS
-========================= */
+.gallery-description {
+	margin: 0;
 
-.gallery-controls {
-    display: flex;
-    align-items: end;
-    justify-content: flex-end;
-    gap: 14px;
-    flex-wrap: wrap;
+	color: #c9c0da;
+	font-size: 13px;
+	line-height: 1.7;
 }
 
-.control-field {
-    display: grid;
-    gap: 7px;
-}
-
-.control-field span {
-    color: #aea9bc;
-    font-size: 11px;
-}
-
-.control-field select,
-.control-field input {
-    height: 46px;
-
-    border: 1px solid rgba(168, 85, 247, 0.5);
-    border-radius: 10px;
-
-    outline: none;
-    background: rgba(11, 9, 31, 0.88);
-
-    color: white;
-    font: inherit;
-}
-
-.control-field select {
-    min-width: 190px;
-    padding: 0 38px 0 14px;
-}
-
-.control-field input {
-    min-width: 270px;
-    padding: 0 14px;
-}
-
-.control-field input::placeholder {
-    color: #c9c3d5;
-}
-
-/* =========================
-   CHARACTER GRID AND CARDS
-========================= */
-
-/* Uses six desktop columns; media queries reduce the count on smaller screens. */
-
-.gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-    gap: 16px;
-}
-
-.character-card {
-    min-width: 0;
-    overflow: hidden;
-    position: relative;
-
-    border: 1px solid rgba(168, 85, 247, 0.55);
-    border-radius: 16px;
-
-    background:
-        linear-gradient(
-            155deg,
-            rgba(14, 12, 37, 0.98),
-            rgba(6, 7, 22, 0.98)
-        );
-
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
-
-    transform-style: preserve-3d;
-
-    transition:
-        transform 0.25s ease,
-        box-shadow 0.25s ease,
-        border-color 0.25s ease;
-}
-
-.character-card:hover {
-    transform: perspective(1000px) translateY(-7px) rotateX(1.5deg);
-
-    border-color: rgba(216, 180, 254, 0.9);
-
-    box-shadow: 0 20px 45px rgba(39, 14, 76, 0.55);
-}
-
-/* =========================
-   CHARACTER ART AND EFFECTS
-========================= */
-
-/* Gradients and decorative rings create depth around the character image. */
-
-.character-stage {
-    height: 290px;
-    overflow: hidden;
-    position: relative;
-
-    display: grid;
-    place-items: end center;
-
-    background:
-        radial-gradient(
-            ellipse at 50% 84%,
-            rgba(168, 85, 247, 0.32),
-            transparent 30%
-        ),
-        linear-gradient(
-            180deg,
-            rgba(41, 25, 66, 0.15),
-            rgba(8, 7, 24, 0.85)
-        );
-}
-
-.character-stage::before {
-    content: "";
-
-    width: 72%;
-    height: 12%;
-
-    position: absolute;
-    left: 14%;
-    bottom: 11px;
-
-    border: 1px solid rgba(216, 180, 254, 0.55);
-    border-radius: 50%;
-
-    background:
-        radial-gradient(
-            ellipse,
-            rgba(168, 85, 247, 0.28),
-            rgba(85, 30, 150, 0.04) 65%,
-            transparent 70%
-        );
-
-    box-shadow: 0 0 26px rgba(168, 85, 247, 0.28);
-}
-
-.character-stage img {
-    width: 100%;
-    height: 100%;
-
-    position: relative;
-    z-index: 2;
-
-    object-fit: cover;
-    object-position: center top;
-
-    filter: drop-shadow(0 16px 18px rgba(0, 0, 0, 0.45));
-}
-
-.character-stage::after {
-    content: "";
-
-    position: absolute;
-    inset: 0;
-    z-index: 3;
-
-    background:
-        linear-gradient(
-            180deg,
-            transparent 48%,
-            rgba(7, 7, 23, 0.94) 100%
-        );
-
-    pointer-events: none;
-}
-
-.stage-ring {
-    position: absolute;
-    left: 20%;
-    bottom: 18px;
-    z-index: 4;
-
-    width: 60%;
-    height: 8px;
-
-    border-radius: 50%;
-
-    background: #b46aff;
-    filter: blur(8px);
-    opacity: 0.38;
-}
-
-/* =========================
-   CHARACTER INFORMATION
-========================= */
-
-.character-info {
-    padding: 16px;
-}
-
-.character-type {
-    color: #c7a7ef;
-    font-size: 9px;
-    letter-spacing: 0.13em;
-}
-
-.character-info h3 {
-    margin-top: 6px;
-    font-size: 20px;
-}
-
-.creator,
-.created-date {
-    color: #aaa5b8;
-    font-size: 11px;
-    line-height: 1.55;
-}
-
-.creator {
-    margin-top: 8px;
-}
-
-.view-button {
-    width: 100%;
-    margin-top: 13px;
-    padding: 9px 10px;
-
-    display: inline-flex;
-    justify-content: center;
-
-    border: 1px solid rgba(168, 85, 247, 0.7);
-    border-radius: 999px;
-
-    background:
-        linear-gradient(
-            135deg,
-            rgba(109, 40, 217, 0.84),
-            rgba(168, 85, 247, 0.88)
-        );
-
-    font-size: 11px;
-}
-
-/* =========================
-   LINK-BASED PAGINATION
-========================= */
-
-/* Preserves the existing styles for pagination built with links. */
-
-.pagination {
-    margin-top: 30px;
-
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-}
-
-.pagination a {
-    width: 38px;
-    height: 38px;
-
-    display: grid;
-    place-items: center;
-
-    border: 1px solid rgba(168, 85, 247, 0.4);
-    border-radius: 9px;
-
-    background: rgba(9, 8, 27, 0.86);
-    color: #cbc6d3;
-
-    font-size: 12px;
-}
-
-.pagination .active {
-    border-color: rgba(216, 180, 254, 0.9);
-    background: linear-gradient(135deg, #6d28d9, #a855f7);
-
-    color: white;
-}
-
-/* =========================
-   ADDITIONAL PAGE NOTE
-========================= */
-
-.frontend-note {
-    margin-top: 16px;
-
-    text-align: center;
-    color: #777185;
-
-    font-size: 10px;
-}
-
-/* =========================
-   SITE FOOTER
-========================= */
-
-.footer {
-    min-height: 90px;
-    padding: 24px 5%;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-
-    border-top: 1px solid rgba(168, 85, 247, 0.2);
-
-    background: rgba(4, 4, 14, 0.94);
-    color: #9690a3;
-
-    font-size: 11px;
-}
-
-.footer-brand {
-    color: white;
-    font-size: 18px;
-}
-
-.footer-links {
-    display: flex;
-    gap: 22px;
-}
-
-/* =========================
-   RESPONSIVE GALLERY LAYOUT
-========================= */
-
-@media (max-width: 1280px) {
-    .gallery-grid {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-}
-
-@media (max-width: 960px) {
-    .gallery-topbar {
-        align-items: stretch;
-        flex-direction: column;
-    }
-
-    .gallery-controls {
-        justify-content: flex-start;
-    }
-
-    .gallery-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-}
-
-/* =========================
-   MOBILE NAVIGATION
-========================= */
-
-@media (max-width: 680px) {
-    body {
-        background-attachment: scroll;
-    }
-
-    .gallery-navbar {
-        height: auto;
-        min-height: 68px;
-        padding: 10px 14px;
-
-        flex-direction: column;
-        justify-content: center;
-        gap: 8px;
-    }
-
-    .brand {
-        font-size: 17px;
-    }
-
-    .brand-mark {
-        font-size: 24px;
-    }
-
-    .nav-links {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 8px 14px;
-    }
-
-    .nav-links a {
-        display: inline-flex;
-        font-size: 12px;
-    }
-
-    .nav-register {
-        padding: 8px 14px;
-        font-size: 11px;
-    }
-
-    /* Keeps dropdown links aligned and readable inside the mobile navbar. */
-
-    .nav-links .settings-dropdown a {
-        display: flex;
-        justify-content: flex-start;
-        font-size: 14px;
-    }
-}
-
-/* =========================
-   MOBILE GALLERY AND FOOTER
-========================= */
-
-@media (max-width: 680px) {
-    .gallery-hero {
-        min-height: 300px;
-        padding: 120px 18px 56px;
-        background-position: 62% center;
-    }
-
-    .gallery-hero h1 {
-        font-size: clamp(38px, 12vw, 58px);
-    }
-
-    .gallery-hero-copy > p:last-child {
-        font-size: 13px;
-    }
-
-    .gallery-shell {
-        width: calc(100% - 20px);
-        margin-top: -22px;
-        padding: 18px 14px;
-        border-radius: 17px;
-    }
-
-    .gallery-topbar h2 {
-        font-size: 25px;
-    }
-
-    .gallery-controls {
-        display: grid;
-        grid-template-columns: 1fr;
-    }
-
-    .control-field select,
-    .control-field input {
-        width: 100%;
-        min-width: 0;
-    }
-
-    .gallery-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 11px;
-    }
-
-    .character-stage {
-        height: 220px;
-    }
-
-    .character-info {
-        padding: 12px;
-    }
-
-    .character-info h3 {
-        font-size: 17px;
-    }
-
-    .footer {
-        flex-direction: column;
-        text-align: center;
-    }
-
-    .footer-links {
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-}
-
-@media (max-width: 390px) {
-    .gallery-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .character-stage {
-        height: 330px;
-    }
-}
-
-/* =========================
-   CREATOR AND DATE FILTERS
-========================= */
-
-/* Preserves the filter layout overrides from the original stylesheet. */
-
-.gallery-topbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    gap: 28px;
-    flex-wrap: wrap;
-
-    margin-bottom: 34px;
-}
+/* =========================================================
+   FILTER PANEL
+========================================================= */
 
 .gallery-filters {
-    display: flex;
-    align-items: flex-end;
-    gap: 14px;
-    flex-wrap: wrap;
+	display: grid;
+	grid-template-columns:
+		minmax(150px, 1.4fr) minmax(135px, 1fr) minmax(140px, 1fr) minmax(140px, 1fr) auto;
 
-    padding: 18px 20px;
+	align-items: end;
+	gap: 14px;
 
-    background:
-        linear-gradient(
-            135deg,
-            rgba(17, 12, 40, 0.88),
-            rgba(10, 9, 28, 0.78)
-        );
+	margin-bottom: 23px;
+	padding: 22px;
 
-    border: 1px solid rgba(196, 131, 255, 0.35);
-    border-radius: 16px;
+	border: 1px solid rgba(196, 131, 255, 0.35);
+	border-radius: 16px;
 
-    box-shadow:
-        0 12px 35px rgba(0, 0, 0, 0.25),
-        inset 0 0 25px rgba(124, 58, 237, 0.04);
-
-    backdrop-filter: blur(14px);
+	background: rgba(7, 6, 22, 0.62);
 }
 
 .filter-field {
-    display: flex;
-    flex-direction: column;
-    gap: 7px;
+	display: flex;
+	flex-direction: column;
+	gap: 9px;
+	min-width: 0;
 }
 
 .filter-field label {
-    font-size: 0.75rem;
-    font-weight: 600;
-
-    color: var(--purple-soft);
-
-    text-transform: uppercase;
-    letter-spacing: 0.09em;
+	color: #d8b4fe;
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
 }
 
-.filter-field input {
-    min-width: 190px;
-    padding: 11px 13px;
+.filter-field input,
+.filter-field select {
+	box-sizing: border-box;
 
-    color: var(--text);
-    background: rgba(6, 6, 18, 0.82);
+	width: 100%;
+	min-width: 0;
+	height: 45px;
+	padding: 0 13px;
 
-    border: 1px solid rgba(196, 131, 255, 0.3);
-    border-radius: 9px;
+	border: 1px solid rgba(168, 85, 247, 0.42);
+	border-radius: 10px;
 
-    font-family: "Inter", sans-serif;
-    font-size: 0.9rem;
+	background: #100c27;
+	color: #fff;
 
-    transition:
-        border-color 0.2s ease,
-        box-shadow 0.2s ease,
-        background 0.2s ease;
+	font-family: "Inter", sans-serif;
+	font-size: 13px;
+
+	color-scheme: dark;
 }
 
 .filter-field input::placeholder {
-    color: rgba(201, 199, 216, 0.65);
+	color: #aaa0bf;
 }
 
-.filter-field input:hover {
-    border-color: rgba(196, 131, 255, 0.55);
+.filter-field input:focus-visible,
+.filter-field select:focus-visible {
+	outline: 2px solid rgba(216, 180, 254, 0.75);
+	outline-offset: 2px;
 }
-
-.filter-field input:focus {
-    outline: none;
-
-    border-color: var(--purple-light);
-    background: rgba(10, 9, 28, 0.95);
-
-    box-shadow:
-        0 0 0 3px rgba(168, 85, 247, 0.14),
-        0 0 18px rgba(124, 58, 237, 0.16);
-}
-
-/* =========================
-   CLEAR FILTERS BUTTON
-========================= */
 
 .clear-filters {
-    min-height: 42px;
-    padding: 10px 18px;
+	min-height: 45px;
+	padding: 10px 18px;
 
-    color: #ffffff;
+	border: 1px solid rgba(216, 180, 254, 0.45);
+	border-radius: 10px;
 
-    background:
-        linear-gradient(
-            135deg,
-            var(--purple),
-            var(--purple-light)
-        );
+	background: rgba(124, 58, 237, 0.22);
+	color: #f5e8ff;
 
-    border: 1px solid rgba(216, 180, 254, 0.35);
-    border-radius: 9px;
+	font-family: "Inter", sans-serif;
+	font-size: 12px;
+	font-weight: 600;
 
-    font-family: "Inter", sans-serif;
-    font-weight: 600;
-
-    cursor: pointer;
-
-    box-shadow: 0 8px 22px rgba(124, 58, 237, 0.22);
-
-    transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
+	white-space: nowrap;
+	cursor: pointer;
 }
 
 .clear-filters:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 28px rgba(124, 58, 237, 0.35);
+	border-color: #d8b4fe;
+	background: rgba(124, 58, 237, 0.38);
 }
 
-.clear-filters:active {
-    transform: translateY(0);
+.clear-filters:focus-visible {
+	outline: 2px solid #edd5a8;
+	outline-offset: 3px;
 }
 
-/* =========================
-   GALLERY PAGINATION BUTTONS
-========================= */
+/* =========================================================
+   GALLERY STATUS
+========================================================= */
 
-/* Styles the pagination buttons generated by character-gallery.js. */
+.gallery-count {
+	margin: 0 0 20px;
+
+	color: #c9c0da;
+	font-size: 12px;
+}
+
+.empty-gallery {
+	margin: 20px 0;
+	padding: 34px 20px;
+
+	border: 1px solid rgba(168, 85, 247, 0.27);
+	border-radius: 14px;
+
+	background: rgba(8, 7, 26, 0.65);
+	color: #d8cee8;
+
+	font-size: 14px;
+	line-height: 1.7;
+	text-align: center;
+}
+
+.gallery-page [hidden] {
+	display: none !important;
+}
+
+/* =========================================================
+   CHARACTER GRID
+========================================================= */
+
+.gallery-grid {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: 20px;
+}
+
+.character-card {
+	display: flex;
+	flex-direction: column;
+
+	min-width: 0;
+	overflow: hidden;
+
+	border: 1px solid rgba(168, 85, 247, 0.45);
+	border-radius: 16px;
+
+	background: linear-gradient(155deg,
+			rgba(22, 15, 49, 0.97),
+			rgba(6, 7, 22, 0.98));
+
+	box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+
+	transition:
+		transform 180ms ease,
+		border-color 180ms ease,
+		box-shadow 180ms ease;
+}
+
+/*
+ * CHARACTER CARD - HOVER EFFECT
+ *
+ * The card moves upward as a single element.
+ * The shadow follows the transformed card and creates
+ * a subtle floating effect without a visible top gap.
+ */
+
+.character-card:hover {
+	transform: translateY(-5px);
+
+	border-color: rgba(216, 180, 254, 0.85);
+
+	box-shadow:
+		0 22px 45px rgba(0, 0, 0, 0.45),
+		0 0 24px rgba(168, 85, 247, 0.18);
+}
+
+/* =========================================================
+   CHARACTER IMAGE
+========================================================= */
+
+.character-stage {
+	position: relative;
+	display: grid;
+	place-items: center;
+
+	height: 270px;
+	overflow: hidden;
+
+	background:
+		radial-gradient(ellipse at 50% 80%,
+			rgba(168, 85, 247, 0.3),
+			transparent 44%),
+		linear-gradient(180deg,
+			rgba(41, 25, 66, 0.22),
+			rgba(8, 7, 24, 0.9));
+}
+
+.character-stage img {
+	position: relative;
+	z-index: 2;
+
+	width: 100%;
+	height: 100%;
+
+	object-fit: cover;
+	object-position: center top;
+}
+
+/*
+ * CHARACTER STAGE - SEAMLESS BOTTOM FADE
+ *
+ * The overlay gradually darkens the artwork towards
+ * the character information area.
+ *
+ * The final gradient color exactly matches the background
+ * of the information section to avoid a visible seam.
+ */
+.character-stage::after {
+	content: "";
+
+	position: absolute;
+	z-index: 3;
+
+	inset: 0;
+
+	background: linear-gradient(to bottom,
+			transparent 45%,
+			rgba(11, 9, 28, 0.45) 75%,
+			#0b091c 100%);
+
+	pointer-events: none;
+}
+
+/* =========================================================
+   CHARACTER INFORMATION
+========================================================= */
+
+.character-info {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+
+	gap: 8px;
+	padding: 19px;
+
+	background: #0b091c;
+}
+
+.character-info h3 {
+	margin: 0;
+
+	overflow-wrap: anywhere;
+
+	color: #faf4ff;
+	font-size: 19px;
+	line-height: 1.4;
+}
+
+.creator,
+.character-gender,
+.created-date {
+	margin: 0;
+
+	color: #bbb2cf;
+	font-size: 12px;
+	line-height: 1.6;
+}
+
+.view-button {
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+
+	min-height: 42px;
+	margin-top: auto;
+	padding: 11px 13px;
+
+	border: 1px solid rgba(233, 213, 255, 0.65);
+	border-radius: 999px;
+
+	background: linear-gradient(135deg,
+			#6d28d9,
+			#a855f7);
+
+	color: #fff;
+
+	font-size: 12px;
+	font-weight: 600;
+	text-align: center;
+	text-decoration: none;
+
+	transition: box-shadow 180ms ease;
+}
+
+.view-button:hover {
+	box-shadow: 0 0 24px rgba(168, 85, 247, 0.45);
+}
+
+.view-button:focus-visible {
+	outline: 2px solid #edd5a8;
+	outline-offset: 3px;
+}
+
+/* =========================================================
+   PAGINATION
+========================================================= */
 
 .gallery-pagination {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: center;
 
-    margin-top: 42px;
+	gap: 9px;
+	margin-top: 36px;
 }
 
 .pagination-button {
-    min-width: 42px;
-    height: 42px;
-    padding: 0 12px;
+	min-width: 42px;
+	min-height: 42px;
+	padding: 10px 13px;
 
-    color: var(--text);
-    background: rgba(10, 9, 28, 0.82);
+	border: 1px solid rgba(196, 131, 255, 0.36);
+	border-radius: 10px;
 
-    border: 1px solid rgba(196, 131, 255, 0.32);
-    border-radius: 9px;
+	background: rgba(10, 9, 28, 0.85);
+	color: #eee8f8;
 
-    font-family: "Inter", sans-serif;
-    font-weight: 600;
+	font-family: "Inter", sans-serif;
+	font-size: 13px;
+	font-weight: 600;
 
-    cursor: pointer;
-
-    transition:
-        transform 0.2s ease,
-        background 0.2s ease,
-        border-color 0.2s ease,
-        box-shadow 0.2s ease;
+	cursor: pointer;
 }
 
 .pagination-button:hover {
-    transform: translateY(-2px);
-
-    background: rgba(124, 58, 237, 0.28);
-    border-color: var(--purple-light);
+	border-color: #c084fc;
+	background: rgba(124, 58, 237, 0.28);
 }
 
 .pagination-button.active {
-    color: #ffffff;
+	border-color: #d8b4fe;
 
-    background:
-        linear-gradient(
-            135deg,
-            var(--purple),
-            var(--purple-light)
-        );
+	background: linear-gradient(135deg,
+			#6d28d9,
+			#a855f7);
 
-    border-color: var(--purple-light);
-    box-shadow: 0 8px 22px rgba(124, 58, 237, 0.3);
+	color: #fff;
 }
 
-/* =========================
-   RESPONSIVE FILTERS
-========================= */
-
-@media (max-width: 780px) {
-    .gallery-topbar {
-        align-items: stretch;
-    }
-
-    .gallery-filters {
-        width: 100%;
-    }
+.pagination-button:focus-visible {
+	outline: 2px solid #edd5a8;
+	outline-offset: 3px;
 }
 
-@media (max-width: 680px) {
-    .gallery-filters {
-        flex-direction: column;
-        align-items: stretch;
+/* =========================================================
+   RESPONSIVE DESIGN
+========================================================= */
 
-        padding: 16px;
-    }
+@media (max-width: 1200px) {
+	.gallery-filters {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
 
-    .filter-field {
-        width: 100%;
-    }
+	.clear-filters {
+		grid-column: 1 / -1;
+	}
 
-    .filter-field input {
-        width: 100%;
-        min-width: 0;
-    }
-
-    .clear-filters {
-        width: 100%;
-    }
+	.gallery-grid {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
 }
 
-/* =========================
-   HIDDEN STAFF NAVIGATION
-========================= */
-
-/* Overrides dropdown display styles for links hidden by the role check. */
-
-.nav-links .settings-dropdown a[hidden] {
-    display: none;
+@media (max-width: 850px) {
+	.gallery-grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
 }
 
-/* =========================
-   FANTASYREALM PREMIUM FOOTER
-========================= */
+@media (max-width: 600px) {
+	.gallery-hero {
+		min-height: 230px;
+		padding: 48px 20px 65px;
+	}
 
-.footer {
-    background: linear-gradient(
-        135deg,
-        #1b1038 0%,
-        #0c071b 55%,
-        #080513 100%
-    );
+	.gallery-hero h1 {
+		font-size: clamp(32px, 10vw, 48px);
+	}
 
-    border-top: 1px solid rgba(180, 115, 255, 0.35);
+	.gallery-hero-copy>p:last-child {
+		font-size: 13px;
+	}
 
-    box-shadow:
-        0 -8px 35px rgba(100, 35, 190, 0.12),
-        inset 0 1px rgba(255, 255, 255, 0.04);
+	.gallery-shell {
+		width: calc(100% - 20px);
+		margin-top: -20px;
+		padding: 20px 15px;
+		border-radius: 17px;
+	}
 
-    padding: 35px 8%;
-    min-height: 110px;
+	.gallery-filters {
+		grid-template-columns: 1fr;
+		padding: 16px;
+	}
 
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 24px;
+	.clear-filters {
+		grid-column: auto;
+		width: 100%;
+	}
 
-    color: #a8a0bf;
+	.gallery-grid {
+		gap: 12px;
+	}
+
+	.character-stage {
+		height: 210px;
+	}
+
+	.character-info {
+		padding: 13px;
+	}
+
+	.character-info h3 {
+		font-size: 16px;
+	}
 }
 
-/* Branding */
+@media (max-width: 390px) {
+	.gallery-grid {
+		grid-template-columns: 1fr;
+	}
 
-.footer-brand {
-    font-family: "Cinzel", serif;
-    color: #f4eaff;
-    font-size: 19px;
-    font-weight: 700;
-    letter-spacing: 1px;
-
-    text-shadow: 0 0 18px rgba(178, 107, 255, 0.45);
+	.character-stage {
+		height: 300px;
+	}
 }
 
-/* Copyright */
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
 
-.footer > p {
-    color: #9187a9;
-    font-size: 12px;
+@media (prefers-reduced-motion: reduce) {
+
+	.character-card,
+	.view-button {
+		transition: none;
+	}
+
+	.character-card:hover {
+		transform: none;
+	}
 }
 
-/* Navigation links */
 
-.footer-links {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 10px;
+/*
+ * CHARACTER CARD - TOP EDGE FIX
+ *
+ * Keeps the visual background and its gradient attached
+ * to the card while preventing a thin uncovered strip
+ * from appearing during hover transformations.
+ */
+
+.character-card {
+	position: relative;
+	isolation: isolate;
+	background-clip: padding-box;
 }
 
-.footer-links a {
-    color: #c5b6dd;
-    text-decoration: none;
-    font-size: 13px;
-    font-weight: 500;
-
-    padding: 10px 15px;
-    border-radius: 10px;
-    border: 1px solid transparent;
-
-    transition:
-        color 0.2s ease,
-        background 0.2s ease,
-        border-color 0.2s ease,
-        box-shadow 0.2s ease,
-        transform 0.2s ease;
+.character-card .character-stage {
+	border-radius: 15px 15px 0 0;
 }
 
-.footer-links a:hover,
-.footer-links a:focus-visible {
-    color: #ffffff;
+/*
+ * CHARACTER CARD - PREVENT SUBPIXEL SEAMS
+ *
+ * Slightly overlap the information panel with the stage.
+ * This prevents a one-pixel gap during hover transforms.
+ */
+.character-card .character-info {
+	position: relative;
+	z-index: 4;
 
-    background: rgba(147, 74, 238, 0.16);
-    border-color: rgba(185, 130, 255, 0.35);
-
-    box-shadow: 0 0 18px rgba(153, 76, 255, 0.14);
-
-    transform: translateY(-2px);
-}
-
-/* Mobile */
-
-@media (max-width: 760px) {
-    .footer {
-        flex-direction: column;
-        text-align: center;
-        padding: 32px 20px;
-        gap: 16px;
-    }
-
-    .footer-links {
-        justify-content: center;
-    }
+	margin-top: -2px;
+	padding-top: 21px;
 }

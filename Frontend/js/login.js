@@ -1,86 +1,181 @@
-const loginForm = document.getElementById('login-form');
-const formMessage = document.getElementById('form-message');
-const loginButton = document.getElementById('login-button');
 
-loginForm.addEventListener('submit', async (event) => {
+/*
+ * FANTASYREALM - LOGIN CONTROLLER
+ *
+ * Authenticates users and redirects them to the
+ * dashboard corresponding to their current role.
+ *
+ * The shared header manages navigation and logout.
+ */
 
-    event.preventDefault();
+(() => {
+	'use strict';
 
-    const email = document.getElementById('email').value.trim();
-    const password = document.getElementById('password').value;
+	const LOGIN_URL = '/FantasyRealm/Backend/api/login.php';
+	const SESSION_URL = '/FantasyRealm/Backend/api/session.php';
 
-    formMessage.hidden = true;
-    formMessage.textContent = '';
+	const ROLE_DESTINATIONS = {
+		USER: 'dashboard.html',
+		EMPLOYEE: 'employee-dashboard.html',
+		ADMIN: 'admin-dashboard.html'
+	};
 
-    if (email === '' || password === '') {
-        showMessage('Please fill in all fields.');
-        return;
-    }
+	const form = document.getElementById('login-form');
 
-    loginButton.disabled = true;
-    loginButton.textContent = 'Logging in...';
+	if (!form) {
+		return;
+	}
 
-    try {
+	const emailInput = document.getElementById('email');
+	const passwordInput = document.getElementById('password');
+	const passwordToggle = document.getElementById('toggle-password');
+	const formMessage = document.getElementById('form-message');
+	const loginButton = document.getElementById('login-button');
 
-        const response = await fetch(
-            '/FantasyRealm/Backend/api/login.php',
-            {
-                method: 'POST',
+	function showError(message) {
+		formMessage.textContent = message;
+		formMessage.hidden = false;
+	}
 
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
+	function clearError() {
+		formMessage.textContent = '';
+		formMessage.hidden = true;
+	}
 
-                body: JSON.stringify({
-                    email: email,
-                    password: password
-                })
-            }
-        );
+	/*
+	 * Allow users to show or hide their password.
+	 */
+	passwordToggle.addEventListener('click', () => {
+		const visible = passwordInput.type === 'password';
 
-        const data = await response.json();
+		passwordInput.type = visible ? 'text' : 'password';
 
-        if (!response.ok) {
-            showMessage(
-                data.message || 'Unable to log in.'
-            );
-            return;
-        }
+		passwordToggle.textContent = visible ? 'Hide' : 'Show';
 
-        if (data.success) {
+		passwordToggle.setAttribute(
+			'aria-label',
+			visible ? 'Hide password' : 'Show password'
+		);
 
-            window.location.href = 'index.html';
+		passwordToggle.setAttribute(
+			'aria-pressed',
+			String(visible)
+		);
+	});
 
-        } else {
+	/*
+	 * Retrieve the current role from the database-backed
+	 * session endpoint, rather than assuming role IDs.
+	 */
+	async function getAuthenticatedRole() {
+		const response = await fetch(SESSION_URL, {
+			method: 'GET',
+			credentials: 'same-origin',
+			cache: 'no-store',
+			headers: {
+				Accept: 'application/json'
+			}
+		});
 
-            showMessage(
-                data.message || 'Unable to log in.'
-            );
+		if (!response.ok) {
+			throw new Error('Unable to verify the current session.');
+		}
 
-        }
+		const session = await response.json();
 
-    } catch (error) {
+		if (
+			session.authenticated !== true ||
+			!session.user ||
+			typeof session.user.role !== 'string'
+		) {
+			throw new Error('Unable to determine the account role.');
+		}
 
-        console.error('Login request failed:', error);
+		return session.user.role;
+	}
 
-        showMessage(
-            'Unable to connect to the server.'
-        );
+	/*
+	 * Submit login credentials and redirect according
+	 * to the authenticated user's current role.
+	 */
+	async function handleLogin(event) {
+		event.preventDefault();
 
-    } finally {
+		if (loginButton.disabled) {
+			return;
+		}
 
-        loginButton.disabled = false;
-        loginButton.textContent = 'Login';
+		clearError();
 
-    }
+		const email = emailInput.value.trim();
+		const password = passwordInput.value;
 
-});
+		if (!email || !password) {
+			showError('Please fill in all fields.');
+			return;
+		}
 
+		if (!emailInput.checkValidity()) {
+			showError('Please enter a valid email address.');
+			emailInput.focus();
+			return;
+		}
 
-function showMessage(message) {
+		loginButton.disabled = true;
+		loginButton.textContent = 'Logging in...';
 
-    formMessage.textContent = message;
-    formMessage.hidden = false;
+		try {
+			const response = await fetch(LOGIN_URL, {
+				method: 'POST',
+				credentials: 'same-origin',
+				cache: 'no-store',
+				headers: {
+					'Content-Type': 'application/json',
+					Accept: 'application/json'
+				},
+				body: JSON.stringify({
+					email,
+					password
+				})
+			});
 
-}
+			const result = await response.json();
+
+			if (!response.ok || result.success !== true) {
+				showError(
+					result.message ||
+					'Unable to log in. Please try again.'
+				);
+				return;
+			}
+
+			/*
+			 * The session endpoint resolves the role by name,
+			 * including accounts promoted after registration.
+			 */
+			const role = await getAuthenticatedRole();
+
+			const destination = ROLE_DESTINATIONS[role];
+
+			if (!destination) {
+				throw new Error('Unsupported account role.');
+			}
+
+			window.location.replace(destination);
+
+		} catch (error) {
+			console.error('Login failed:', error);
+
+			showError(
+				error.message ||
+				'Unable to connect to the server. Please try again.'
+			);
+
+		} finally {
+			loginButton.disabled = false;
+			loginButton.textContent = 'Login';
+		}
+	}
+
+	form.addEventListener('submit', handleLogin);
+})();

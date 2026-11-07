@@ -1,6 +1,7 @@
 {
     "require": {
         "vlucas/phpdotenv": "*",
-        "mongodb/mongodb": "^2.5"
+        "mongodb/mongodb": "^2.5",
+        "phpmailer/phpmailer": "^7.0"
     }
 }

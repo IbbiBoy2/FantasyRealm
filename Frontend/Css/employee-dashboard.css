@@ -1,534 +1,443 @@
-/* =========================
-   EMPLOYEE IDENTITY
-========================= */
+/*
+ * FANTASYREALM - EMPLOYEE DASHBOARD
+ * Page-only styles; header, footer and layout remain shared.
+ */
 
-#employee-username {
-    color: var(--purple-soft);
+/* Page-level color tokens and box sizing. */
+/* Accessible confirmation dialogs and backdrop. */
+.employee-page,
+.employee-dialog {
+	--emp-border: rgba(168, 85, 247, .35);
+	--emp-muted: #cfc1e2;
+	color: #f9f4ff;
+	font-family: Inter, sans-serif
+}
+
+.employee-page *,
+.employee-dialog *,
+.employee-page *::before,
+.employee-dialog *::before {
+	box-sizing: border-box
+}
+
+/* Main employee workspace layout. */
+.employee-container {
+	width: min(1280px, calc(100% - 36px));
+	margin: auto;
+	padding: 38px 0 90px
+}
+
+.employee-container [hidden],
+.employee-dialog [hidden] {
+	display: none !important
+}
+
+/* Welcome banner and section shortcuts. */
+.employee-hero {
+	padding: 42px clamp(22px, 4vw, 58px);
+	border: 1px solid var(--emp-border);
+	border-radius: 22px;
+	background: radial-gradient(circle at 88% 5%, rgba(123, 58, 237, .28), transparent 52%), linear-gradient(130deg, #15102e, #0b0a1c);
+	box-shadow: 0 20px 60px #0005
+}
+
+.employee-eyebrow {
+	font-size: 11px;
+	letter-spacing: .21em;
+	color: #d8b4fe;
+	font-weight: 700;
+	margin: 0 0 12px
+}
+
+/* Section headings and responsive content panels. */
+.employee-hero h1,
+.employee-section h2,
+.employee-dialog h2 {
+	font-family: Cinzel, serif;
+	font-weight: 600;
+	color: #fff;
+	margin: 0
+}
+
+.employee-hero h1 {
+	font-size: clamp(30px, 5vw, 52px)
+}
+
+.employee-hero p:not(.employee-eyebrow),
+.employee-section-head p:not(.employee-eyebrow) {
+	color: var(--emp-muted);
+	line-height: 1.75
 }
 
 .employee-role {
-    display: inline-block;
-
-    margin-top: 16px;
-    padding: 7px 12px;
-
-    border: 1px solid rgba(196, 131, 255, 0.35);
-    border-radius: 999px;
-
-    background: rgba(124, 58, 237, 0.15);
-    color: var(--purple-soft);
-
-    font-size: 0.8rem;
-    font-weight: 600;
+	font-size: 12px;
+	letter-spacing: .12em;
+	text-transform: uppercase
 }
 
-/* =========================
-   EMPLOYEE ACCESS VISIBILITY
-========================= */
-
-/* Keeps staff content hidden until the protected API authorizes access. */
-
-#employee-content[hidden],
-#employee-message[hidden] {
-    display: none;
+.employee-jump-links {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+	margin-top: 24px
 }
 
-/* =========================
-   EMPLOYEE SETTINGS CONTROLS
-========================= */
-
-#logout-link:disabled {
-    opacity: 0.6;
-    cursor: wait;
+.employee-jump-links a {
+	border: 1px solid var(--emp-border);
+	border-radius: 99px;
+	padding: 9px 15px;
+	color: #f1dfff;
+	text-decoration: none;
+	background: #24163d
 }
 
-/* =========================
-   EMPLOYEE DASHBOARD — MOBILE
-========================= */
-
-@media (max-width: 680px) {
-    #employee-content .dashboard-header h1 {
-        overflow-wrap: anywhere;
-    }
+.employee-jump-links a:hover {
+	background: #422468
 }
 
-/* =========================
-   CHARACTER MODERATION QUEUE
-========================= */
-
-.moderation-list {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 18px;
-
-    margin-top: 24px;
+/* Key moderation and catalogue statistics. */
+.employee-stats {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: 16px;
+	margin: 22px 0 48px
 }
 
-.moderation-card {
-    min-width: 0;
-    padding: 22px;
-
-    border: 1px solid rgba(196, 131, 255, 0.3);
-    border-radius: 15px;
-
-    background:
-        linear-gradient(
-            135deg,
-            rgba(17, 12, 40, 0.9),
-            rgba(6, 6, 18, 0.8)
-        );
+.employee-stats article {
+	border: 1px solid var(--emp-border);
+	border-radius: 16px;
+	padding: 22px;
+	background: #120e2be8;
+	display: flex;
+	gap: 12px;
+	flex-direction: column
 }
 
-.moderation-card h3 {
-    margin-bottom: 12px;
-
-    color: var(--purple-soft);
-    font-family: "Cinzel", serif;
-    font-size: 1.3rem;
-
-    overflow-wrap: anywhere;
+.employee-stats span {
+	font-size: 12px;
+	color: #d5c4e8
 }
 
-/* =========================
-   MODERATION DECISION COLORS
-========================= */
-
-.character-action.moderation-approve {
-    border-color: rgba(74, 222, 128, 0.5);
-
-    background: rgba(22, 101, 52, 0.3);
-    color: #bbf7d0;
+.employee-stats strong {
+	font-family: Cinzel, serif;
+	font-size: 32px;
+	color: #fff
 }
 
-.character-action.moderation-approve:hover {
-    background: rgba(22, 101, 52, 0.55);
+.employee-section {
+	margin: 42px 0;
+	scroll-margin-top: 28px
 }
 
-.character-action.moderation-reject {
-    border-color: rgba(248, 113, 113, 0.5);
-
-    background: rgba(153, 27, 27, 0.3);
-    color: #fecaca;
+.employee-section-head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 24px;
+	margin-bottom: 20px
 }
 
-.character-action.moderation-reject:hover {
-    background: rgba(153, 27, 27, 0.55);
+.employee-section h2 {
+	font-size: clamp(22px, 3vw, 32px)
 }
 
-/* =========================
-   MODERATION DIALOG
-========================= */
-
-.moderation-dialog {
-    width: min(520px, calc(100% - 32px));
-    max-height: calc(100dvh - 32px);
-
-    margin: auto;
-    padding: 30px;
-    overflow-y: auto;
-
-    border: 1px solid rgba(196, 131, 255, 0.5);
-    border-radius: 22px;
-
-    background:
-        linear-gradient(
-            145deg,
-            #17102e,
-            #0a091c
-        );
-
-    color: var(--text);
-    font-family: "Inter", sans-serif;
-
-    box-shadow:
-        0 24px 80px rgba(0, 0, 0, 0.65),
-        0 0 35px rgba(124, 58, 237, 0.2);
+.employee-section-head p:not(.employee-eyebrow) {
+	margin-bottom: 0
 }
 
-/* Separates the modal visually from the dashboard behind it. */
-
-.moderation-dialog::backdrop {
-    background: rgba(3, 2, 12, 0.78);
-    backdrop-filter: blur(6px);
+/* Reusable moderation cards. */
+.employee-card-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 16px
 }
 
-.moderation-form {
-    display: grid;
-    gap: 16px;
+.employee-card,
+.employee-panel {
+	min-width: 0;
+	border: 1px solid var(--emp-border);
+	border-radius: 18px;
+	background: linear-gradient(135deg, #15102d, #100b24);
+	padding: 24px;
+	box-shadow: 0 10px 35px #0003
 }
 
-.moderation-form .section-label {
-    margin-bottom: 0;
+.employee-card h3,
+.employee-panel h3 {
+	font: 600 19px Cinzel, serif;
+	color: #fff;
+	margin: 0 0 12px
 }
 
-.moderation-form h2 {
-    font-family: "Cinzel", serif;
-    font-size: 1.6rem;
+.employee-card p {
+	line-height: 1.7;
+	color: #ded4eb;
+	overflow-wrap: anywhere
 }
 
-.moderation-description {
-    color: var(--muted);
-    font-size: 0.9rem;
-    line-height: 1.7;
-
-    overflow-wrap: anywhere;
+.employee-meta {
+	font-size: 12px;
+	color: #b9a8d0 !important
 }
 
-/* =========================
-   REJECTION REASON
-========================= */
-
-#rejection-reason-field {
-    display: grid;
-    gap: 10px;
+.employee-card-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	margin-top: 22px
 }
 
-#rejection-reason-field label {
-    color: var(--purple-soft);
-    font-size: 0.85rem;
-    font-weight: 600;
+.employee-button-primary,
+.employee-button-secondary,
+.employee-button-danger {
+	border-radius: 10px;
+	min-height: 41px;
+	padding: 11px 17px;
+	color: #fff;
+	font: 600 13px Inter, sans-serif;
+	cursor: pointer;
+	transition: background .15s ease, transform .15s ease
 }
 
-#rejection-reason {
-    width: 100%;
-    min-height: 120px;
-
-    padding: 13px 15px;
-    resize: vertical;
-
-    border: 1px solid rgba(196, 131, 255, 0.4);
-    border-radius: 11px;
-
-    background: rgba(6, 6, 18, 0.8);
-    color: var(--text);
-
-    font: inherit;
-    line-height: 1.6;
+.employee-button-primary {
+	border: 1px solid #b886f7;
+	background: linear-gradient(135deg, #6426ad, #9a48ee)
 }
 
-#rejection-reason::placeholder {
-    color: #92889f;
+.employee-button-secondary {
+	border: 1px solid #8466b5;
+	background: #261641
 }
 
-.moderation-hint {
-    color: var(--muted);
-    font-size: 0.75rem;
-    line-height: 1.5;
+.employee-button-danger {
+	border: 1px solid #db6a8b;
+	background: #962749
 }
 
-/* =========================
-   MODERATION FEEDBACK
-========================= */
-
-.moderation-error {
-    padding: 12px 14px;
-
-    border: 1px solid rgba(248, 113, 113, 0.4);
-    border-radius: 10px;
-
-    background: rgba(127, 29, 29, 0.18);
-    color: #fecaca;
-
-    font-size: 0.85rem;
-    line-height: 1.5;
+.employee-button-primary:hover,
+.employee-button-secondary:hover,
+.employee-button-danger:hover {
+	transform: translateY(-1px);
+	filter: brightness(1.15)
 }
 
-/* Preserves hidden states when other rules define display values. */
-
-#rejection-reason-field[hidden],
-.moderation-error[hidden],
-#pending-characters-message[hidden] {
-    display: none;
+.employee-page button:disabled,
+.employee-dialog button:disabled {
+	opacity: .55;
+	cursor: not-allowed;
+	transform: none
 }
 
-/* =========================
-   DIALOG ACTIONS AND FOCUS
-========================= */
-
-.moderation-dialog-actions {
-    display: flex;
-    justify-content: flex-end;
-    flex-wrap: wrap;
-    gap: 12px;
+.employee-page button:focus-visible,
+.employee-dialog button:focus-visible,
+.employee-page a:focus-visible {
+	outline: 2px solid #eed1ff;
+	outline-offset: 3px
 }
 
-.moderation-dialog-actions .character-action {
-    padding: 12px 18px;
+.employee-feedback {
+	margin: 14px 0;
+	padding: 13px 17px;
+	border-radius: 12px;
+	border: 1px solid #8163b1;
+	background: #211639;
+	color: #f3e8ff;
+	overflow-wrap: anywhere
 }
 
-#rejection-reason:focus-visible,
-.moderation-card button:focus-visible,
-.moderation-dialog button:focus-visible {
-    outline: 2px solid var(--purple-soft);
-    outline-offset: 3px;
+.employee-feedback.is-error {
+	border-color: #d56a83;
+	background: #4a1323;
+	color: #ffe0ea
 }
 
-.moderation-dialog button:disabled,
-#rejection-reason:disabled {
-    opacity: 0.6;
-    cursor: wait;
+.employee-feedback.is-success {
+	border-color: #4eb78a;
+	background: #0d402f;
+	color: #c7fbe7
 }
 
-/* =========================
-   MODERATION — MOBILE
-========================= */
-
-@media (max-width: 680px) {
-    .moderation-list {
-        grid-template-columns: 1fr;
-    }
-
-    .moderation-dialog {
-        padding: 24px 20px;
-    }
-
-    .moderation-dialog-actions {
-        flex-direction: column;
-    }
-
-    .moderation-dialog-actions button {
-        width: 100%;
-    }
+.employee-add-form {
+	display: grid;
+	grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) auto;
+	gap: 16px;
+	align-items: end
 }
 
-/* =========================
-   REVIEW MODERATION
-========================= */
-
-.review-moderation-section {
-    margin-top: 30px;
+.employee-add-form label,
+.employee-search-panel label,
+.employee-dialog label {
+	display: block;
+	font-weight: 600;
+	font-size: 13px;
+	margin: 0 0 8px;
+	color: #efe1ff
 }
 
-.moderation-review-rating {
-    margin-top: 12px;
-
-    color: #f5c96a;
-    font-size: 0.9rem;
-    font-weight: 600;
+.employee-add-form input,
+.employee-add-form select,
+.employee-search-panel input,
+.employee-dialog textarea {
+	box-sizing: border-box;
+	width: 100%;
+	min-width: 0;
+	background: #0c0a1d;
+	border: 1px solid #77559f;
+	border-radius: 10px;
+	color: #fff;
+	padding: 12px;
+	font: 14px Inter, sans-serif
 }
 
-/* Preserves comment line breaks and wraps long text within cards and dialogs. */
-
-.moderation-review-comment {
-    margin: 16px 0;
-    padding: 14px 16px;
-
-    border-left: 3px solid var(--purple-light);
-    border-radius: 0 10px 10px 0;
-
-    background: rgba(124, 58, 237, 0.1);
-    color: var(--text);
-
-    font-size: 0.9rem;
-    line-height: 1.7;
-
-    white-space: pre-wrap;
-    overflow-wrap: anywhere;
+.employee-search-panel {
+	margin-bottom: 18px
 }
 
-#review-moderation-error[hidden] {
-    display: none;
+.employee-search-panel input {
+	max-width: 480px
 }
 
-/* =========================
-   ACCESSORY MANAGEMENT
-========================= */
-
-.accessory-management-section {
-    margin-top: 30px;
+.employee-panel {
+	margin-bottom: 18px
 }
 
-.accessories-list {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 18px;
-
-    margin-top: 24px;
+.employee-status {
+	display: inline-block;
+	border-radius: 99px;
+	border: 1px solid #629880;
+	padding: 5px 12px;
+	color: #bdf7d8;
+	font-size: 12px
 }
 
-/* =========================
-   ADD ACCESSORY FORM
-========================= */
-
-.accessory-form {
-    display: grid;
-    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) auto;
-    align-items: end;
-    gap: 16px;
-
-    margin-top: 24px;
-    padding: 20px;
-
-    border: 1px solid rgba(196, 131, 255, 0.25);
-    border-radius: 14px;
-
-    background: rgba(6, 6, 18, 0.45);
+.employee-status.inactive {
+	border-color: #cf6d81;
+	color: #ffc3d1
 }
 
-.accessory-field {
-    min-width: 0;
-
-    display: grid;
-    gap: 9px;
+.employee-dialog {
+	box-sizing: border-box;
+	position: fixed;
+	inset: 0;
+	margin: auto;
+	width: min(490px, calc(100vw - 28px));
+	max-height: calc(100dvh - 30px);
+	overflow-x: hidden;
+	overflow-y: auto;
+	padding: 27px;
+	border: 1px solid #9066c6;
+	border-radius: 18px;
+	background: #120b2a;
+	color: #fff;
+	box-shadow: 0 25px 90px #000a
 }
 
-.accessory-field label {
-    color: var(--purple-soft);
-    font-size: 0.85rem;
-    font-weight: 600;
+.employee-dialog::backdrop {
+	background: #040210d9;
+	backdrop-filter: blur(5px)
 }
 
-.accessory-field input,
-.accessory-field select {
-    width: 100%;
-    min-width: 0;
-    min-height: 46px;
-    padding: 12px 14px;
-
-    border: 1px solid rgba(196, 131, 255, 0.4);
-    border-radius: 10px;
-
-    background: #0a091c;
-    color: var(--text);
-
-    font: inherit;
-    font-size: 0.9rem;
+.employee-dialog h2 {
+	font-size: 24px;
+	margin-bottom: 13px
 }
 
-.accessory-field select {
-    color-scheme: dark;
+.employee-dialog p {
+	line-height: 1.75;
+	color: #e5d6f1;
+	overflow-wrap: anywhere
 }
 
-.accessory-field input::placeholder {
-    color: #92889f;
+.employee-dialog textarea {
+	resize: vertical;
+	min-height: 100px
 }
 
-#accessory-add-button {
-    min-height: 46px;
-    padding: 12px 20px;
-
-    background:
-        linear-gradient(
-            135deg,
-            var(--purple),
-            var(--purple-light)
-        );
+.employee-dialog blockquote {
+	margin: 12px 0;
+	padding: 12px;
+	border-left: 3px solid #bd87ef;
+	color: #e8ddf3;
+	overflow-wrap: anywhere
 }
 
-/* =========================
-   ACCESSORY FEEDBACK
-========================= */
-
-.accessory-feedback {
-    margin-top: 18px;
-    padding: 13px 15px;
-
-    border: 1px solid rgba(196, 131, 255, 0.35);
-    border-radius: 10px;
-
-    background: rgba(124, 58, 237, 0.12);
-    color: var(--purple-soft);
-
-    font-size: 0.85rem;
-    line-height: 1.6;
+.employee-dialog-actions {
+	display: flex;
+	justify-content: flex-end;
+	gap: 12px;
+	flex-wrap: wrap;
+	margin-top: 23px
 }
 
-.accessory-feedback-error {
-    border-color: rgba(248, 113, 113, 0.4);
-
-    background: rgba(127, 29, 29, 0.18);
-    color: #fecaca;
+.employee-dialog-note {
+	font-size: 13px;
+	border: 1px solid #5c3a82;
+	padding: 12px;
+	border-radius: 10px
 }
 
-/* Preserves feedback visibility controlled by JavaScript. */
+/* Responsive adjustments for tablets and phones. */
+@media(max-width:950px) {
+	.employee-stats {
+		grid-template-columns: repeat(2, minmax(0, 1fr))
+	}
 
-.accessory-feedback[hidden],
-#accessory-delete-error[hidden],
-#accessories-message[hidden] {
-    display: none;
+	.employee-add-form {
+		grid-template-columns: 1fr 1fr
+	}
+
+	.employee-add-form button {
+		grid-column: 1/-1
+	}
+
 }
 
-/* =========================
-   ACCESSORY CONTROL STATES
-========================= */
+@media(max-width:650px) {
+	.employee-container {
+		width: calc(100% - 24px);
+		padding-top: 20px
+	}
 
-.accessory-field input:focus-visible,
-.accessory-field select:focus-visible,
-.accessory-form button:focus-visible {
-    outline: 2px solid var(--purple-soft);
-    outline-offset: 3px;
+	.employee-hero {
+		padding: 28px 20px
+	}
+
+	.employee-stats {
+		gap: 10px
+	}
+
+	.employee-stats article {
+		padding: 17px
+	}
+
+	.employee-card-grid {
+		grid-template-columns: 1fr
+	}
+
+	.employee-section-head {
+		align-items: flex-start;
+		flex-direction: column
+	}
+
+	.employee-add-form {
+		grid-template-columns: 1fr
+	}
+
+	.employee-dialog {
+		padding: 22px 18px
+	}
+
+	.employee-dialog-actions button {
+		flex: 1
+	}
+
 }
 
-.accessory-form input:disabled,
-.accessory-form select:disabled,
-.accessory-form button:disabled,
-.accessory-card button:disabled {
-    opacity: 0.55;
-}
+@media(prefers-reduced-motion:reduce) {
 
-.accessory-form input:disabled,
-.accessory-form select:disabled,
-.accessory-form button:disabled {
-    cursor: wait;
-}
+	.employee-page button,
+	.employee-dialog button {
+		transition: none
+	}
 
-.accessory-card button:disabled {
-    cursor: not-allowed;
-}
-
-/* Keeps unavailable card actions visually inactive on hover. */
-
-.accessory-card button:disabled:hover {
-    background: rgba(124, 58, 237, 0.14);
-    border-color: rgba(168, 85, 247, 0.45);
-    transform: none;
-}
-
-/* =========================
-   ACCESSORY MANAGEMENT — MOBILE
-========================= */
-
-@media (max-width: 900px) {
-    .accessory-form {
-        grid-template-columns: 1fr;
-    }
-
-    #accessory-add-button {
-        width: 100%;
-    }
-}
-
-@media (max-width: 680px) {
-    .accessories-list {
-        grid-template-columns: 1fr;
-    }
-
-    .accessory-form {
-        padding: 16px;
-    }
-}
-
-/* =========================
-   PLAYER ACCOUNT MANAGEMENT
-========================= */
-
-.user-management-section {
-    margin-top: 30px;
-}
-
-.managed-user-card .character-meta {
-    overflow-wrap: anywhere;
-}
-
-#user-action-description {
-    white-space: pre-wrap;
-    overflow-wrap: anywhere;
-}
-
-/* Preserves feedback visibility controlled by JavaScript. */
-
-#users-message[hidden],
-#user-management-feedback[hidden],
-#user-action-error[hidden] {
-    display: none;
 }

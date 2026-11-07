@@ -2,205 +2,190 @@
 
 declare(strict_types=1);
 
+/*
+ * FANTASYREALM - PASSWORD RESET API
+ *
+ * Validates a one-time recovery token, enforces
+ * password requirements, and stores the new
+ * password using Argon2id.
+ */
+
 header('Content-Type: application/json; charset=utf-8');
+header('Cache-Control: no-store');
+header('X-Content-Type-Options: nosniff');
 
-require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../config/password.php';
 
-// =========================
-// REQUEST VALIDATION
-// =========================
+function respond(
+	int $status,
+	bool $success,
+	string $message
+): never {
+	http_response_code($status);
 
-// Password resets only accept POST requests.
+	echo json_encode([
+		'success' => $success,
+		'message' => $message
+	]);
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405);
-
-    echo json_encode([
-        'success' => false,
-        'message' => 'Method not allowed.'
-    ]);
-
-    exit;
+	exit;
 }
 
+/*
+ * Only POST requests may reset a password.
+ */
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+	header('Allow: POST');
 
-$input = json_decode(
-    file_get_contents('php://input'),
-    true
-);
+	respond(405, false, 'Method not allowed.');
+}
 
+/*
+ * Accept a limited JSON request body.
+ */
+$contentType = $_SERVER['CONTENT_TYPE'] ?? '';
+
+if (!preg_match('~^application/json(?:\s*;|$)~i', $contentType)) {
+	respond(
+		415,
+		false,
+		'Content type must be application/json.'
+	);
+}
+
+$raw = file_get_contents('php://input');
+
+if ($raw === false || strlen($raw) > 4096) {
+	respond(413, false, 'Invalid request size.');
+}
+
+$input = json_decode($raw, true);
 
 if (!is_array($input)) {
-    http_response_code(400);
-
-    echo json_encode([
-        'success' => false,
-        'message' => 'Invalid JSON request.'
-    ]);
-
-    exit;
+	respond(400, false, 'Invalid JSON request.');
 }
 
-
-// =========================
-// INPUT TYPE VALIDATION
-// =========================
-
-// Reject malformed input before processing reset requests.
-$token = is_string($input['token'] ?? null)
-    ? trim($input['token'])
-    : '';
-
-$password = is_string($input['password'] ?? null)
-    ? $input['password']
-    : '';
-
-$passwordConfirm = is_string($input['password_confirm'] ?? null)
-    ? $input['password_confirm']
-    : '';
-
+/*
+ * Reject invalid field types before processing
+ * any password or recovery token.
+ */
+$tokenValue = $input['token'] ?? null;
+$passwordValue = $input['password'] ?? null;
+$passwordConfirmValue = $input['password_confirm'] ?? null;
 
 if (
-    $token === '' ||
-    $password === '' ||
-    $passwordConfirm === ''
+	!is_string($tokenValue) ||
+	!is_string($passwordValue) ||
+	!is_string($passwordConfirmValue)
 ) {
-    http_response_code(400);
-
-    echo json_encode([
-        'success' => false,
-        'message' => 'Please fill in all fields.'
-    ]);
-
-    exit;
+	respond(422, false, 'Invalid password reset information.');
 }
 
+$token = trim($tokenValue);
+$newPassword = $passwordValue;
+$passwordConfirm = $passwordConfirmValue;
 
-if ($password !== $passwordConfirm) {
-
-// =========================
-// PASSWORD SECURITY
-// =========================
-
-// Enforce the same password requirements as registration.
 if (
-    mb_strlen($password, 'UTF-8') < 12 ||
-    strlen($password) > 72
+	$token === '' ||
+	$newPassword === '' ||
+	$passwordConfirm === ''
 ) {
-    http_response_code(422);
-
-    echo json_encode([
-        'success' => false,
-        'message' => 'Password must be at least 12 characters and no more than 72 bytes.'
-    ]);
-
-    exit;
+	respond(400, false, 'Please fill in all fields.');
 }
 
-    http_response_code(400);
-
-    echo json_encode([
-        'success' => false,
-        'message' => 'Passwords do not match.'
-    ]);
-
-    exit;
+/*
+ * Recovery tokens consist of 32 random bytes
+ * represented as 64 hexadecimal characters.
+ */
+if (!preg_match('/\A[a-fA-F0-9]{64}\z/D', $token)) {
+	respond(
+		400,
+		false,
+		'This password reset link is invalid or has expired.'
+	);
 }
 
-// =========================
-// PASSWORD SECURITY
-// =========================
-
-// Enforce password requirements before checking the reset token.
-if (
-    mb_strlen($password, 'UTF-8') < 12 ||
-    strlen($password) > 72
-) {
-    http_response_code(422);
-
-    echo json_encode([
-        'success' => false,
-        'message' => 'Password must be at least 12 characters and no more than 72 bytes.'
-    ]);
-
-    exit;
+/*
+ * Confirm both password fields match.
+ */
+if ($newPassword !== $passwordConfirm) {
+	respond(400, false, 'Passwords do not match.');
 }
 
-// =========================
-// TOKEN VERIFICATION
-// =========================
+/*
+ * Enforce the shared password policy.
+ */
+$passwordError = validateAccountPassword($newPassword);
 
-// Hashes the submitted token so it can be compared with the hash stored in the database.
+if ($passwordError !== null) {
+	respond(
+		422,
+		false,
+		$passwordError
+	);
+}
 
 try {
+	require_once __DIR__ . '/../config/database.php';
 
-    $tokenHash = hash(
-        'sha256',
-        $token
-    );
+	/*
+	 * Hash the submitted token instead of
+	 * storing or searching for the raw token.
+	 */
+	$tokenHash = hash('sha256', $token);
 
-// The reset token must exist and still be within its expiration time.
+	/*
+	 * Hash the new password with the shared
+	 * Argon2id configuration.
+	 */
+	$passwordHash = hashAccountPassword($newPassword);
 
-    $stmt = $pdo->prepare(
-        'SELECT id
-         FROM users
-         WHERE reset_token_hash = :reset_token_hash
-           AND reset_token_expires_at > NOW()
-         LIMIT 1'
-    );
-
-    $stmt->execute([
-        'reset_token_hash' => $tokenHash
-    ]);
-
-    $user = $stmt->fetch();
-
-
-    if (!$user) {
-        http_response_code(400);
-
-        echo json_encode([
-            'success' => false,
-            'message' => 'This password reset link is invalid or has expired.'
-        ]);
-
-        exit;
-    }
-
-// Hashes the new password before saving it.
-
-    $passwordHash = password_hash(
-        $password,
-        PASSWORD_DEFAULT
-    );
-
-    // Updates the password and immediately invalidates the reset token.
-
-    $stmt = $pdo->prepare(
-        'UPDATE users
+	/*
+	 * Update the password only when the token
+	 * still exists and has not expired.
+	 *
+	 * The token is invalidated in the same SQL
+	 * statement, preventing simultaneous reuse.
+	 */
+	$stmt = $pdo->prepare(
+		'UPDATE users
          SET password_hash = :password_hash,
              reset_token_hash = NULL,
              reset_token_expires_at = NULL
-         WHERE id = :id'
-    );
+         WHERE reset_token_hash = :token_hash
+           AND reset_token_expires_at > NOW()
+           AND suspended = 0'
+	);
 
-    $stmt->execute([
-        'password_hash' => $passwordHash,
-        'id' => $user['id']
-    ]);
+	$stmt->execute([
+		'password_hash' => $passwordHash,
+		'token_hash' => $tokenHash
+	]);
 
+	/*
+	 * A successful reset must update exactly
+	 * one account.
+	 */
+	if ($stmt->rowCount() !== 1) {
+		respond(
+			400,
+			false,
+			'This password reset link is invalid or has expired.'
+		);
+	}
 
-    echo json_encode([
-        'success' => true,
-        'message' => 'Password reset successfully.'
-    ]);
+	respond(
+		200,
+		true,
+		'Password reset successfully.'
+	);
 
-} catch (Throwable $e) {
+} catch (Throwable $error) {
+	error_log('Password reset request failed.');
 
-    http_response_code(500);
-
-    echo json_encode([
-        'success' => false,
-        'message' => 'An internal server error occurred.'
-    ]);
+	respond(
+		500,
+		false,
+		'An internal server error occurred.'
+	);
 }

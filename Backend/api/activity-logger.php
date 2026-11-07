@@ -21,10 +21,12 @@ function recordStaffActivity(
         'employee.promoted' => 'employee',
         'employee.suspended' => 'employee',
         'employee.reactivated' => 'employee',
-
+        'employee.password_updated' => 'employee',
+        'employee.deleted' => 'employee',
 
         'character.approved' => 'character',
         'character.rejected' => 'character',
+        'character.deleted' => 'character',
 
         'review.approved' => 'review',
         'review.rejected' => 'review',

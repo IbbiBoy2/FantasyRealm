@@ -15,7 +15,10 @@ SET NAMES utf8mb4;
 CREATE TABLE `accessories` (
   `id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
+  `image_path` VARCHAR(255) DEFAULT NULL,
+  `body_image_path` VARCHAR(255) DEFAULT NULL,
   `type` varchar(50) NOT NULL,
+  `gender` VARCHAR(10) DEFAULT NULL,
   `active` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -83,6 +86,40 @@ CREATE TABLE `users` (
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `reset_token_hash` varchar(255) DEFAULT NULL,
   `reset_token_expires_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE `login_rate_limits` (
+  `rate_key` varchar(80) NOT NULL,
+  `attempt_count` int unsigned NOT NULL DEFAULT 0,
+  `window_started_at` datetime NOT NULL,
+  PRIMARY KEY (`rate_key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE character_moderation_decisions (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  character_id INT NOT NULL,
+  character_name VARCHAR(100) NOT NULL,
+  owner_user_id INT NOT NULL,
+  actor_user_id INT NOT NULL,
+  decision VARCHAR(20) NOT NULL,
+  rejection_reason VARCHAR(1000) NOT NULL,
+  decided_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  KEY idx_moderation_character (character_id),
+  KEY idx_moderation_decided_at (decided_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE character_staff_deletions (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  character_id INT NOT NULL,
+  character_name VARCHAR(100) NOT NULL,
+  owner_user_id INT NOT NULL,
+  actor_user_id INT NOT NULL,
+  reason VARCHAR(1000) NOT NULL,
+  deleted_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  KEY idx_staff_deletion_character (character_id),
+  KEY idx_staff_deletion_date (deleted_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 ALTER TABLE `accessories`

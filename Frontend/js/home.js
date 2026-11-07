@@ -1,186 +1,58 @@
-// =========================
-// DOM REFERENCES
-// =========================
 
-const loginLink = document.getElementById('login-link');
-const registerLink = document.getElementById('register-link');
-const usernameDisplay = document.getElementById('nav-username');
-const logoutButton = document.getElementById('logout-link');
+/*
+ * FANTASYREALM - HOME PAGE CONTROLLER
+ *
+ * Adjusts the main character creation link according
+ * to the authenticated session.
+ *
+ * The backend remains responsible for enforcing
+ * access permissions on protected features.
+ */
 
-const settingsMenu = document.getElementById('settings-menu');
-const settingsButton = document.getElementById('settings-button');
-const settingsDropdown = document.getElementById('settings-dropdown');
+(() => {
+  'use strict';
 
-const employeeDashboardLink =
-    document.getElementById('employee-dashboard-link');
+  const SESSION_URL = '/FantasyRealm/Backend/api/session.php';
 
-    const adminDashboardLink = document.createElement('a');
+  const createLink = document.getElementById('home-create-link');
 
-adminDashboardLink.id = 'admin-dashboard-link';
-adminDashboardLink.href = 'admin-dashboard.html';
-adminDashboardLink.textContent = 'Admin Dashboard';
-adminDashboardLink.hidden = true;
+  if (!createLink) {
+    return;
+  }
 
-employeeDashboardLink.insertAdjacentElement(
-    'afterend',
-    adminDashboardLink
-);
-
-// =========================
-// SETTINGS MENU
-// =========================
-
-// Keeps dropdown visibility and its accessibility state synchronized.
-
-function setSettingsOpen(isOpen) {
-    settingsDropdown.hidden = !isOpen;
-
-    settingsButton.setAttribute(
-        'aria-expanded',
-        String(isOpen)
-    );
-}
-
-settingsButton.addEventListener('click', () => {
-    setSettingsOpen(settingsDropdown.hidden);
-});
-
-// Closes the dropdown when clicking outside the settings container.
-
-document.addEventListener('click', (event) => {
-    if (!settingsMenu.contains(event.target)) {
-        setSettingsOpen(false);
-    }
-});
-
-// Returns keyboard focus to the gear when Escape closes the dropdown.
-
-document.addEventListener('keydown', (event) => {
-    if (
-        event.key === 'Escape' &&
-        !settingsDropdown.hidden
-    ) {
-        setSettingsOpen(false);
-        settingsButton.focus();
-    }
-});
-
-// =========================
-// SESSION / NAVBAR
-// =========================
-
-// Uses the PHP session to display the appropriate account controls.
-
-async function loadSession() {
-
-    employeeDashboardLink.hidden = true;
+  /*
+   * Guests keep the login destination.
+   * An authenticated user can open the creator directly.
+   */
+  async function updateCreateLink() {
+    createLink.href = 'login.html';
 
     try {
-        const response = await fetch(
-            '/FantasyRealm/Backend/api/session.php'
-        );
-
-        const data = await response.json();
-        // Shows staff navigation only after a successful authenticated role check.
-
-employeeDashboardLink.hidden = !(
-    response.ok &&
-    data.authenticated &&
-    ['EMPLOYEE', 'ADMIN'].includes(data.user?.role)
-);
-
-adminDashboardLink.hidden = !(
-    response.ok &&
-    data.authenticated &&
-    data.user?.role === 'ADMIN'
-);
-
-        if (!response.ok) {
-            throw new Error('Unable to verify session.');
-        }
-
-        if (data.authenticated) {
-            loginLink.hidden = true;
-            registerLink.hidden = true;
-
-            usernameDisplay.textContent = data.user.username;
-            usernameDisplay.hidden = false;
-
-            settingsMenu.hidden = false;
-        } else {
-            loginLink.hidden = false;
-            registerLink.hidden = false;
-
-            usernameDisplay.textContent = '';
-            usernameDisplay.hidden = true;
-
-            settingsMenu.hidden = true;
-            setSettingsOpen(false);
-        }
-
-    } catch (error) {
-        console.error('Unable to load session:', error);
-    }
-}
-
-// =========================
-// LOGOUT
-// =========================
-
-// Ends the PHP session through the REST API before reloading the homepage.
-
-logoutButton.addEventListener('click', async () => {
-    try {
-
-// =========================
-// CSRF PROTECTION
-// =========================
-
-const sessionResponse = await fetch(
-    '/FantasyRealm/Backend/api/session.php',
-    {
+      const response = await fetch(SESSION_URL, {
         credentials: 'same-origin',
-        cache: 'no-store'
-    }
-);
-
-const sessionData = await sessionResponse.json();
-
-if (
-    !sessionResponse.ok ||
-    !sessionData.authenticated ||
-    typeof sessionData.csrf_token !== 'string'
-) {
-    throw new Error('Unable to verify session security.');
-}
-
-        const response = await fetch(
-            '/FantasyRealm/Backend/api/logout.php',
-            {
-                method: 'POST',
-headers: {
-    'Accept': 'application/json',
-    'X-CSRF-Token': sessionData.csrf_token
-}
-            }
-        );
-
-        const data = await response.json();
-
-        if (!response.ok || !data.success) {
-            console.error('Logout failed:', data.message);
-            return;
+        cache: 'no-store',
+        headers: {
+          'Accept': 'application/json'
         }
+      });
 
-        window.location.href = 'index.html';
+      if (!response.ok) {
+        return;
+      }
+
+      const session = await response.json();
+
+      if (session.authenticated && session.user) {
+        createLink.href = 'create-character.html';
+      }
 
     } catch (error) {
-        console.error('Unable to logout:', error);
+      console.error(
+        'Unable to determine homepage creation access:',
+        error
+      );
     }
-});
+  }
 
-// =========================
-// INITIALIZATION
-// =========================
-
-loadSession();
+  updateCreateLink();
+})();

@@ -1,86 +1,167 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>Legal Notice | FantasyRealm</title>
-    <style>
-        body {
-            background: #130b27;
-            color: #f5f0ff;
-            font: 16px/1.7 Arial, sans-serif;
-        }
-        main {
-            max-width: 850px;
-            margin: 50px auto;
-            padding: 24px;
-        }
-        h1, h2 { color: #c9a5ff; }
-        a { color: #d9c5ff; }
-    </style>
-    <link rel="stylesheet" href="../Css/accessibility.css">
-</head>
-<body>
-    <a class="skip-link" href="#main-content">Skip to main content</a>
-<main tabindex="-1" id="main-content">
-    <a href="index.html">Back to Home</a>
 
-    <h1>Legal Notice</h1>
+    <meta
+      name="description"
+      content="Legal information about the FantasyRealm educational project."
+    />
 
-    <h2>Project information</h2>
+    <!-- Shared application typography. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-<p>
-    FantasyRealm is a non-commercial educational
-    project created for the Studi
-    Développeur Web et Web Mobile (DWWM)
-    examination.
-</p>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
 
-<p>
-    The project is developed and maintained
-    by an individual student.
-</p>
+    <!-- FantasyRealm favicon. -->
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
 
-<p>
-    PixelVerse Studios is a fictional company
-    used in the examination scenario and is
-    not the legal publisher of this website.
-</p>
+    <!--
+        STYLESHEETS
 
-<h2>Contact</h2>
+        Shared components and the application layout are reused.
+        This page has its own stylesheet for legal content.
+    -->
+    <link rel="stylesheet" href="../Css/legal-pages.css" />
+    <link rel="stylesheet" href="../Css/header.css" />
+    <link rel="stylesheet" href="../Css/footer.css" />
+    <link rel="stylesheet" href="../Css/accessibility.css" />
+    <link rel="stylesheet" href="../Css/layout.css" />
 
-<p>
-    Enquiries can be submitted using the
-    <a href="contact.html">Contact page</a>.
-</p>
+    <!-- Load shared header and footer components. -->
+    <script src="../js/components/header.js" defer></script>
+    <script src="../js/components/footer.js" defer></script>
+  </head>
 
-<h2>Hosting</h2>
+  <body class="app-layout" data-page="legal-notice">
+    <!-- Allow keyboard users to skip the navigation. -->
+    <a class="skip-link" href="#main-content"> Skip to main content </a>
 
-<p>
-    The current development version runs
-    locally using Apache through XAMPP.
-</p>
+    <!-- Shared application header. -->
+    <header id="site-header" class="app-header"></header>
 
-<p>
-    No public hosting provider has yet
-    been selected.
-</p>
+    <!--
+        LEGAL NOTICE
 
-    <h2>Intellectual property</h2>
-    <p>
-        Original website content is protected by
-        applicable intellectual property laws.
-        Third-party assets remain subject to
-        their respective licences.
-    </p>
+        Only the main content area scrolls.
+        The shared header, footer and background stay fixed.
+    -->
+    <main id="main-content" class="app-main legal-page" tabindex="-1">
+      <div class="legal-container">
+        <!-- Page introduction. -->
+        <header class="legal-intro">
+          <p class="legal-eyebrow">FANTASYREALM</p>
 
-    <h2>Personal data</h2>
-    <p>
-        Read our
-        <a href="privacy.html">Privacy Policy</a>.
-    </p>
-</main>
-</body>
+          <h1>Legal Notice</h1>
+
+          <p class="legal-description">
+            Information about the FantasyRealm project, its purpose and its
+            operation.
+          </p>
+
+          <div class="legal-divider" aria-hidden="true">
+            <span></span>
+            <span>✦</span>
+            <span></span>
+          </div>
+        </header>
+
+        <!--
+                PROJECT INFORMATION
+
+                FantasyRealm is an educational project.
+                The fictional company from the examination
+                scenario is not presented as the publisher.
+            -->
+        <section class="legal-section" aria-labelledby="project-heading">
+          <h2 id="project-heading">Project Information</h2>
+
+          <p>
+            FantasyRealm is a non-commercial educational project created for the
+            Studi Développeur Web et Web Mobile (DWWM) examination.
+          </p>
+
+          <p>
+            The project is developed and maintained by an individual student.
+          </p>
+
+          <p>
+            PixelVerse Studios is a fictional company used in the examination
+            scenario and is not the legal publisher of this website.
+          </p>
+        </section>
+
+        <!-- Contact information. -->
+        <section class="legal-section" aria-labelledby="contact-heading">
+          <h2 id="contact-heading">Contact</h2>
+
+          <p>
+            Enquiries about FantasyRealm can be submitted using the
+            <a href="contact.html">Contact page</a>.
+          </p>
+        </section>
+
+        <!--
+                HOSTING INFORMATION
+
+                Local development uses Docker and Apache.
+                Public hosting details must be updated
+                before the production site goes live.
+            -->
+        <section class="legal-section" aria-labelledby="hosting-heading">
+          <h2 id="hosting-heading">Hosting</h2>
+
+          <p>
+            The development version of FantasyRealm runs locally in a Docker
+            environment using the Apache web server.
+          </p>
+
+          <p>
+            Information about the public hosting provider will be added before
+            the website is made publicly available.
+          </p>
+        </section>
+
+        <!-- Intellectual property information. -->
+        <section class="legal-section" aria-labelledby="property-heading">
+          <h2 id="property-heading">Intellectual Property</h2>
+
+          <p>
+            Original website content is protected by applicable intellectual
+            property laws. Third-party assets remain subject to their respective
+            licences.
+          </p>
+        </section>
+
+        <!-- Link to the dedicated privacy information. -->
+        <section class="legal-section" aria-labelledby="privacy-heading">
+          <h2 id="privacy-heading">Personal Data</h2>
+
+          <p>
+            For information about the collection and processing of personal
+            data, please read our
+            <a href="privacy.html">Privacy Policy</a>.
+          </p>
+        </section>
+
+        <!-- Return to the application homepage. -->
+        <div class="legal-actions">
+          <a class="legal-back-link" href="index.html">
+            <span aria-hidden="true">←</span>
+            Back to Home
+          </a>
+        </div>
+      </div>
+    </main>
+
+    <!-- Shared application footer. -->
+    <footer id="site-footer" class="app-footer"></footer>
+  </body>
 </html>

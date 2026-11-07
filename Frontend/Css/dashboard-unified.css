@@ -1,0 +1,224 @@
+/*
+ * FANTASYREALM - SHARED USER DASHBOARD PRESENTATION
+ *
+ * Loaded after dashboard.css and layout.css. Keeps the existing character
+ * cards and dialogs, while matching the admin/employee dashboard shell.
+ */
+
+/* Match the common application layout; only the main area scrolls. */
+body.app-layout[data-page="dashboard"] {
+  font-family: "Inter", sans-serif;
+}
+
+body.app-layout .dashboard-page {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.dashboard-page .dashboard-container {
+  width: min(1280px, calc(100% - 36px));
+  margin: 0 auto;
+  padding: 38px 0 90px;
+}
+
+.dashboard-page [hidden],
+.duplicate-dialog [hidden] {
+  display: none !important;
+}
+
+/* Shared visual language with staff workspaces. */
+.dashboard-page .dashboard-header {
+  gap: 28px;
+  margin: 0 0 26px;
+  padding: 42px clamp(22px, 4vw, 54px);
+  border: 1px solid rgba(168, 85, 247, 0.35);
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 88% 5%, rgba(123, 58, 237, 0.28), transparent 52%),
+    linear-gradient(130deg, #15102e, #0b0a1c);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.dashboard-page .dashboard-header h1 {
+  font-size: clamp(30px, 4vw, 48px);
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.dashboard-page .section-label {
+  color: #d8b4fe;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+}
+
+.dashboard-page .dashboard-intro {
+  color: #cfc1e2;
+  line-height: 1.7;
+}
+
+.dashboard-page .create-character-button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 46px;
+  text-align: center;
+  font-weight: 600;
+  white-space: normal;
+}
+
+.dashboard-page .dashboard-stats {
+  gap: 16px;
+  margin-bottom: 30px;
+}
+
+.dashboard-page .stat-card {
+  padding: 23px;
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  border-radius: 16px;
+  background: linear-gradient(145deg, rgba(29, 18, 62, 0.96), rgba(9, 8, 29, 0.96));
+}
+
+.dashboard-page .stat-card span {
+  color: #cfc1e2;
+}
+
+.dashboard-page .characters-section {
+  margin-bottom: 24px;
+  border: 1px solid rgba(168, 85, 247, 0.35);
+  border-radius: 20px;
+  background: linear-gradient(135deg, #15102d, #100b24);
+}
+
+.dashboard-page .section-heading h2 {
+  font-size: clamp(23px, 3vw, 32px);
+}
+
+.dashboard-page .dashboard-character-grid {
+  gap: 18px;
+}
+
+.dashboard-page .dashboard-character-card {
+  transition: border-color 160ms ease, transform 160ms ease;
+}
+
+.dashboard-page .dashboard-character-card:hover {
+  border-color: rgba(216, 180, 254, 0.75);
+  transform: translateY(-2px);
+}
+
+.dashboard-page .character-preview img {
+  object-fit: contain;
+}
+
+.dashboard-page .character-action {
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.dashboard-page .create-character-button:focus-visible,
+.dashboard-page .character-action:focus-visible {
+  outline: 2px solid #eed1ff;
+  outline-offset: 3px;
+}
+
+@media (max-width: 900px) {
+  .dashboard-page .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 680px) {
+  .dashboard-page .dashboard-container {
+    width: calc(100% - 24px);
+    padding: 20px 0 56px;
+  }
+
+  .dashboard-page .dashboard-header {
+    padding: 28px 20px;
+    gap: 20px;
+  }
+
+  .dashboard-page .characters-section {
+    padding: 20px;
+  }
+
+  .dashboard-page .dashboard-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 390px) {
+  .dashboard-page .dashboard-stats {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dashboard-page .dashboard-character-card {
+    transition: none;
+  }
+
+  .dashboard-page .dashboard-character-card:hover {
+    transform: none;
+  }
+}
+
+/* Do not display compatibility controls retained for the existing controller. */
+#legacy-dashboard-controls {
+  display: none !important;
+}
+
+/*
+ * FANTASYREALM - USER DASHBOARD HEADER FIX
+ *
+ * Hide the legacy navigation controls without affecting
+ * the shared header, main content or footer layout.
+ */
+
+/* Prevent the legacy controls from creating an extra grid row. */
+body.app-layout[data-page="dashboard"] #legacy-dashboard-controls {
+  display: none !important;
+}
+
+/* Keep the shared header in the first grid row. */
+body.app-layout[data-page="dashboard"]>.app-header {
+  grid-row: 1;
+  position: relative;
+  z-index: 100;
+  width: 100%;
+  min-height: 0;
+}
+
+/* Keep the dashboard content in the second grid row. */
+body.app-layout[data-page="dashboard"]>.app-main {
+  grid-row: 2;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Keep the shared footer in the third grid row. */
+body.app-layout[data-page="dashboard"]>.app-footer {
+  grid-row: 3;
+}
+
+/* Preserve the shared header's account button appearance. */
+body.app-layout[data-page="dashboard"] .app-header .settings-button.account-trigger {
+  width: auto;
+  height: auto;
+  border-radius: 12px;
+  font-size: inherit;
+}
+
+/* Keep the shared account dropdown above the page content. */
+body.app-layout[data-page="dashboard"] .app-header .settings-dropdown {
+  position: absolute;
+  z-index: 200;
+}

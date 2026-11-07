@@ -1,0 +1,16 @@
+/* FantasyRealm - Gender-specific staff equipment image fields. */
+#accessory-form #equipment-gender,
+#accessory-form #equipment-body-image {
+    width: 100%;
+    max-width: 100%;
+}
+#accessory-form #equipment-body-image + small {
+    display: block;
+    margin-top: 6px;
+    color: #cfc1e2;
+    font-size: 12px;
+    line-height: 1.5;
+}
+#accessory-form > div[hidden] {
+    display: none !important;
+}

@@ -1,0 +1,36 @@
+/*
+ * FANTASYREALM - SAVED CHARACTER APPEARANCE
+ *
+ * The same 568x1275 canvas is resized for the private dashboard,
+ * public gallery and character detail page. Internal image resolution
+ * never changes, only the CSS display size does.
+ */
+
+/* Keep the full figure visible in compact dashboard previews. */
+.character-preview .saved-character-canvas {
+	display: block;
+	position: relative;
+	z-index: 1;
+	width: auto;
+	height: 220px;
+	max-width: 100%;
+	object-fit: contain;
+}
+
+/* Respect the card layout and its existing decorative layers. */
+.character-stage .saved-character-canvas {
+	display: block;
+	position: relative;
+	z-index: 2;
+	width: auto;
+	height: 100%;
+	max-width: 100%;
+	max-height: 100%;
+	object-fit: contain;
+}
+
+/* The detail page should not distort tall source artwork. */
+.character-page .character-stage .saved-character-canvas {
+	max-height: 450px;
+	height: auto;
+}

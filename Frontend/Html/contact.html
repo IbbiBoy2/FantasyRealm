@@ -1,241 +1,174 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>Contact | FantasyRealm</title>
 
-    <!-- Fonts and assets -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect"
-          href="https://fonts.gstatic.com" crossorigin>
+    <meta
+      name="description"
+      content="Contact the FantasyRealm team for questions, assistance or privacy requests."
+    />
+
+    <!-- Shared application typography. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
     <link
-        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600&display=swap"
-        rel="stylesheet"
-    >
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
 
-    <link rel="stylesheet" href="../Css/contact.css">
+    <!-- FantasyRealm favicon. -->
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+
+    <!-- Shared components and contact page styles. -->
+    <link rel="stylesheet" href="../Css/contact.css" />
+    <link rel="stylesheet" href="../Css/header.css" />
+    <link rel="stylesheet" href="../Css/footer.css" />
+    <link rel="stylesheet" href="../Css/accessibility.css" />
+    <link rel="stylesheet" href="../Css/layout.css" />
+
+    <!-- Shared navigation and page-specific behavior. -->
+    <script src="../js/components/header.js" defer></script>
+    <script src="../js/components/footer.js" defer></script>
     <script src="../js/contact.js" defer></script>
-    <link rel="stylesheet" href="../Css/accessibility.css">
-</head>
+  </head>
 
-<body>
-    <a class="skip-link" href="#main-content">Skip to main content</a>
+  <body class="app-layout" data-page="contact">
+    <!-- Provide direct keyboard access to the main content. -->
+    <a class="skip-link" href="#main-content"> Skip to main content </a>
 
-    <!-- MAIN NAVIGATION -->
-    <header class="contact-navbar">
+    <!-- Shared application header. -->
+    <header id="site-header" class="app-header"></header>
 
-        <a class="brand" href="index.html">
-            <span class="brand-mark">✦</span>
-            <span>FantasyRealm</span>
-        </a>
+    <!--
+        CONTACT PAGE
 
-        <nav class="nav-links">
+        The central content scrolls independently from
+        the application header, footer and background.
+    -->
+    <main id="main-content" class="app-main contact-page" tabindex="-1">
+      <section class="contact-panel" aria-labelledby="contact-heading">
+        <!-- Page introduction. -->
+        <div class="contact-introduction">
+          <p class="section-label">GET IN TOUCH</p>
 
-            <a href="index.html">Home</a>
-            <a href="character-gallery.html">Characters</a>
-            <a href="create-character.html">Create</a>
+          <h1 id="contact-heading">Contact FantasyRealm</h1>
 
-            <a id="login-link" href="login.html">
-                Login
-            </a>
+          <p class="contact-intro">
+            Have a question, need assistance or want to exercise your privacy
+            rights? Send us a message.
+          </p>
 
-            <a
-                id="register-link"
-                class="nav-register"
-                href="register.html"
-            >
-                Register
-            </a>
+          <div class="contact-divider" aria-hidden="true">
+            <span></span>
+            <span>✦</span>
+            <span></span>
+          </div>
+        </div>
 
-            <span
-                id="nav-username"
-                class="nav-username"
-                hidden
-            ></span>
+        <!--
+                CONTACT FORM
 
-            <!-- Account settings -->
-            <div
-                id="settings-menu"
-                class="settings-menu"
-                hidden
-            >
-                <button
-                    id="settings-button"
-                    class="settings-button"
-                    type="button"
-                    aria-label="Open settings"
-                    aria-controls="settings-dropdown"
-                    aria-expanded="false"
-                >
-                    ⚙
-                </button>
+                JavaScript validates the fields and sends
+                JSON to the existing PHP contact endpoint.
+                The server remains responsible for final
+                validation and database persistence.
+            -->
+        <form id="contact-form" class="contact-form" method="post">
+          <div class="form-field">
+            <label for="username">
+              Username
+              <span class="optional-label"> (optional) </span>
+            </label>
 
-                <div
-                    id="settings-dropdown"
-                    class="settings-dropdown"
-                    hidden
-                >
-                    <a href="dashboard.html">
-                        Character Settings
-                    </a>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              maxlength="50"
+              autocomplete="username"
+              placeholder="Your username"
+            />
+          </div>
 
-                    <a
-                        id="employee-dashboard-link"
-                        href="employee-dashboard.html"
-                        hidden
-                    >
-                        Employee Dashboard
-                    </a>
+          <div class="form-field">
+            <label for="email">
+              Email address
+              <span class="required-mark" aria-hidden="true"> * </span>
+            </label>
 
-                    <button
-                        id="logout-link"
-                        type="button"
-                    >
-                        Logout
-                    </button>
-                </div>
-            </div>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              maxlength="255"
+              autocomplete="email"
+              placeholder="you@example.com"
+              required
+            />
+          </div>
 
-        </nav>
-    </header>
+          <div class="form-field">
+            <label for="message">
+              Your message
+              <span class="required-mark" aria-hidden="true"> * </span>
+            </label>
 
-    <!-- MAIN CONTACT PAGE -->
-    <main tabindex="-1" id="main-content" class="contact-page">
+            <textarea
+              id="message"
+              name="message"
+              rows="7"
+              maxlength="2000"
+              minlength="1"
+              placeholder="Tell us how we can help..."
+              required
+            ></textarea>
 
-        <section class="contact-panel">
-
-            <p class="section-label">
-                CONTACT
+            <p id="message-counter" class="message-counter" aria-live="off">
+              0 / 2000 characters
             </p>
+          </div>
 
-            <h1>Contact FantasyRealm</h1>
+          <!-- Explain how submitted personal data is used. -->
+          <p class="privacy-notice">
+            We use your email address and message to process and respond to your
+            enquiry. Providing a username is optional. Learn more in our
+            <a href="privacy.html">Privacy Policy</a>.
+          </p>
 
-            <p class="contact-intro">
-                Have a question or need help?
-                Send us a message.
-            </p>
+          <!-- Submission result is announced to assistive technology. -->
+          <p
+            id="form-message"
+            class="form-message"
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+            hidden
+          ></p>
 
-            <!-- Form feedback -->
-            <p
-                id="form-message"
-                class="form-message"
-                hidden
-            ></p>
+          <button id="send-button" class="send-button" type="submit">
+            Send Message
+          </button>
+        </form>
 
-            <!-- Contact form -->
-            <form
-                id="contact-form"
-                class="contact-form"
-            >
+        <!-- Secondary navigation. -->
+        <div class="contact-actions">
+          <a class="back-link" href="index.html">
+            <span aria-hidden="true">←</span>
+            Back to Home
+          </a>
 
-                <label for="username">
-                    Username (optional)
-                </label>
-
-                <input
-                    type="text"
-                    id="username"
-                    maxlength="50"
-                >
-
-                <label for="email">
-                    Email
-                </label>
-
-                <input
-                    type="email"
-                    id="email"
-                    maxlength="255"
-                    required
-                >
-
-                <label for="message">
-                    Message
-                </label>
-
-                <textarea
-                    id="message"
-                    rows="6"
-                    maxlength="2000"
-                    required
-                ></textarea>
-
-                <!-- RGPD information -->
-                <p class="privacy-notice">
-                    We use your email address and message
-                    to respond to your enquiry.
-                    Providing a username is optional.
-
-                    Learn more in our
-                    <a href="privacy.html">
-                        Privacy Policy
-                    </a>.
-                </p>
-
-                <button
-                    id="send-button"
-                    type="submit"
-                >
-                    Send Message
-                </button>
-
-            </form>
-
-            <!-- Page navigation -->
-            <div class="contact-actions">
-
-                <a
-                    href="index.html"
-                    class="back-link"
-                >
-                    Back to Home
-                </a>
-
-                <a
-                    href="character-gallery.html"
-                    class="back-link"
-                >
-                    View Characters
-                </a>
-
-            </div>
-
-        </section>
-
+          <a class="back-link" href="character-gallery.html">
+            Explore Characters
+          </a>
+        </div>
+      </section>
     </main>
 
-    <!-- SITE FOOTER -->
-    <footer class="footer">
-
-        <div class="footer-brand">
-            ✦ FantasyRealm
-        </div>
-
-        <p>
-            © 2026 FantasyRealm. All rights reserved.
-        </p>
-
-        <div class="footer-links">
-            <a href="legal-notice.html">
-                Legal Notice
-            </a>
-
-            <a href="privacy.html">
-                Privacy Policy
-            </a>
-
-            <a href="contact.html">
-                Contact
-            </a>
-        </div>
-
-    </footer>
-
-</body>
+    <!-- Shared application footer. -->
+    <footer id="site-footer" class="app-footer"></footer>
+  </body>
 </html>

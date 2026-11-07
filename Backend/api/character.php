@@ -2,161 +2,70 @@
 
 declare(strict_types=1);
 
+/* FANTASYREALM - PUBLIC CHARACTER DETAIL */
 header('Content-Type: application/json; charset=utf-8');
-
+header('Cache-Control: no-store');
 require_once __DIR__ . '/../config/database.php';
-
-// =========================
-// REQUEST VALIDATION
-// =========================
-
-// This endpoint only accepts GET requests.
+require_once __DIR__ . '/character-equipment-data.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
-    http_response_code(405);
-
-    echo json_encode([
-        'success' => false,
-        'message' => 'Method not allowed.'
-    ]);
-
-    exit;
+	header('Allow: GET');
+	http_response_code(405);
+	echo json_encode(['success' => false, 'message' => 'Method not allowed.']);
+	exit;
 }
 
-// Validates the character ID received from the URL query string.
-
-$characterId = filter_input(
-    INPUT_GET,
-    'id',
-    FILTER_VALIDATE_INT
-);
-
-
+$characterId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT, [
+	'options' => ['min_range' => 1]
+]);
 if (!$characterId) {
-    http_response_code(400);
-
-    echo json_encode([
-        'success' => false,
-        'message' => 'Invalid character ID.'
-    ]);
-
-    exit;
+	http_response_code(400);
+	echo json_encode(['success' => false, 'message' => 'Invalid character ID.']);
+	exit;
 }
-
-// =========================
-// CHARACTER LOOKUP
-// =========================
-
-// Loads one approved, shared character together with its creator and appearance.
 
 try {
-
-    $stmt = $pdo->prepare(
-        'SELECT
+	// Preserve the current public visibility constraints.
+	$stmt = $pdo->prepare(
+		'SELECT
             characters.id,
             characters.name,
             characters.gender,
             characters.image_path,
             characters.created_at,
-
             users.username AS creator_username,
-
+            appearances.nose_shape,
+            appearances.mouth_shape,
+            appearances.eye_shape,
             appearances.skin_color,
             appearances.hair_style,
             appearances.hair_color,
             appearances.eye_color
-
          FROM characters
-
-         INNER JOIN users
-            ON characters.user_id = users.id
-
-         LEFT JOIN appearances
-            ON appearances.character_id = characters.id
-
+         INNER JOIN users ON characters.user_id = users.id
+         LEFT JOIN appearances ON appearances.character_id = characters.id
          WHERE characters.id = :id
            AND characters.status = :status
            AND characters.shared = 1
            AND characters.deleted_at IS NULL
-
          LIMIT 1'
-    );
+	);
+	$stmt->execute(['id' => $characterId, 'status' => 'APPROVED']);
+	$character = $stmt->fetch(PDO::FETCH_ASSOC);
 
+	if (!$character) {
+		http_response_code(404);
+		echo json_encode(['success' => false, 'message' => 'Character not found.']);
+		exit;
+	}
 
-    $stmt->execute([
-        'id' => $characterId,
-        'status' => 'APPROVED'
-    ]);
+	$character['id'] = (int) $character['id'];
+	$equipment = loadCharacterEquipment($pdo, [(int) $characterId]);
+	$character['equipment'] = $equipment[(int) $characterId] ?? [];
 
-
-    $character = $stmt->fetch();
-
-
-    if (!$character) {
-        http_response_code(404);
-
-        echo json_encode([
-            'success' => false,
-            'message' => 'Character not found.'
-        ]);
-
-        exit;
-    }
-
-// =========================
-// EQUIPMENT LOOKUP
-// =========================
-
-// Equipment is loaded separately because one character can have multiple accessories.
-
-    $equipmentStmt = $pdo->prepare(
-        'SELECT
-            accessories.id,
-            accessories.name
-
-         FROM character_accessories
-
-         INNER JOIN accessories
-            ON character_accessories.accessory_id = accessories.id
-
-         WHERE character_accessories.character_id = :character_id
-
-         ORDER BY accessories.name'
-    );
-
-
-    $equipmentStmt->execute([
-        'character_id' => $characterId
-    ]);
-
-
-    $equipment = $equipmentStmt->fetchAll();
-
-
-    $character['id'] = (int) $character['id'];
-
-    foreach ($equipment as &$item) {
-        $item['id'] = (int) $item['id'];
-    }
-
-    unset($item);
-
-    // Adds the equipment array to the character before returning JSON.
-
-    $character['equipment'] = $equipment;
-
-
-    echo json_encode([
-        'success' => true,
-        'character' => $character
-    ]);
-
-} catch (Throwable $e) {
-
-    http_response_code(500);
-
-    echo json_encode([
-        'success' => false,
-        'message' => 'Unable to load character.'
-    ]);
+	echo json_encode(['success' => true, 'character' => $character]);
+} catch (Throwable $error) {
+	error_log('FantasyRealm character details: ' . $error->getMessage());
+	http_response_code(500);
+	echo json_encode(['success' => false, 'message' => 'Unable to load character.']);
 }

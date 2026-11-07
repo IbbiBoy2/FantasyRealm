@@ -1,0 +1,18 @@
+services:
+  web:
+    ports:
+      - "127.0.0.1:8080:80"
+    networks:
+      - private
+      - frontend
+    volumes:
+      # Allow the frontend directory to host the writable accessory volume.
+      - ./Frontend:/var/www/html/FantasyRealm/Frontend:rw
+
+      # Keep backend source files read-only.
+      - ./Backend/api:/var/www/html/FantasyRealm/Backend/api:ro
+      - ./Backend/config:/var/www/html/FantasyRealm/Backend/config:ro
+
+networks:
+  frontend:
+    driver: bridge
