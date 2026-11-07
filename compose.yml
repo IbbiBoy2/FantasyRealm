@@ -1,0 +1,61 @@
+name: fantasyrealm-ecf
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    env_file:
+      - ${BACKEND_ENV_FILE:-./.local/backend.env}
+    volumes:
+      - ${BACKEND_ENV_FILE:-./.local/backend.env}:/var/www/html/FantasyRealm/Backend/.env:ro
+      - accessory_images:/var/www/html/FantasyRealm/Frontend/assets/accessories
+    depends_on:
+      db:
+        condition: service_healthy
+      mongodb:
+        condition: service_started
+    restart: unless-stopped
+    networks:
+      - private
+
+  db:
+    image: mariadb:11.4
+    environment:
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD:?Run scripts/init-local.sh first}
+      MARIADB_DATABASE: fantasyrealm
+      MARIADB_USER: fantasyrealm
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD:?Run scripts/init-local.sh first}
+    volumes:
+      - mariadb_data:/var/lib/mysql
+      - ./Backend/Database/shema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - ./Backend/Database/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql:ro
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+    restart: unless-stopped
+    networks:
+      - private
+
+  mongodb:
+    image: mongo:7.0
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: fantasyrealm
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD:?Run scripts/init-local.sh first}
+    volumes:
+      - mongodb_data:/data/db
+    restart: unless-stopped
+    networks:
+      - private
+
+volumes:
+  mariadb_data:
+  mongodb_data:
+  accessory_images:
+
+networks:
+  private:
+    internal: true

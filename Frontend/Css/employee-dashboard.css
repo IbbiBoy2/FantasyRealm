@@ -1,0 +1,443 @@
+/*
+ * FANTASYREALM - EMPLOYEE DASHBOARD
+ * Page-only styles; header, footer and layout remain shared.
+ */
+
+/* Page-level color tokens and box sizing. */
+/* Accessible confirmation dialogs and backdrop. */
+.employee-page,
+.employee-dialog {
+	--emp-border: rgba(168, 85, 247, .35);
+	--emp-muted: #cfc1e2;
+	color: #f9f4ff;
+	font-family: Inter, sans-serif
+}
+
+.employee-page *,
+.employee-dialog *,
+.employee-page *::before,
+.employee-dialog *::before {
+	box-sizing: border-box
+}
+
+/* Main employee workspace layout. */
+.employee-container {
+	width: min(1280px, calc(100% - 36px));
+	margin: auto;
+	padding: 38px 0 90px
+}
+
+.employee-container [hidden],
+.employee-dialog [hidden] {
+	display: none !important
+}
+
+/* Welcome banner and section shortcuts. */
+.employee-hero {
+	padding: 42px clamp(22px, 4vw, 58px);
+	border: 1px solid var(--emp-border);
+	border-radius: 22px;
+	background: radial-gradient(circle at 88% 5%, rgba(123, 58, 237, .28), transparent 52%), linear-gradient(130deg, #15102e, #0b0a1c);
+	box-shadow: 0 20px 60px #0005
+}
+
+.employee-eyebrow {
+	font-size: 11px;
+	letter-spacing: .21em;
+	color: #d8b4fe;
+	font-weight: 700;
+	margin: 0 0 12px
+}
+
+/* Section headings and responsive content panels. */
+.employee-hero h1,
+.employee-section h2,
+.employee-dialog h2 {
+	font-family: Cinzel, serif;
+	font-weight: 600;
+	color: #fff;
+	margin: 0
+}
+
+.employee-hero h1 {
+	font-size: clamp(30px, 5vw, 52px)
+}
+
+.employee-hero p:not(.employee-eyebrow),
+.employee-section-head p:not(.employee-eyebrow) {
+	color: var(--emp-muted);
+	line-height: 1.75
+}
+
+.employee-role {
+	font-size: 12px;
+	letter-spacing: .12em;
+	text-transform: uppercase
+}
+
+.employee-jump-links {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+	margin-top: 24px
+}
+
+.employee-jump-links a {
+	border: 1px solid var(--emp-border);
+	border-radius: 99px;
+	padding: 9px 15px;
+	color: #f1dfff;
+	text-decoration: none;
+	background: #24163d
+}
+
+.employee-jump-links a:hover {
+	background: #422468
+}
+
+/* Key moderation and catalogue statistics. */
+.employee-stats {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: 16px;
+	margin: 22px 0 48px
+}
+
+.employee-stats article {
+	border: 1px solid var(--emp-border);
+	border-radius: 16px;
+	padding: 22px;
+	background: #120e2be8;
+	display: flex;
+	gap: 12px;
+	flex-direction: column
+}
+
+.employee-stats span {
+	font-size: 12px;
+	color: #d5c4e8
+}
+
+.employee-stats strong {
+	font-family: Cinzel, serif;
+	font-size: 32px;
+	color: #fff
+}
+
+.employee-section {
+	margin: 42px 0;
+	scroll-margin-top: 28px
+}
+
+.employee-section-head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 24px;
+	margin-bottom: 20px
+}
+
+.employee-section h2 {
+	font-size: clamp(22px, 3vw, 32px)
+}
+
+.employee-section-head p:not(.employee-eyebrow) {
+	margin-bottom: 0
+}
+
+/* Reusable moderation cards. */
+.employee-card-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 16px
+}
+
+.employee-card,
+.employee-panel {
+	min-width: 0;
+	border: 1px solid var(--emp-border);
+	border-radius: 18px;
+	background: linear-gradient(135deg, #15102d, #100b24);
+	padding: 24px;
+	box-shadow: 0 10px 35px #0003
+}
+
+.employee-card h3,
+.employee-panel h3 {
+	font: 600 19px Cinzel, serif;
+	color: #fff;
+	margin: 0 0 12px
+}
+
+.employee-card p {
+	line-height: 1.7;
+	color: #ded4eb;
+	overflow-wrap: anywhere
+}
+
+.employee-meta {
+	font-size: 12px;
+	color: #b9a8d0 !important
+}
+
+.employee-card-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	margin-top: 22px
+}
+
+.employee-button-primary,
+.employee-button-secondary,
+.employee-button-danger {
+	border-radius: 10px;
+	min-height: 41px;
+	padding: 11px 17px;
+	color: #fff;
+	font: 600 13px Inter, sans-serif;
+	cursor: pointer;
+	transition: background .15s ease, transform .15s ease
+}
+
+.employee-button-primary {
+	border: 1px solid #b886f7;
+	background: linear-gradient(135deg, #6426ad, #9a48ee)
+}
+
+.employee-button-secondary {
+	border: 1px solid #8466b5;
+	background: #261641
+}
+
+.employee-button-danger {
+	border: 1px solid #db6a8b;
+	background: #962749
+}
+
+.employee-button-primary:hover,
+.employee-button-secondary:hover,
+.employee-button-danger:hover {
+	transform: translateY(-1px);
+	filter: brightness(1.15)
+}
+
+.employee-page button:disabled,
+.employee-dialog button:disabled {
+	opacity: .55;
+	cursor: not-allowed;
+	transform: none
+}
+
+.employee-page button:focus-visible,
+.employee-dialog button:focus-visible,
+.employee-page a:focus-visible {
+	outline: 2px solid #eed1ff;
+	outline-offset: 3px
+}
+
+.employee-feedback {
+	margin: 14px 0;
+	padding: 13px 17px;
+	border-radius: 12px;
+	border: 1px solid #8163b1;
+	background: #211639;
+	color: #f3e8ff;
+	overflow-wrap: anywhere
+}
+
+.employee-feedback.is-error {
+	border-color: #d56a83;
+	background: #4a1323;
+	color: #ffe0ea
+}
+
+.employee-feedback.is-success {
+	border-color: #4eb78a;
+	background: #0d402f;
+	color: #c7fbe7
+}
+
+.employee-add-form {
+	display: grid;
+	grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) auto;
+	gap: 16px;
+	align-items: end
+}
+
+.employee-add-form label,
+.employee-search-panel label,
+.employee-dialog label {
+	display: block;
+	font-weight: 600;
+	font-size: 13px;
+	margin: 0 0 8px;
+	color: #efe1ff
+}
+
+.employee-add-form input,
+.employee-add-form select,
+.employee-search-panel input,
+.employee-dialog textarea {
+	box-sizing: border-box;
+	width: 100%;
+	min-width: 0;
+	background: #0c0a1d;
+	border: 1px solid #77559f;
+	border-radius: 10px;
+	color: #fff;
+	padding: 12px;
+	font: 14px Inter, sans-serif
+}
+
+.employee-search-panel {
+	margin-bottom: 18px
+}
+
+.employee-search-panel input {
+	max-width: 480px
+}
+
+.employee-panel {
+	margin-bottom: 18px
+}
+
+.employee-status {
+	display: inline-block;
+	border-radius: 99px;
+	border: 1px solid #629880;
+	padding: 5px 12px;
+	color: #bdf7d8;
+	font-size: 12px
+}
+
+.employee-status.inactive {
+	border-color: #cf6d81;
+	color: #ffc3d1
+}
+
+.employee-dialog {
+	box-sizing: border-box;
+	position: fixed;
+	inset: 0;
+	margin: auto;
+	width: min(490px, calc(100vw - 28px));
+	max-height: calc(100dvh - 30px);
+	overflow-x: hidden;
+	overflow-y: auto;
+	padding: 27px;
+	border: 1px solid #9066c6;
+	border-radius: 18px;
+	background: #120b2a;
+	color: #fff;
+	box-shadow: 0 25px 90px #000a
+}
+
+.employee-dialog::backdrop {
+	background: #040210d9;
+	backdrop-filter: blur(5px)
+}
+
+.employee-dialog h2 {
+	font-size: 24px;
+	margin-bottom: 13px
+}
+
+.employee-dialog p {
+	line-height: 1.75;
+	color: #e5d6f1;
+	overflow-wrap: anywhere
+}
+
+.employee-dialog textarea {
+	resize: vertical;
+	min-height: 100px
+}
+
+.employee-dialog blockquote {
+	margin: 12px 0;
+	padding: 12px;
+	border-left: 3px solid #bd87ef;
+	color: #e8ddf3;
+	overflow-wrap: anywhere
+}
+
+.employee-dialog-actions {
+	display: flex;
+	justify-content: flex-end;
+	gap: 12px;
+	flex-wrap: wrap;
+	margin-top: 23px
+}
+
+.employee-dialog-note {
+	font-size: 13px;
+	border: 1px solid #5c3a82;
+	padding: 12px;
+	border-radius: 10px
+}
+
+/* Responsive adjustments for tablets and phones. */
+@media(max-width:950px) {
+	.employee-stats {
+		grid-template-columns: repeat(2, minmax(0, 1fr))
+	}
+
+	.employee-add-form {
+		grid-template-columns: 1fr 1fr
+	}
+
+	.employee-add-form button {
+		grid-column: 1/-1
+	}
+
+}
+
+@media(max-width:650px) {
+	.employee-container {
+		width: calc(100% - 24px);
+		padding-top: 20px
+	}
+
+	.employee-hero {
+		padding: 28px 20px
+	}
+
+	.employee-stats {
+		gap: 10px
+	}
+
+	.employee-stats article {
+		padding: 17px
+	}
+
+	.employee-card-grid {
+		grid-template-columns: 1fr
+	}
+
+	.employee-section-head {
+		align-items: flex-start;
+		flex-direction: column
+	}
+
+	.employee-add-form {
+		grid-template-columns: 1fr
+	}
+
+	.employee-dialog {
+		padding: 22px 18px
+	}
+
+	.employee-dialog-actions button {
+		flex: 1
+	}
+
+}
+
+@media(prefers-reduced-motion:reduce) {
+
+	.employee-page button,
+	.employee-dialog button {
+		transition: none
+	}
+
+}

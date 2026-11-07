@@ -1,0 +1,389 @@
+/*
+ * FANTASYREALM - REGISTRATION PAGE
+ *
+ * Styles the registration panel and its controls.
+ * The shared header, footer, background and layout
+ * are handled by their dedicated stylesheets.
+ */
+
+/* =========================================================
+   PAGE LAYOUT
+========================================================= */
+
+.register-page {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+
+  padding: 64px 20px 90px;
+
+  color: #f5f0ff;
+  font-family: "Inter", sans-serif;
+}
+
+.register-panel {
+  box-sizing: border-box;
+
+  width: min(600px, 100%);
+  padding: 44px 46px;
+
+  border: 1px solid rgba(168, 85, 247, 0.42);
+  border-radius: 22px;
+
+  background: linear-gradient(145deg,
+      rgba(23, 14, 49, 0.96),
+      rgba(9, 7, 26, 0.94));
+
+  box-shadow:
+    0 18px 55px rgba(0, 0, 0, 0.28),
+    0 0 35px rgba(124, 58, 237, 0.13);
+
+  backdrop-filter: blur(16px);
+}
+
+/* =========================================================
+   INTRODUCTION
+========================================================= */
+
+.register-introduction {
+  text-align: center;
+}
+
+.register-page .section-label {
+  margin: 0 0 14px;
+
+  color: #d8b4fe;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+}
+
+.register-panel h1 {
+  margin: 0 0 16px;
+
+  color: #faf4ff;
+  font-family: "Cinzel", serif;
+  font-size: clamp(29px, 5vw, 40px);
+  font-weight: 600;
+  line-height: 1.25;
+
+  text-shadow: 0 0 22px rgba(168, 85, 247, 0.4);
+}
+
+.register-intro {
+  max-width: 440px;
+  margin: 0 auto;
+
+  color: #c9c0da;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.register-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 14px;
+  margin: 25px 0 32px;
+
+  color: #edd5a8;
+}
+
+.register-divider span:first-child,
+.register-divider span:last-child {
+  width: 75px;
+  height: 1px;
+
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(216, 180, 254, 0.8));
+}
+
+.register-divider span:last-child {
+  transform: rotate(180deg);
+}
+
+/* =========================================================
+   REGISTRATION FORM
+========================================================= */
+
+.register-form {
+  display: grid;
+  gap: 20px;
+}
+
+.register-page .form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.register-page .form-field label {
+  color: #eee8f8;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.register-form input {
+  box-sizing: border-box;
+
+  width: 100%;
+  min-width: 0;
+  padding: 14px 16px;
+
+  border: 1px solid rgba(168, 85, 247, 0.4);
+  border-radius: 12px;
+
+  background: rgba(5, 5, 18, 0.75);
+  color: #fff;
+
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.register-form input::placeholder {
+  color: #aaa0bf;
+}
+
+.register-form input:focus-visible {
+  outline: 2px solid rgba(216, 180, 254, 0.75);
+  outline-offset: 2px;
+
+  border-color: #c084fc;
+}
+
+/* =========================================================
+   PASSWORD VISIBILITY
+========================================================= */
+
+.register-page .password-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.register-page .password-field input {
+  padding-right: 90px;
+}
+
+.register-page .password-toggle {
+  position: absolute;
+  right: 10px;
+
+  padding: 8px 10px;
+
+  border: 0;
+  border-radius: 8px;
+
+  background: transparent;
+  color: #dec7ff;
+
+  font-family: "Inter", sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.register-page .password-toggle:hover {
+  background: rgba(168, 85, 247, 0.15);
+  color: #fff;
+}
+
+.password-requirements {
+  margin: 2px 0 0;
+
+  color: #bdb2d0;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+/* =========================================================
+   PRIVACY INFORMATION
+========================================================= */
+
+.privacy-notice {
+  margin: 0;
+
+  color: #b6acc9;
+  font-size: 12px;
+  line-height: 1.8;
+  text-align: center;
+}
+
+.privacy-notice a,
+.login-link a {
+  color: #e5c3ff;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.privacy-notice a:hover,
+.login-link a:hover {
+  color: #fff;
+}
+
+/* =========================================================
+   FORM FEEDBACK
+========================================================= */
+
+.register-page .form-message {
+  margin: 0;
+  padding: 13px 16px;
+
+  border: 1px solid rgba(252, 165, 165, 0.5);
+  border-radius: 12px;
+
+  background: rgba(127, 29, 29, 0.2);
+  color: #fecaca;
+
+  font-size: 13px;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.register-page .form-message[hidden] {
+  display: none;
+}
+
+.register-page .form-message[data-type="success"] {
+  border-color: rgba(134, 239, 172, 0.5);
+  background: rgba(22, 101, 52, 0.18);
+  color: #bbf7d0;
+}
+
+/* =========================================================
+   REGISTER BUTTON
+========================================================= */
+
+.register-button {
+  width: 100%;
+  min-height: 48px;
+  padding: 14px 24px;
+
+  border: 1px solid rgba(233, 213, 255, 0.85);
+  border-radius: 999px;
+
+  background: linear-gradient(135deg,
+      #6d28d9,
+      #a855f7);
+
+  color: #fff;
+
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  box-shadow: 0 0 24px rgba(168, 85, 247, 0.2);
+
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.register-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 0 28px rgba(168, 85, 247, 0.4);
+}
+
+.register-button:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+/* =========================================================
+   LOGIN AND RETURN NAVIGATION
+========================================================= */
+
+.login-link {
+  margin: 27px 0 0;
+
+  color: #c9c0da;
+  font-size: 13px;
+  line-height: 1.7;
+  text-align: center;
+}
+
+.register-actions {
+  display: flex;
+  justify-content: center;
+
+  margin-top: 28px;
+}
+
+.register-page .back-link {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 9px;
+  padding: 10px 20px;
+
+  border: 1px solid rgba(216, 180, 254, 0.4);
+  border-radius: 999px;
+
+  background: rgba(124, 58, 237, 0.12);
+  color: #eee3ff;
+
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.register-page .back-link:hover {
+  border-color: #d8b4fe;
+  background: rgba(124, 58, 237, 0.28);
+}
+
+.register-page a:focus-visible,
+.register-page button:focus-visible {
+  outline: 2px solid #edd5a8;
+  outline-offset: 4px;
+}
+
+/* =========================================================
+   RESPONSIVE DESIGN
+========================================================= */
+
+@media (max-width: 768px) {
+  .register-page {
+    padding: 38px 16px 65px;
+  }
+
+  .register-panel {
+    padding: 32px 25px;
+    border-radius: 17px;
+  }
+}
+
+@media (max-width: 390px) {
+  .register-page {
+    padding-inline: 12px;
+  }
+
+  .register-panel {
+    padding: 28px 18px;
+  }
+
+  .register-intro {
+    font-size: 13px;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .register-button {
+    transition: none;
+  }
+
+  .register-button:hover:not(:disabled) {
+    transform: none;
+  }
+}

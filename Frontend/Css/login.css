@@ -1,0 +1,392 @@
+/*
+ * FANTASYREALM - LOGIN PAGE
+ *
+ * Styles only the authentication panel and its controls.
+ * The shared header, footer, background and scrolling
+ * behavior are managed by their dedicated stylesheets.
+ */
+
+/* =========================================================
+   PAGE LAYOUT
+========================================================= */
+
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+
+  padding: 64px 20px 90px;
+
+  color: #f5f0ff;
+  font-family: "Inter", sans-serif;
+}
+
+.login-panel {
+  box-sizing: border-box;
+
+  width: min(560px, 100%);
+  padding: 44px 46px;
+
+  border: 1px solid rgba(168, 85, 247, 0.42);
+  border-radius: 22px;
+
+  background:
+    linear-gradient(145deg,
+      rgba(23, 14, 49, 0.96),
+      rgba(9, 7, 26, 0.94));
+
+  box-shadow:
+    0 18px 55px rgba(0, 0, 0, 0.28),
+    0 0 35px rgba(124, 58, 237, 0.13);
+
+  backdrop-filter: blur(16px);
+}
+
+/* =========================================================
+   INTRODUCTION
+========================================================= */
+
+.login-introduction {
+  text-align: center;
+}
+
+.login-page .section-label {
+  margin: 0 0 14px;
+
+  color: #d8b4fe;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+}
+
+.login-panel h1 {
+  margin: 0 0 16px;
+
+  color: #faf4ff;
+  font-family: "Cinzel", serif;
+  font-size: clamp(30px, 5vw, 43px);
+  font-weight: 600;
+  line-height: 1.2;
+
+  text-shadow: 0 0 22px rgba(168, 85, 247, 0.4);
+}
+
+.login-intro {
+  max-width: 420px;
+  margin: 0 auto;
+
+  color: #c9c0da;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.login-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 14px;
+  margin: 25px 0 32px;
+
+  color: #edd5a8;
+}
+
+.login-divider span:first-child,
+.login-divider span:last-child {
+  width: 75px;
+  height: 1px;
+
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(216, 180, 254, 0.8));
+}
+
+.login-divider span:last-child {
+  transform: rotate(180deg);
+}
+
+/* =========================================================
+   FORM FIELDS
+========================================================= */
+
+.login-form {
+  display: grid;
+  gap: 20px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.form-field label {
+  color: #eee8f8;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.login-form input {
+  box-sizing: border-box;
+
+  width: 100%;
+  min-width: 0;
+  padding: 14px 16px;
+
+  border: 1px solid rgba(168, 85, 247, 0.4);
+  border-radius: 12px;
+
+  background: rgba(5, 5, 18, 0.75);
+  color: #fff;
+
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.login-form input::placeholder {
+  color: #aaa0bf;
+}
+
+.login-form input:focus-visible {
+  outline: 2px solid rgba(216, 180, 254, 0.75);
+  outline-offset: 2px;
+
+  border-color: #c084fc;
+}
+
+/* =========================================================
+   BROWSER AUTOFILL
+========================================================= */
+
+/*
+ * Keep the dark FantasyRealm input styling when
+ * the browser automatically fills login credentials.
+ */
+.login-form input:-webkit-autofill,
+.login-form input:-webkit-autofill:hover,
+.login-form input:-webkit-autofill:focus,
+.login-form input:-webkit-autofill:active {
+  -webkit-text-fill-color: #fff;
+  -webkit-box-shadow: 0 0 0 1000px #090718 inset;
+  box-shadow: 0 0 0 1000px #090718 inset;
+  caret-color: #fff;
+}
+
+/* =========================================================
+   PASSWORD VISIBILITY
+========================================================= */
+
+.password-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-field input {
+  padding-right: 84px;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 10px;
+
+  padding: 8px 10px;
+
+  border: 0;
+  border-radius: 8px;
+
+  background: transparent;
+  color: #dec7ff;
+
+  font-family: "Inter", sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.password-toggle:hover {
+  background: rgba(168, 85, 247, 0.15);
+  color: #fff;
+}
+
+/* =========================================================
+   PASSWORD RECOVERY AND REGISTRATION
+========================================================= */
+
+.login-help {
+  margin-top: -4px;
+  text-align: right;
+}
+
+.login-help a,
+.register-link a {
+  color: #e5c3ff;
+  font-size: 13px;
+  font-weight: 600;
+
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.login-help a:hover,
+.register-link a:hover {
+  color: #fff;
+}
+
+.register-link {
+  margin: 27px 0 0;
+
+  color: #c9c0da;
+  font-size: 13px;
+  line-height: 1.7;
+  text-align: center;
+}
+
+/* =========================================================
+   AUTHENTICATION FEEDBACK
+========================================================= */
+
+.form-message {
+  margin: 0;
+  padding: 13px 16px;
+
+  border: 1px solid rgba(252, 165, 165, 0.5);
+  border-radius: 12px;
+
+  background: rgba(127, 29, 29, 0.2);
+  color: #fecaca;
+
+  font-size: 13px;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.form-message[hidden] {
+  display: none;
+}
+
+/* =========================================================
+   LOGIN BUTTON
+========================================================= */
+
+.login-button {
+  width: 100%;
+  min-height: 48px;
+  padding: 14px 24px;
+
+  border: 1px solid rgba(233, 213, 255, 0.85);
+  border-radius: 999px;
+
+  background: linear-gradient(135deg,
+      #6d28d9,
+      #a855f7);
+
+  color: #fff;
+
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  box-shadow: 0 0 24px rgba(168, 85, 247, 0.2);
+
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.login-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 0 28px rgba(168, 85, 247, 0.4);
+}
+
+.login-button:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+/* =========================================================
+   RETURN NAVIGATION
+========================================================= */
+
+.login-actions {
+  display: flex;
+  justify-content: center;
+
+  margin-top: 28px;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 9px;
+  padding: 10px 20px;
+
+  border: 1px solid rgba(216, 180, 254, 0.4);
+  border-radius: 999px;
+
+  background: rgba(124, 58, 237, 0.12);
+  color: #eee3ff;
+
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.back-link:hover {
+  border-color: #d8b4fe;
+  background: rgba(124, 58, 237, 0.28);
+}
+
+.login-page a:focus-visible,
+.login-page button:focus-visible {
+  outline: 2px solid #edd5a8;
+  outline-offset: 4px;
+}
+
+/* =========================================================
+   RESPONSIVE DESIGN
+========================================================= */
+
+@media (max-width: 768px) {
+  .login-page {
+    padding: 38px 16px 65px;
+  }
+
+  .login-panel {
+    padding: 32px 25px;
+    border-radius: 17px;
+  }
+}
+
+@media (max-width: 390px) {
+  .login-page {
+    padding-inline: 12px;
+  }
+
+  .login-panel {
+    padding: 28px 18px;
+  }
+
+  .login-intro {
+    font-size: 13px;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .login-button {
+    transition: none;
+  }
+
+  .login-button:hover:not(:disabled) {
+    transform: none;
+  }
+}

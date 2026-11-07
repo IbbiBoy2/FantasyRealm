@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Character Gallery | FantasyRealm</title>
+
+    <meta
+      name="description"
+      content="Explore characters created and shared by the FantasyRealm community."
+    />
+
+    <!-- Shared application identity and typography. -->
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Gallery and shared application styles. -->
+    <link rel="stylesheet" href="../Css/gallery.css" />
+    <link rel="stylesheet" href="../Css/header.css" />
+    <link rel="stylesheet" href="../Css/footer.css" />
+    <link rel="stylesheet" href="../Css/accessibility.css" />
+    <link rel="stylesheet" href="../Css/layout.css" />
+    <!-- Shared renderer styles for saved character appearances. -->
+    <link rel="stylesheet" href="../Css/character-renderer.css" />
+    <!-- Shared components and gallery controller. -->
+    <script src="../js/components/header.js" defer></script>
+    <script src="../js/components/footer.js" defer></script>
+    <!-- Rebuild saved characters from their PNG layers. -->
+    <script src="../js/components/character-renderer.js" defer></script>
+    <script src="../js/character-gallery.js" defer></script>
+  </head>
+
+  <body class="app-layout" data-page="gallery">
+    <a class="skip-link" href="#main-content"> Skip to main content </a>
+
+    <!-- Shared application header. -->
+    <header id="site-header" class="app-header"></header>
+
+    <main id="main-content" class="app-main gallery-page" tabindex="-1">
+      <!-- Public gallery introduction. -->
+      <section class="gallery-hero" aria-labelledby="gallery-heading">
+        <div class="gallery-hero-copy">
+          <p class="eyebrow">THE FANTASYREALM ARCHIVE</p>
+
+          <h1 id="gallery-heading">Character Gallery</h1>
+
+          <p>Discover heroes, villains and legends created by the community.</p>
+        </div>
+      </section>
+
+      <!-- Public characters and filtering controls. -->
+      <section class="gallery-shell" aria-labelledby="community-heading">
+        <div class="gallery-topbar">
+          <div class="gallery-heading">
+            <p class="eyebrow">PUBLIC CHARACTERS</p>
+
+            <h2 id="community-heading">Community Legends</h2>
+
+            <p class="gallery-description">
+              Explore characters approved and shared by the FantasyRealm
+              community.
+            </p>
+          </div>
+        </div>
+
+        <!--
+          Client-side filters use public API data.
+          Every field has a visible accessible label.
+        -->
+        <form
+          id="gallery-filters"
+          class="gallery-filters"
+          role="search"
+          aria-label="Filter public characters"
+        >
+          <div class="filter-field">
+            <label for="creator-filter">Creator</label>
+
+            <input
+              id="creator-filter"
+              name="creator"
+              type="search"
+              maxlength="100"
+              placeholder="Search by username"
+            />
+          </div>
+
+          <div class="filter-field">
+            <label for="gender-filter">Gender</label>
+
+            <select id="gender-filter" name="gender">
+              <option value="">All genders</option>
+            </select>
+          </div>
+
+          <div class="filter-field">
+            <label for="date-from-filter">From date</label>
+
+            <input id="date-from-filter" name="date_from" type="date" />
+          </div>
+
+          <div class="filter-field">
+            <label for="date-to-filter">To date</label>
+
+            <input id="date-to-filter" name="date_to" type="date" />
+          </div>
+
+          <button id="clear-filters" class="clear-filters" type="reset">
+            Clear Filters
+          </button>
+        </form>
+
+        <!-- Visible result count. -->
+        <p
+          id="gallery-count"
+          class="gallery-count"
+          aria-live="polite"
+          aria-atomic="true"
+          hidden
+        ></p>
+
+        <!-- Loading, empty results and API errors. -->
+        <p
+          id="gallery-message"
+          class="empty-gallery"
+          role="status"
+          aria-live="polite"
+        >
+          Loading characters...
+        </p>
+
+        <!-- Character cards are rendered by JavaScript. -->
+        <div id="gallery-grid" class="gallery-grid"></div>
+
+        <!-- Page navigation is rendered only when required. -->
+        <nav
+          id="gallery-pagination"
+          class="gallery-pagination"
+          aria-label="Character gallery pages"
+        ></nav>
+      </section>
+    </main>
+
+    <!-- Shared application footer. -->
+    <footer id="site-footer" class="app-footer"></footer>
+  </body>
+</html>

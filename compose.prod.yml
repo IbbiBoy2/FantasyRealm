@@ -1,0 +1,14 @@
+# K8: Caddy must already be on external Docker network "proxy".
+# Set BACKEND_ENV_FILE to an absolute server-side secret file path.
+services:
+  web:
+    networks:
+      private:
+      proxy:
+        aliases:
+          - fantasyrealm-ecf-web
+
+networks:
+  proxy:
+    external: true
+    name: proxy

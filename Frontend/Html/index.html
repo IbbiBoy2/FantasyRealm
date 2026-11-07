@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>FantasyRealm Online | Forge Your Legend</title>
+
+    <meta
+      name="description"
+      content="Discover FantasyRealm Online, explore its fantasy universe, and create, customize, manage and share your own characters."
+    />
+
+    <!-- FantasyRealm brand favicon. -->
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+
+    <!-- Shared typography for the application. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!--
+      STYLESHEETS
+
+      Homepage styles remain separate from shared
+      navigation, footer and application layout styles.
+    -->
+    <link rel="stylesheet" href="../Css/home.css" />
+    <link rel="stylesheet" href="../Css/header.css" />
+    <link rel="stylesheet" href="../Css/footer.css" />
+    <link rel="stylesheet" href="../Css/accessibility.css" />
+    <link rel="stylesheet" href="../Css/layout.css" />
+
+    <!-- Shared components and homepage interactions. -->
+    <script src="../js/components/header.js" defer></script>
+    <script src="../js/components/footer.js" defer></script>
+    <script src="../js/home.js" defer></script>
+  </head>
+
+  <body class="app-layout" data-page="home">
+    <!-- Allow keyboard users to reach the main content directly. -->
+    <a class="skip-link" href="#main-content"> Skip to main content </a>
+
+    <!-- Shared application header. -->
+    <header id="site-header" class="app-header"></header>
+
+    <!--
+      HOMEPAGE CONTENT
+
+      The application shell keeps the shared header,
+      footer and background fixed while main scrolls.
+    -->
+    <main id="main-content" class="app-main" tabindex="-1">
+      <!--
+        HERO
+
+        Introduces the game universe and offers two
+        meaningful entry points into the application.
+      -->
+      <section class="hero" id="home" aria-labelledby="hero-heading">
+        <div class="hero-content">
+          <p class="hero-kicker">WELCOME TO</p>
+
+          <h1 id="hero-heading">FantasyRealm</h1>
+
+          <div class="magic-divider" aria-hidden="true">
+            <span></span>
+            <span class="divider-star">✦</span>
+            <span></span>
+          </div>
+
+          <p class="hero-subtitle">Forge Your Legend</p>
+
+          <p class="hero-description">
+            Enter the world of FantasyRealm Online, where extraordinary
+            adventures begin with a hero of your own creation.
+          </p>
+
+          <div class="hero-actions">
+            <!--
+              Guests are directed to login.
+              home.js changes this destination to the
+              creator after authentication is confirmed.
+            -->
+            <a id="home-create-link" class="btn btn-primary" href="login.html">
+              <span aria-hidden="true">✦</span>
+              Create Your Character
+            </a>
+
+            <a class="btn btn-secondary" href="character-gallery.html">
+              Explore Characters
+            </a>
+          </div>
+        </div>
+
+        <a class="hero-scroll-link" href="#game">
+          Discover the World
+          <span aria-hidden="true">↓</span>
+        </a>
+      </section>
+
+      <!--
+        THE GAME
+
+        Introduces FantasyRealm Online as the fictional
+        MMORPG described in the Studi project scenario.
+      -->
+      <section
+        class="home-section game-section"
+        id="game"
+        aria-labelledby="game-heading"
+      >
+        <div class="home-panel game-panel">
+          <div class="game-copy">
+            <p class="section-label">THE GAME</p>
+
+            <h2 id="game-heading">Enter FantasyRealm Online</h2>
+
+            <p>
+              FantasyRealm Online is a fantasy massively multiplayer online
+              role-playing game (MMORPG) set in a world of magic, exploration
+              and extraordinary adventures.
+            </p>
+
+            <p>
+              Players create heroes, explore mysterious lands, face powerful
+              creatures and take part in epic quests.
+            </p>
+
+            <p>
+              Every adventurer has a different story. Your character is the
+              beginning of yours.
+            </p>
+          </div>
+
+          <div class="game-highlights" aria-label="Game highlights">
+            <div class="highlight-item">
+              <span aria-hidden="true">✧</span>
+              <span>Fantasy adventures</span>
+            </div>
+
+            <div class="highlight-item">
+              <span aria-hidden="true">◇</span>
+              <span>Unique heroes</span>
+            </div>
+
+            <div class="highlight-item">
+              <span aria-hidden="true">✦</span>
+              <span>A shared universe</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!--
+        THE STUDIO
+
+        PixelVerse Studios is the fictional company
+        presented in the examination scenario.
+      -->
+      <section
+        class="home-section studio-section"
+        aria-labelledby="studio-heading"
+      >
+        <div class="studio-content">
+          <p class="section-label">THE CREATORS</p>
+
+          <h2 id="studio-heading">PixelVerse Studios</h2>
+
+          <p>
+            In the FantasyRealm Online project scenario, PixelVerse Studios is a
+            fictional video game development studio specializing in immersive
+            multiplayer role-playing experiences.
+          </p>
+
+          <p>
+            To give players greater freedom, the studio envisioned a dedicated
+            character management platform that extends customization beyond the
+            game's original system.
+          </p>
+
+          <p>
+            This educational application demonstrates that vision: a place where
+            players can create, personalize and organize their characters in one
+            interface.
+          </p>
+        </div>
+      </section>
+
+      <!--
+        CHARACTER MANAGEMENT BENEFITS
+
+        Explains why the dedicated character management
+        platform is useful to FantasyRealm players.
+      -->
+      <section
+        class="home-section benefits-section"
+        aria-labelledby="benefits-heading"
+      >
+        <div class="section-heading">
+          <p class="section-label">YOUR CHARACTER, YOUR STORY</p>
+
+          <h2 id="benefits-heading">Shape Every Detail of Your Legend</h2>
+
+          <p class="section-description">
+            More than a character creator, FantasyRealm brings the essential
+            steps of character management together in one place.
+          </p>
+        </div>
+
+        <div class="benefits-grid">
+          <article class="benefit-card">
+            <div class="benefit-icon" aria-hidden="true">✦</div>
+
+            <h3>Create</h3>
+
+            <p>Give your character a unique name, identity and appearance.</p>
+          </article>
+
+          <article class="benefit-card">
+            <div class="benefit-icon" aria-hidden="true">✧</div>
+
+            <h3>Customize</h3>
+
+            <p>
+              Shape facial features, colors, clothing and equipment to suit your
+              hero.
+            </p>
+          </article>
+
+          <article class="benefit-card">
+            <div class="benefit-icon" aria-hidden="true">◇</div>
+
+            <h3>Manage</h3>
+
+            <p>
+              Keep your characters organized and develop their individual
+              identities.
+            </p>
+          </article>
+
+          <article class="benefit-card">
+            <div class="benefit-icon" aria-hidden="true">❖</div>
+
+            <h3>Share</h3>
+
+            <p>
+              Discover characters approved and shared by the FantasyRealm
+              community.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <!--
+        CHARACTER SHOWCASE
+
+        These three characters are fictional examples.
+        They are not loaded from the public gallery API.
+
+        The placeholders will be replaced with original
+        character artwork once illustrations are available.
+      -->
+      <section
+        class="home-section characters-section"
+        id="characters"
+        aria-labelledby="characters-heading"
+      >
+        <div class="section-heading">
+          <p class="section-label">CHARACTER SHOWCASE</p>
+
+          <h2 id="characters-heading">Legends Already Walk Among Us</h2>
+
+          <p class="section-description">
+            Discover three fictional heroes from the world of FantasyRealm, then
+            explore characters shared by the community.
+          </p>
+        </div>
+
+        <div class="character-grid">
+          <!-- Lyraeth: fictional showcase character. -->
+          <article class="character-card">
+            <div class="character-art art-one">
+              <img
+                class="character-showcase-image"
+                src="../assets/characters/lyraeth.png"
+                alt="Lyraëth, blue-haired fantasy adventurer with a golden crown and sword."
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+
+            <div class="character-body">
+              <p class="character-type">ADVENTURER</p>
+
+              <h3>Lyraëth</h3>
+
+              <p class="character-title">Moonblade</p>
+
+              <p class="character-quote">
+                “In shadows I find clarity, and in silence, my strength.”
+              </p>
+            </div>
+          </article>
+
+          <!-- Thoran: fictional showcase character. -->
+          <article class="character-card">
+            <div class="character-art art-two">
+              <img
+                class="character-showcase-image"
+                src="../assets/characters/thoran.png"
+                alt="Thoran, a fantasy warrior with pink hair, green eyes, heavy armor, a battle axe and a dark shield."
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+
+            <div class="character-body">
+              <p class="character-type">WARRIOR</p>
+
+              <h3>Thoran</h3>
+
+              <p class="character-title">Stormborn</p>
+
+              <p class="character-quote">
+                “A greater tomorrow is worth any sacrifice today.”
+              </p>
+            </div>
+          </article>
+
+          <!-- Seraphine: fictional showcase character. -->
+          <article class="character-card">
+            <div class="character-art art-three">
+              <img
+                class="character-showcase-image"
+                src="../assets/characters/seraphine.png"
+                alt="Seraphine, a purple-skinned fantasy mage with blonde hair, violet robes, a magical staff and scrolls."
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+
+            <div class="character-body">
+              <p class="character-type">MAGE</p>
+
+              <h3>Seraphine</h3>
+
+              <p class="character-title">Voidweaver</p>
+
+              <p class="character-quote">
+                “Magic is not power to control, but a truth to understand.”
+              </p>
+            </div>
+          </article>
+        </div>
+
+        <!-- Link to real, publicly shared character records. -->
+        <div class="showcase-actions">
+          <a class="btn btn-secondary" href="character-gallery.html">
+            Explore the Community Gallery
+          </a>
+        </div>
+      </section>
+
+      <!-- Final invitation to explore the platform. -->
+      <section
+        class="home-section home-cta-section"
+        aria-labelledby="home-cta-heading"
+      >
+        <div class="home-cta-panel">
+          <p class="section-label">YOUR JOURNEY BEGINS HERE</p>
+
+          <h2 id="home-cta-heading">Every Legend Starts Somewhere</h2>
+
+          <p>
+            Explore the world of FantasyRealm and discover the heroes created by
+            its community.
+          </p>
+
+          <a class="btn btn-primary" href="character-gallery.html">
+            Discover Characters
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <!-- Shared application footer. -->
+    <footer id="site-footer" class="app-footer"></footer>
+  </body>
+</html>

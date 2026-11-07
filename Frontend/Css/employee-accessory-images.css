@@ -1,0 +1,91 @@
+/*
+ * FANTASYREALM - EMPLOYEE ACCESSORY ARTWORK
+ * The image is inside the accessory heading, which is moved into the
+ * generated employee table together with its existing action controls.
+ */
+
+.employee-page .employee-accessory-thumbnail {
+	display: block;
+	width: 48px;
+	height: 48px;
+	flex: 0 0 48px;
+	object-fit: contain;
+	border-radius: 8px;
+	padding: 4px;
+	background: rgba(168, 85, 247, 0.1);
+	border: 1px solid rgba(168, 85, 247, 0.25);
+}
+
+.employee-page #accessories-list h3 {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	min-width: 170px;
+}
+
+.employee-page #accessory-image-hint {
+	display: block;
+	margin-top: 6px;
+	font-size: 12px;
+	line-height: 1.4;
+	color: #cfc1e2;
+}
+
+.employee-page #accessory-image {
+	max-width: 100%;
+}
+
+/* Align the accessory creation form in three columns. */
+.employee-page #accessory-form {
+	display: grid;
+	grid-template-columns:
+		minmax(0, 1.5fr) minmax(0, 0.8fr) minmax(0, 1.2fr);
+	align-items: start;
+	gap: 20px;
+}
+
+/* Keep every form field inside its grid column. */
+.employee-page #accessory-form>div {
+	min-width: 0;
+}
+
+/* Align form controls to the same height. */
+.employee-page #accessory-form input,
+.employee-page #accessory-form select {
+	box-sizing: border-box;
+	min-height: 52px;
+}
+
+/* Place the submit button below all three fields. */
+.employee-page #accessory-add-button {
+	grid-column: 1 / -1;
+	width: 100%;
+	margin-top: 4px;
+}
+
+/* Use two columns on medium-sized screens. */
+@media (max-width: 950px) {
+	.employee-page #accessory-form {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	.employee-page #accessory-form>div:nth-child(3) {
+		grid-column: 1 / -1;
+	}
+}
+
+/* Stack the form fields on mobile. */
+@media (max-width: 650px) {
+	.employee-page #accessory-form {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 16px;
+	}
+
+	.employee-page #accessory-form>div:nth-child(3) {
+		grid-column: auto;
+	}
+
+	.employee-page #accessory-add-button {
+		grid-column: 1;
+	}
+}

@@ -1,0 +1,87 @@
+/* RGAA - Accessible skip navigation */
+
+.skip-link {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    z-index: 9999;
+
+    padding: 12px 20px;
+
+    background: #24123f;
+    color: #ffffff;
+
+    border: 2px solid #d8b4fe;
+    border-radius: 8px;
+
+    transform: translateY(-200%);
+}
+
+.skip-link:focus-visible {
+    transform: translateY(0);
+    outline: 3px solid #ffffff;
+    outline-offset: 3px;
+}
+
+/* RGAA - Visible keyboard focus */
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible {
+    outline: 3px solid #f0dcff !important;
+    outline-offset: 3px;
+}
+
+
+/*
+ * FANTASYREALM - GLOBAL SCROLLBAR THEME
+ *
+ * Apply the same purple scrollbar to all scrollable areas:
+ * pages, panels, tables, dialogs and form containers.
+ *
+ * Firefox uses scrollbar-color and scrollbar-width.
+ * Chromium-based browsers and Safari support the
+ * WebKit scrollbar pseudo-elements.
+ */
+
+/* Firefox scrollbar styling. */
+html,
+body,
+body * {
+    scrollbar-width: thin;
+    scrollbar-color: #8753be #100b24;
+}
+
+/* Chromium, Edge and Safari scrollbar width. */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+body *::-webkit-scrollbar {
+    width: 9px;
+    height: 9px;
+}
+
+/* Scrollbar track. */
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track,
+body *::-webkit-scrollbar-track {
+    background: #100b24;
+    border-radius: 999px;
+}
+
+/* Scrollbar thumb. */
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb,
+body *::-webkit-scrollbar-thumb {
+    background: #8753be;
+    border-radius: 999px;
+}
+
+/* Hover state. */
+html::-webkit-scrollbar-thumb:hover,
+body::-webkit-scrollbar-thumb:hover,
+body *::-webkit-scrollbar-thumb:hover {
+    background: #b178ee;
+}

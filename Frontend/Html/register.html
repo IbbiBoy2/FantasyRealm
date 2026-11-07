@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Create an Account | FantasyRealm</title>
+
+    <meta
+      name="description"
+      content="Create your FantasyRealm account and begin your character creation adventure."
+    />
+
+    <!-- Shared application favicon and typography. -->
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Registration and shared application styles. -->
+    <link rel="stylesheet" href="../Css/register.css" />
+    <link rel="stylesheet" href="../Css/header.css" />
+    <link rel="stylesheet" href="../Css/footer.css" />
+    <link rel="stylesheet" href="../Css/accessibility.css" />
+    <link rel="stylesheet" href="../Css/layout.css" />
+
+    <!-- Shared components and registration controller. -->
+    <script src="../js/components/header.js" defer></script>
+    <script src="../js/components/footer.js" defer></script>
+    <script src="../js/register.js" defer></script>
+  </head>
+
+  <body class="app-layout" data-page="register">
+    <!-- Keyboard navigation shortcut. -->
+    <a class="skip-link" href="#main-content"> Skip to main content </a>
+
+    <!-- Shared application header. -->
+    <header id="site-header" class="app-header"></header>
+
+    <main id="main-content" class="app-main register-page" tabindex="-1">
+      <section class="register-panel" aria-labelledby="register-heading">
+        <!-- Page introduction. -->
+        <div class="register-introduction">
+          <p class="section-label">JOIN THE REALM</p>
+
+          <h1 id="register-heading">Create Your Account</h1>
+
+          <p class="register-intro">
+            Begin your adventure, bring your characters to life, and create your
+            own legend.
+          </p>
+
+          <div class="register-divider" aria-hidden="true">
+            <span></span>
+            <span>✦</span>
+            <span></span>
+          </div>
+        </div>
+
+        <!--
+          REGISTRATION FORM
+
+          Browser validation improves usability.
+          The PHP API remains responsible for
+          security and account uniqueness.
+        -->
+        <form id="register-form" class="register-form" method="post">
+          <div class="form-field">
+            <label for="username">Username</label>
+
+            <input
+              id="username"
+              name="username"
+              type="text"
+              autocomplete="username"
+              maxlength="100"
+              placeholder="Choose your username"
+              required
+            />
+          </div>
+
+          <div class="form-field">
+            <label for="email">Email address</label>
+
+            <input
+              id="email"
+              name="email"
+              type="email"
+              autocomplete="email"
+              maxlength="255"
+              placeholder="you@example.com"
+              required
+            />
+          </div>
+
+          <div class="form-field">
+            <label for="password">Password</label>
+
+            <div class="password-field">
+              <input
+                id="password"
+                name="password"
+                type="password"
+                autocomplete="new-password"
+                placeholder="Create a secure password"
+                minlength="12"
+                aria-describedby="password-requirements"
+                required
+              />
+
+              <button
+                id="toggle-password"
+                class="password-toggle"
+                type="button"
+                aria-label="Show password"
+                aria-pressed="false"
+              >
+                Show
+              </button>
+            </div>
+
+            <p id="password-requirements" class="password-requirements">
+              Use at least 12 characters, including an uppercase letter, a
+              lowercase letter, a number and a special character. Maximum: 72
+              bytes.
+            </p>
+          </div>
+
+          <div class="form-field">
+            <label for="password-confirm"> Confirm password </label>
+
+            <div class="password-field">
+              <input
+                id="password-confirm"
+                name="password_confirm"
+                type="password"
+                autocomplete="new-password"
+                placeholder="Confirm your password"
+                minlength="12"
+                required
+              />
+
+              <button
+                id="toggle-password-confirm"
+                class="password-toggle"
+                type="button"
+                aria-label="Show confirmation password"
+                aria-pressed="false"
+              >
+                Show
+              </button>
+            </div>
+          </div>
+
+          <!-- Accessible form feedback. -->
+          <p
+            id="form-message"
+            class="form-message"
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+            hidden
+          ></p>
+
+          <!-- Account data information. -->
+          <p class="privacy-notice">
+            We use your username and email to create and manage your account.
+            Your password is securely hashed. Learn more in our
+            <a href="privacy.html">Privacy Policy</a>.
+          </p>
+
+          <button id="register-button" class="register-button" type="submit">
+            Create Account
+          </button>
+        </form>
+
+        <p class="login-link">
+          Already have an account?
+          <a href="login.html">Login</a>
+        </p>
+
+        <div class="register-actions">
+          <a class="back-link" href="index.html">
+            <span aria-hidden="true">←</span>
+            Back to Home
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <!-- Shared application footer. -->
+    <footer id="site-footer" class="app-footer"></footer>
+  </body>
+</html>

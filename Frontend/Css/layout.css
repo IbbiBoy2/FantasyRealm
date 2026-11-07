@@ -1,0 +1,113 @@
+/*
+ * FANTASYREALM - SHARED APPLICATION SHELL
+ *
+ * The application background stays fixed behind the interface.
+ * Only the main content area scrolls.
+ *
+ * Header and footer remain visible at all times.
+ */
+
+:root {
+  --app-header-height: 76px;
+  --app-footer-height: 110px;
+
+  --app-background: url("../assets/backgrounds/site-galaxy.png");
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+body.app-layout {
+  display: grid;
+
+  grid-template-rows:
+    var(--app-header-height) minmax(0, 1fr) var(--app-footer-height);
+
+  height: 100vh;
+  height: 100dvh;
+
+  overflow: hidden;
+
+  /*
+     * The background belongs to the application shell,
+     * not to the individual page content.
+     */
+  background:
+    linear-gradient(rgba(4, 3, 15, 0.66),
+      rgba(4, 3, 15, 0.94)),
+    var(--app-background) center / cover no-repeat;
+}
+
+/*
+ * The creator can use its own background while keeping
+ * exactly the same application layout.
+ */
+body.app-layout[data-page="creator"] {
+  --app-background: url("../assets/backgrounds/creator-chamber.png");
+}
+
+/* Keep the header above scrolling content and dropdowns. */
+body.app-layout>.app-header {
+  grid-row: 1;
+
+  position: relative;
+  inset: auto;
+
+  height: var(--app-header-height);
+  min-height: 0;
+
+  z-index: 100;
+}
+
+/*
+ * Main content is the only scrollable element.
+ * A transparent background lets the fixed scene remain visible.
+ */
+body.app-layout>.app-main {
+  grid-row: 2;
+
+  min-height: 0;
+  min-width: 0;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  overscroll-behavior-y: contain;
+}
+
+/* Footer remains below the main content. */
+body.app-layout>.app-footer {
+  grid-row: 3;
+
+  min-height: 0;
+  margin: 0;
+
+  position: relative;
+  z-index: 10;
+}
+
+/* Keep anchor targets visible inside the scrollable area. */
+body.app-layout .app-main [id] {
+  scroll-margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+  :root {
+    --app-footer-height: 88px;
+  }
+}
+
+/*
+ * HOME PAGE
+ *
+ * The application shell owns the background and scrolling.
+ * Home sections keep their existing visual styling.
+ */
+body.app-layout[data-page="home"]>.app-main {
+  position: relative;
+  background: transparent;
+}

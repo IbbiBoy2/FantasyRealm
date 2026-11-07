@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Manage your FantasyRealm characters, visibility, and approval status."
+    />
+    <title>My Dashboard | FantasyRealm</title>
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../Css/dashboard.css" />
+    <link rel="stylesheet" href="../Css/header.css" />
+    <link rel="stylesheet" href="../Css/footer.css" />
+    <link rel="stylesheet" href="../Css/accessibility.css" />
+    <link rel="stylesheet" href="../Css/layout.css" />
+    <link rel="stylesheet" href="../Css/dashboard-unified.css" />
+    <!-- Shared renderer styles for saved character appearances. -->
+    <link rel="stylesheet" href="../Css/character-renderer.css" />
+    <script src="../js/components/header.js" defer></script>
+    <script src="../js/components/footer.js" defer></script>
+    <!-- Rebuild saved characters from their PNG layers. -->
+    <script src="../js/components/character-renderer.js" defer></script>
+    <script src="../js/dashboard.js" defer></script>
+  </head>
+  <body class="app-layout" data-page="dashboard">
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <!-- Shared site navigation and footer are loaded from their trusted templates. -->
+    <header id="site-header" class="app-header"></header>
+
+    <!-- Compatibility controls keep the current dashboard.js working unchanged.
+       They are never displayed or interactive. The shared header is visible. -->
+    <div id="legacy-dashboard-controls" aria-hidden="true" inert>
+      <span id="nav-username"></span>
+      <div id="settings-menu" hidden>
+        <button id="settings-button" type="button" aria-expanded="false">
+          Settings
+        </button>
+        <div id="settings-dropdown" hidden>
+          <a id="employee-dashboard-link" href="employee-dashboard.html" hidden
+            >Employee Dashboard</a
+          >
+          <button id="logout-link" type="button">Logout</button>
+        </div>
+      </div>
+    </div>
+
+    <main id="main-content" class="app-main dashboard-page" tabindex="-1">
+      <div class="dashboard-container">
+        <section class="dashboard-header" aria-labelledby="dashboard-title">
+          <div>
+            <p class="section-label">MY REALM</p>
+            <h1 id="dashboard-title">
+              Welcome, <span id="dashboard-username">Adventurer</span>
+            </h1>
+            <p class="dashboard-intro">
+              Manage your FantasyRealm characters, their visibility and their
+              current approval status.
+            </p>
+          </div>
+          <a class="create-character-button" href="create-character.html"
+            >✦ Create Character</a
+          >
+        </section>
+
+        <section class="dashboard-stats" aria-label="Character statistics">
+          <article class="stat-card">
+            <span>Total Characters</span><strong id="total-count">0</strong>
+          </article>
+          <article class="stat-card">
+            <span>Pending</span><strong id="pending-count">0</strong>
+          </article>
+          <article class="stat-card">
+            <span>Approved</span><strong id="approved-count">0</strong>
+          </article>
+          <article class="stat-card">
+            <span>Rejected</span><strong id="rejected-count">0</strong>
+          </article>
+        </section>
+
+        <section
+          class="characters-section"
+          aria-labelledby="my-characters-heading"
+        >
+          <div class="section-heading">
+            <div>
+              <p class="section-label">CHARACTER COLLECTION</p>
+              <h2 id="my-characters-heading">My Characters</h2>
+            </div>
+          </div>
+          <p id="dashboard-message" class="dashboard-message" role="status">
+            Loading your characters...
+          </p>
+          <div id="character-list" class="dashboard-character-grid"></div>
+        </section>
+
+        <section
+          class="characters-section deleted-section"
+          aria-labelledby="deleted-characters-heading"
+        >
+          <div class="section-heading">
+            <div>
+              <p class="section-label">TRASH</p>
+              <h2 id="deleted-characters-heading">Deleted Characters</h2>
+            </div>
+          </div>
+          <p id="deleted-message" class="dashboard-message" role="status">
+            Loading deleted characters...
+          </p>
+          <div
+            id="deleted-character-list"
+            class="dashboard-character-grid"
+          ></div>
+        </section>
+      </div>
+    </main>
+
+    <!-- Keep all existing dialog IDs and controls for the dashboard controller. -->
+    <dialog
+      id="duplicate-dialog"
+      class="duplicate-dialog"
+      aria-labelledby="duplicate-dialog-title"
+      aria-describedby="duplicate-dialog-description"
+    >
+      <form id="duplicate-form" class="duplicate-form">
+        <p class="section-label">CREATE A COPY</p>
+        <h2 id="duplicate-dialog-title">Duplicate Character</h2>
+        <p id="duplicate-dialog-description" class="duplicate-description">
+          Choose a new name. The copy will be private and waiting for approval.
+        </p>
+        <label for="duplicate-name">New character name</label>
+        <input
+          id="duplicate-name"
+          name="name"
+          type="text"
+          maxlength="50"
+          placeholder="Enter a new name..."
+          autocomplete="off"
+          required
+        />
+        <p id="duplicate-error" class="duplicate-error" role="alert" hidden></p>
+        <div class="duplicate-dialog-actions">
+          <button id="duplicate-cancel" class="duplicate-cancel" type="button">
+            Cancel
+          </button>
+          <button id="duplicate-submit" class="duplicate-submit" type="submit">
+            ✦ Duplicate Character
+          </button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog
+      id="delete-dialog"
+      class="duplicate-dialog delete-dialog"
+      aria-labelledby="delete-dialog-title"
+      aria-describedby="delete-dialog-description"
+    >
+      <form id="delete-form" class="duplicate-form">
+        <p class="section-label">CHARACTER MANAGEMENT</p>
+        <h2 id="delete-dialog-title">Delete Character</h2>
+        <p id="delete-dialog-description" class="duplicate-description"></p>
+        <p id="delete-error" class="duplicate-error" role="alert" hidden></p>
+        <div class="duplicate-dialog-actions">
+          <button id="delete-cancel" class="duplicate-cancel" type="button">
+            Cancel
+          </button>
+          <button
+            id="delete-submit"
+            class="duplicate-submit delete-submit"
+            type="submit"
+          >
+            Delete Character
+          </button>
+        </div>
+      </form>
+    </dialog>
+
+    <footer id="site-footer" class="app-footer"></footer>
+  </body>
+</html>

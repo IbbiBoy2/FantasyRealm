@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Customize your FantasyRealm hero using layered character artwork."
+    />
+    <title>Forge Your Hero | FantasyRealm</title>
+    <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../Css/header.css" />
+    <link rel="stylesheet" href="../Css/footer.css" />
+    <link rel="stylesheet" href="../Css/accessibility.css" />
+    <link rel="stylesheet" href="../Css/layout.css" />
+    <link rel="stylesheet" href="../Css/create-character.css" />
+    <link rel="stylesheet" href="../Css/edit-character-mode.css" />
+    <script defer src="../js/components/header.js"></script>
+    <script defer src="../js/components/footer.js"></script>
+    <script defer src="../js/create-character.js"></script>
+    <script defer src="../js/edit-character-mode.js"></script>
+    <!-- Export the complete equipped canvas in approved-character edit mode. -->
+    <script defer src="../js/equipped-png-export.js"></script>
+  </head>
+
+  <!--
+  SHARED APPLICATION LAYOUT
+
+  The header and footer use reusable FantasyRealm components.
+  The main content is the only scrollable area, keeping the
+  navigation and footer visible across the application.
+-->
+  <body class="app-layout" data-page="creator">
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <header id="site-header" class="app-header"></header>
+    <main id="main-content" class="app-main creator-page" tabindex="-1">
+      <div class="creator-container">
+        <div class="creator-title-bar">
+          <div>
+            <p class="creator-eyebrow">THE CHARACTER FORGE / APPEARANCE</p>
+            <h1>Forge Your Hero</h1>
+            <p>
+              Choose your features, discover your colors, and watch your legend
+              take shape.
+            </p>
+          </div>
+          <a class="creator-back" href="dashboard.html">← My Dashboard</a>
+        </div>
+        <div class="creator-layout">
+          <!--
+  LIVE CHARACTER PREVIEW
+
+  The canvas combines transparent PNG layers at their
+  original resolution of 568 x 1275 pixels.
+
+  JavaScript renders the selected body, facial features
+  and hair while applying custom colors.
+-->
+          <section
+            class="creator-preview-panel"
+            aria-labelledby="preview-title"
+          >
+            <div class="creator-preview-head">
+              <div>
+                <p class="creator-kicker">LIVE COMPOSITION</p>
+                <h2 id="preview-title">Your Legend</h2>
+              </div>
+              <span class="creator-live-indicator"
+                ><span aria-hidden="true"></span> Live preview</span
+              >
+            </div>
+            <div class="creator-preview-stage">
+              <div class="creator-stage-runes" aria-hidden="true">✦</div>
+              <canvas
+                id="character-preview"
+                width="568"
+                height="1275"
+                role="img"
+                aria-label="Live preview of your character's appearance"
+              ></canvas>
+            </div>
+            <div class="creator-preview-foot">
+              <div>
+                <span class="creator-preview-caption">CHARACTER</span
+                ><strong id="preview-name">Your Legend</strong>
+              </div>
+              <span id="preview-gender">Male body</span>
+            </div>
+            <p class="creator-preview-status" id="preview-status" role="status">
+              Loading artwork…
+            </p>
+          </section>
+
+          <section class="creator-editor" aria-labelledby="editor-title">
+            <div class="creator-editor-head">
+              <p class="creator-kicker">APPEARANCE STUDIO</p>
+              <h2 id="editor-title">Shape your identity</h2>
+              <p>
+                Every choice is reflected instantly in the preview on the left.
+              </p>
+            </div>
+            <form id="character-creator-form">
+              <!--
+  CHARACTER IDENTITY
+
+  Players choose a name and body type.
+
+  The name is submitted for employee approval and cannot
+  be changed after character creation.
+
+  The body type determines which PNG catalogue is used.
+-->
+              <section class="creator-group" aria-labelledby="identity-title">
+                <div class="creator-group-title">
+                  <span class="creator-step">01</span>
+                  <div>
+                    <h3 id="identity-title">Your identity</h3>
+                    <p>Pick a unique name and body type.</p>
+                  </div>
+                </div>
+                <label class="creator-label" for="character-name"
+                  >Character name</label
+                >
+                <input
+                  id="character-name"
+                  name="character_name"
+                  class="creator-text-input"
+                  type="text"
+                  maxlength="50"
+                  minlength="2"
+                  autocomplete="off"
+                  placeholder="e.g. Moonwhisper"
+                  required
+                />
+                <p class="creator-hint">
+                  Choose carefully: names require staff approval and cannot be
+                  renamed afterward.
+                </p>
+                <fieldset class="creator-gender-field">
+                  <legend class="creator-label">Body type</legend>
+                  <div class="creator-segments">
+                    <label
+                      ><input
+                        type="radio"
+                        name="gender"
+                        value="male"
+                        checked
+                      /><span>♂ &nbsp; Male</span></label
+                    >
+                    <label
+                      ><input type="radio" name="gender" value="female" /><span
+                        >♀ &nbsp; Female</span
+                      ></label
+                    >
+                  </div>
+                </fieldset>
+              </section>
+
+              <!--
+  FACIAL FEATURE SELECTION
+
+  JavaScript generates the nose, mouth and eye options
+  from the image catalogue.
+
+  Each selection is displayed as an accessible button
+  with an aria-pressed state.
+-->
+              <section class="creator-group" aria-labelledby="face-title">
+                <div class="creator-group-title">
+                  <span class="creator-step">02</span>
+                  <div>
+                    <h3 id="face-title">Facial features</h3>
+                    <p>Combine facial parts that belong to your chosen body.</p>
+                  </div>
+                </div>
+                <div class="creator-feature-heading">
+                  <h4>Nose</h4>
+                  <span id="nose-count" class="creator-choice-count"></span>
+                </div>
+                <div
+                  id="nose-options"
+                  class="creator-choices"
+                  role="group"
+                  aria-label="Nose styles"
+                ></div>
+                <div class="creator-feature-heading">
+                  <h4>Mouth</h4>
+                  <span id="mouth-count" class="creator-choice-count"></span>
+                </div>
+                <div
+                  id="mouth-options"
+                  class="creator-choices"
+                  role="group"
+                  aria-label="Mouth styles"
+                ></div>
+                <div class="creator-feature-heading">
+                  <h4>Eyes</h4>
+                  <span id="eyes-count" class="creator-choice-count"></span>
+                </div>
+                <div
+                  id="eyes-options"
+                  class="creator-choices"
+                  role="group"
+                  aria-label="Eye styles"
+                ></div>
+              </section>
+
+              <!--
+  CHARACTER COLOR PALETTE
+
+  Players can select predefined colors or use a custom
+  HTML color picker.
+
+  Skin coloring applies to the body and nose together.
+  Iris coloring is limited to the eye regions.
+-->
+              <section class="creator-group" aria-labelledby="palette-title">
+                <div class="creator-group-title">
+                  <span class="creator-step">03</span>
+                  <div>
+                    <h3 id="palette-title">Your palette</h3>
+                    <p>
+                      Custom colors are stored in the preview configuration.
+                    </p>
+                  </div>
+                </div>
+                <div class="creator-colors">
+                  <div class="creator-color-block">
+                    <label class="creator-label" for="skin-color"
+                      >Skin tone</label
+                    >
+                    <div
+                      id="skin-swatches"
+                      class="creator-swatches"
+                      role="group"
+                      aria-label="Skin tone presets"
+                    ></div>
+                    <div class="creator-color-custom">
+                      <input
+                        id="skin-color"
+                        type="color"
+                        value="#d8b39a"
+                      /><label for="skin-color">Custom skin tone</label
+                      ><output id="skin-value" for="skin-color">#D8B39A</output>
+                    </div>
+                  </div>
+                  <div class="creator-color-block">
+                    <label class="creator-label" for="eye-color"
+                      >Iris color</label
+                    >
+                    <div
+                      id="eye-swatches"
+                      class="creator-swatches"
+                      role="group"
+                      aria-label="Eye color presets"
+                    ></div>
+                    <div class="creator-color-custom">
+                      <input
+                        id="eye-color"
+                        type="color"
+                        value="#57b8ff"
+                      /><label for="eye-color">Custom eye color</label
+                      ><output id="eye-value" for="eye-color">#57B8FF</output>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <!--
+  HAIRSTYLE CUSTOMIZATION
+
+  Hairstyles are loaded from gender-specific PNG folders.
+  The chosen hairstyle is rendered above the facial layers.
+
+  Hair color is applied independently from skin and eyes.
+-->
+              <section class="creator-group" aria-labelledby="hair-title">
+                <div class="creator-group-title">
+                  <span class="creator-step">04</span>
+                  <div>
+                    <h3 id="hair-title">Hair &amp; finishing touch</h3>
+                    <p>Complete your character with a hairstyle and color.</p>
+                  </div>
+                </div>
+                <div class="creator-feature-heading">
+                  <h4>Hairstyle</h4>
+                  <span id="hair-count" class="creator-choice-count"></span>
+                </div>
+                <div
+                  id="hair-options"
+                  class="creator-choices creator-hair-choices"
+                  role="group"
+                  aria-label="Hairstyles"
+                ></div>
+                <div class="creator-color-block creator-hair-palette">
+                  <label class="creator-label" for="hair-color"
+                    >Hair color</label
+                  >
+                  <div
+                    id="hair-swatches"
+                    class="creator-swatches"
+                    role="group"
+                    aria-label="Hair color presets"
+                  ></div>
+                  <div class="creator-color-custom">
+                    <input id="hair-color" type="color" value="#d3b278" /><label
+                      for="hair-color"
+                      >Custom hair color</label
+                    ><output id="hair-value" for="hair-color">#D3B278</output>
+                  </div>
+                </div>
+              </section>
+
+              <div
+                id="form-feedback"
+                class="creator-feedback"
+                role="status"
+                aria-live="polite"
+                hidden
+              ></div>
+
+              <!--
+  CHARACTER CREATION ACTIONS
+
+  Export Preview downloads the composed Canvas as a PNG.
+
+  Create Character validates the form and sends the
+  character data to the PHP API.
+
+  The character is saved in MariaDB with PENDING status
+  until its name is approved by a staff member.
+-->
+              <div class="creator-form-actions">
+                <button
+                  id="export-preview"
+                  class="creator-button-secondary"
+                  type="button"
+                >
+                  ↓ Export preview PNG
+                </button>
+                <button
+                  id="create-button"
+                  class="creator-button-primary"
+                  type="submit"
+                >
+                  ✦ Create Character
+                </button>
+              </div>
+              <p class="creator-disclaimer">
+                Your character will be saved and submitted for name approval.
+                You can customize it further once it has been approved.
+              </p>
+            </form>
+          </section>
+        </div>
+      </div>
+    </main>
+    <footer id="site-footer" class="app-footer"></footer>
+  </body>
+</html>

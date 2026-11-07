@@ -1,0 +1,818 @@
+/*
+ * FANTASYREALM - CHARACTER CREATOR STYLES
+ *
+ * Page-specific styles for the layered character editor.
+ *
+ * The shared header, footer and application layout are
+ * managed by their own stylesheets.
+ *
+ * All creator-specific selectors are scoped to this page
+ * to prevent conflicts with other FantasyRealm components.
+ */
+.creator-page,
+.creator-page *,
+.creator-page *::before,
+.creator-page *::after {
+	box-sizing: border-box
+}
+
+.creator-page {
+	font-family: Inter, sans-serif;
+	color: #f9f5ff
+}
+
+/*
+ * PAGE CONTAINER AND TITLE
+ *
+ * Centers the character creator and limits its maximum width.
+ * Responsive spacing keeps the page readable on smaller screens.
+ */
+.creator-container {
+	width: min(1420px, calc(100% - 40px));
+	margin: auto;
+	padding: 36px 0 90px
+}
+
+.creator-title-bar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 24px;
+	margin-bottom: 25px
+}
+
+.creator-eyebrow,
+.creator-kicker {
+	color: #cda7ff;
+	font-size: 11px;
+	letter-spacing: .21em;
+	font-weight: 700;
+	margin: 0 0 10px
+}
+
+.creator-title-bar h1 {
+	font: 600 clamp(30px, 4.5vw, 49px)/1.2 Cinzel, serif;
+	margin: 0 0 9px
+}
+
+.creator-title-bar p:not(.creator-eyebrow) {
+	color: #d1c5e4;
+	line-height: 1.65;
+	margin: 0
+}
+
+.creator-back {
+	color: #e4d1fc;
+	text-decoration: none;
+	white-space: nowrap;
+	font-size: 14px;
+	border: 1px solid #7c56a8;
+	border-radius: 12px;
+	padding: 12px 16px;
+	background: #170f32
+}
+
+.creator-back:hover {
+	border-color: #d4a4ff
+}
+
+/*
+ * TWO-COLUMN EDITOR LAYOUT
+ *
+ * The left column contains the live character preview.
+ * The right column contains all customization controls.
+ *
+ * The layout becomes a single column on smaller screens.
+ */
+.creator-layout {
+	display: grid;
+	grid-template-columns: minmax(330px, .86fr) minmax(0, 1.14fr);
+	gap: 24px;
+	align-items: start
+}
+
+.creator-preview-panel,
+.creator-editor {
+	border: 1px solid rgba(168, 85, 247, .34);
+	border-radius: 23px;
+	background: linear-gradient(145deg, rgba(22, 14, 48, .97), rgba(11, 8, 30, .97));
+	box-shadow: 0 18px 48px #0005;
+	min-width: 0
+}
+
+/*
+ * LIVE CHARACTER PREVIEW
+ *
+ * The preview panel remains visible while scrolling on desktop.
+ *
+ * The canvas keeps the original 568 x 1275 aspect ratio.
+ * CSS scales its display size without changing the internal
+ * resolution used to compose the PNG layers.
+ */
+.creator-preview-panel {
+	padding: 22px;
+	position: sticky;
+	top: 20px
+}
+
+.creator-preview-head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: 10px;
+	margin-bottom: 16px
+}
+
+.creator-preview-head h2,
+.creator-editor-head h2 {
+	font: 600 23px Cinzel, serif;
+	margin: 0
+}
+
+.creator-live-indicator {
+	font-size: 12px;
+	color: #c9efdd;
+	display: inline-flex;
+	align-items: center;
+	gap: 7px
+}
+
+.creator-live-indicator span {
+	width: 7px;
+	height: 7px;
+	border-radius: 50%;
+	background: #66d7a5;
+	box-shadow: 0 0 12px #66d7a5
+}
+
+.creator-preview-stage {
+	position: relative;
+	isolation: isolate;
+	min-height: 510px;
+	max-height: calc(100dvh - 265px);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	overflow: hidden;
+	border: 1px solid #4a346c;
+	border-radius: 19px;
+	background: radial-gradient(ellipse at 50% 36%, rgba(115, 63, 184, .26), transparent 62%), linear-gradient(175deg, #25183f, #0b0920)
+}
+
+.creator-preview-stage::after {
+	content: "";
+	pointer-events: none;
+	position: absolute;
+	inset: 15px;
+	border: 1px solid rgba(215, 183, 255, .1);
+	border-radius: 12px
+}
+
+.creator-stage-runes {
+	position: absolute;
+	inset: 8% 0 auto;
+	text-align: center;
+	font-size: 130px;
+	color: #6c4794;
+	opacity: .12;
+	z-index: -1
+}
+
+#character-preview {
+	display: block;
+	width: auto;
+	height: 100%;
+	max-height: calc(100dvh - 270px);
+	min-height: 490px;
+	max-width: 100%;
+	object-fit: contain;
+	aspect-ratio: 568 / 1275
+}
+
+.creator-preview-foot {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
+	padding: 18px 2px 0
+}
+
+.creator-preview-caption {
+	font-size: 10px;
+	color: #c7aedc;
+	display: block;
+	letter-spacing: .17em;
+	margin-bottom: 5px
+}
+
+#preview-name {
+	font: 600 21px Cinzel, serif;
+	overflow-wrap: anywhere
+}
+
+#preview-gender {
+	font-size: 12px;
+	color: #d6c7e8
+}
+
+.creator-preview-status {
+	min-height: 16px;
+	color: #d5bfeb;
+	font-size: 12px;
+	margin: 12px 0 0
+}
+
+.creator-editor {
+	padding: clamp(20px, 3vw, 34px)
+}
+
+.creator-editor-head {
+	padding-bottom: 20px;
+	border-bottom: 1px solid #48315e
+}
+
+.creator-editor-head p:last-child {
+	color: #cfc1e2;
+	line-height: 1.6;
+	margin: 9px 0 0
+}
+
+.creator-group {
+	padding: 26px 0;
+	border-bottom: 1px solid rgba(166, 121, 211, .22)
+}
+
+.creator-group-title {
+	display: flex;
+	gap: 13px;
+	align-items: center;
+	margin-bottom: 20px
+}
+
+.creator-step {
+	display: grid;
+	place-items: center;
+	flex: 0 0 40px;
+	width: 40px;
+	height: 40px;
+	border: 1px solid #8055ae;
+	border-radius: 12px;
+	color: #e4c3ff;
+	background: #321b54;
+	font-weight: 700;
+	font-size: 13px
+}
+
+.creator-group-title h3 {
+	font: 600 19px Cinzel, serif;
+	margin: 0 0 4px
+}
+
+.creator-group-title p {
+	font-size: 13px;
+	color: #c2b3d3;
+	margin: 0;
+	line-height: 1.5
+}
+
+.creator-label {
+	display: block;
+	font-size: 13px;
+	font-weight: 600;
+	color: #eee2ff;
+	margin-bottom: 9px
+}
+
+.creator-text-input {
+	width: 100%;
+	height: 52px;
+	border-radius: 11px;
+	border: 1px solid #755398;
+	background: #0a091b;
+	color: white;
+	padding: 0 15px;
+	font: 15px Inter, sans-serif
+}
+
+.creator-text-input:focus-visible,
+.creator-back:focus-visible,
+.creator-page button:focus-visible,
+.creator-page input:focus-visible {
+	outline: 2px solid #e6bbff;
+	outline-offset: 3px
+}
+
+.creator-hint {
+	font-size: 12px;
+	color: #bcaed0;
+	margin: 9px 0 20px;
+	line-height: 1.5
+}
+
+/*
+ * BODY TYPE SELECTION
+ *
+ * Native radio inputs preserve keyboard accessibility.
+ * Their associated labels create the segmented-button layout.
+ *
+ * The checked state determines the active visual option.
+ */
+.creator-gender-field {
+	border: 0;
+	padding: 0;
+	margin: 0;
+	min-width: 0
+}
+
+.creator-segments {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 12px
+}
+
+.creator-segments label {
+	position: relative;
+	cursor: pointer
+}
+
+.creator-segments input {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	opacity: 0
+}
+
+.creator-segments span {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border: 1px solid #644788;
+	border-radius: 12px;
+	background: #100c27;
+	color: #e7d9fa;
+	min-height: 52px;
+	font-weight: 700
+}
+
+.creator-segments input:checked+span {
+	border-color: #bd77ff;
+	background: linear-gradient(120deg, #5c269b, #8839ce);
+	color: #fff
+}
+
+.creator-segments input:focus-visible+span {
+	outline: 2px solid #e6bbff;
+	outline-offset: 3px
+}
+
+/*
+ * FACIAL FEATURES AND HAIRSTYLE CARDS
+ *
+ * JavaScript generates thumbnail buttons for each available PNG.
+ *
+ * CSS Grid organizes the choices into responsive rows.
+ * The aria-pressed attribute is used to highlight the
+ * currently selected style.
+ */
+.creator-feature-heading {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
+	margin: 20px 0 11px
+}
+
+.creator-feature-heading h4 {
+	font-size: 14px;
+	margin: 0;
+	color: #f4e9ff
+}
+
+.creator-choice-count {
+	font-size: 12px;
+	color: #c5b5d8
+}
+
+.creator-choices {
+	display: grid;
+	grid-template-columns: repeat(5, minmax(0, 1fr));
+	gap: 9px
+}
+
+.creator-choice {
+	display: grid;
+	gap: 3px;
+	justify-items: center;
+	align-content: center;
+	position: relative;
+	min-width: 0;
+	padding: 7px 4px 9px;
+	border: 1px solid #523d70;
+	border-radius: 11px;
+	background: #0e0b24;
+	color: #d6c8e7;
+	cursor: pointer;
+	font: 12px Inter, sans-serif
+}
+
+.creator-choice canvas {
+	display: block;
+	width: 100%;
+	max-width: 86px;
+	aspect-ratio: 1.2;
+	object-fit: contain;
+	background: radial-gradient(circle, #3d3152, #17132a);
+	border-radius: 7px
+}
+
+.creator-choice[aria-pressed="true"] {
+	background: #39205b;
+	border-color: #c18af6;
+	box-shadow: 0 0 0 1px #a35bde inset;
+	color: #fff
+}
+
+.creator-choice:hover {
+	border-color: #c18af6
+}
+
+/*
+ * CHARACTER COLOR CONTROLS
+ *
+ * Preset swatches provide quick color selection.
+ * Native color inputs allow players to choose custom HEX colors.
+ *
+ * The selected swatch is highlighted with an outline.
+ * Visible focus indicators support keyboard navigation.
+ */
+.creator-colors {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 20px
+}
+
+.creator-color-block {
+	min-width: 0
+}
+
+.creator-swatches {
+	display: flex;
+	gap: 8px;
+	flex-wrap: wrap;
+	margin: 11px 0
+}
+
+.creator-swatch {
+	display: block;
+	width: 35px;
+	height: 35px;
+	flex: 0 0 35px;
+	border-radius: 50%;
+	border: 2px solid #8f80a2;
+	cursor: pointer;
+	background: var(--swatch-color)
+}
+
+.creator-swatch[aria-pressed="true"] {
+	outline: 2px solid #eaccff;
+	outline-offset: 3px;
+	border-color: #fff
+}
+
+.creator-color-custom {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin-top: 16px
+}
+
+.creator-color-custom input {
+	width: 42px;
+	height: 38px;
+	padding: 3px;
+	border: 1px solid #7856a5;
+	border-radius: 9px;
+	background: #100a24;
+	cursor: pointer
+}
+
+.creator-color-custom label {
+	font-size: 12px;
+	color: #dbcde9
+}
+
+.creator-color-custom output {
+	color: #c6a9e9;
+	font-size: 11px;
+	font-variant-numeric: tabular-nums
+}
+
+.creator-hair-palette {
+	margin-top: 24px
+}
+
+/*
+ * ACTION BUTTONS AND FEEDBACK
+ *
+ * The primary button represents character creation.
+ * The secondary button exports the current canvas as a PNG.
+ *
+ * Feedback messages inform players about validation errors
+ * and the current limitations of server persistence.
+ */
+.creator-form-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+	margin: 24px 0 9px
+}
+
+.creator-form-actions button {
+	font: 700 14px Inter, sans-serif;
+	border-radius: 12px;
+	min-height: 50px;
+	padding: 11px 17px;
+	cursor: pointer
+}
+
+.creator-button-primary {
+	background: linear-gradient(120deg, #6e2bb0, #a24ae1);
+	border: 1px solid #bc7fea;
+	color: white;
+	flex: 1
+}
+
+.creator-button-secondary {
+	border: 1px solid #7955a4;
+	background: #231739;
+	color: #f2e8ff
+}
+
+.creator-feedback {
+	padding: 12px 15px;
+	border: 1px solid #ac7dd2;
+	border-radius: 10px;
+	background: #241738;
+	color: #f5eaff;
+	margin-top: 16px;
+	font-size: 13px;
+	line-height: 1.5
+}
+
+.creator-feedback.is-error {
+	border-color: #d77a93;
+	background: #421a32
+}
+
+.creator-disclaimer {
+	font-size: 12px;
+	color: #b8a8c9;
+	line-height: 1.6;
+	margin: 12px 0 0
+}
+
+/*
+ * TABLET RESPONSIVE LAYOUT
+ *
+ * Stack the preview and editor vertically.
+ * Disable sticky positioning for the preview panel.
+ * Adjust the preview dimensions to fit smaller screens.
+ */
+@media(max-width:1060px) {
+	.creator-layout {
+		grid-template-columns: 1fr
+	}
+
+	.creator-preview-panel {
+		position: static
+	}
+
+	.creator-preview-stage {
+		max-height: 600px;
+		min-height: 460px
+	}
+
+	#character-preview {
+		max-height: 580px;
+		min-height: 440px
+	}
+}
+
+/*
+ * MOBILE RESPONSIVE LAYOUT
+ *
+ * Reduce horizontal spacing and panel padding.
+ * Display fewer appearance choices per row.
+ * Stack color controls and action buttons vertically.
+ */
+@media(max-width:620px) {
+	.creator-container {
+		width: calc(100% - 24px);
+		padding: 22px 0 55px
+	}
+
+	.creator-title-bar {
+		align-items: flex-start;
+		flex-direction: column
+	}
+
+	.creator-preview-panel,
+	.creator-editor {
+		padding: 17px;
+		border-radius: 18px
+	}
+
+	.creator-choices {
+		grid-template-columns: repeat(4, minmax(0, 1fr))
+	}
+
+	.creator-colors {
+		grid-template-columns: 1fr
+	}
+
+	.creator-preview-stage {
+		min-height: 390px;
+		max-height: 490px
+	}
+
+	#character-preview {
+		min-height: 370px;
+		max-height: 480px
+	}
+
+	.creator-form-actions {
+		flex-direction: column
+	}
+
+	.creator-form-actions button {
+		width: 100%
+	}
+}
+
+/*
+ * ACCESSIBILITY - REDUCED MOTION
+ *
+ * Respect users who prefer reduced motion by disabling
+ * unnecessary smooth-scrolling behavior.
+ */
+@media(prefers-reduced-motion:reduce) {
+	.creator-page * {
+		scroll-behavior: auto !important
+	}
+}
+
+
+/*
+ * CHARACTER CREATOR - SCROLL MANAGEMENT
+ *
+ * The application uses a fixed three-row layout:
+ * header, scrollable main content and footer.
+ *
+ * Prevent the browser document from creating a second
+ * scrollbar while keeping the character editor scrollable.
+ */
+
+/* Prevent document-level scrolling on the creator page. */
+html:has(body[data-page="creator"]) {
+	height: 100%;
+	overflow: hidden;
+}
+
+/* Keep the complete application inside the viewport. */
+body.app-layout[data-page="creator"] {
+	height: 100dvh;
+	overflow: hidden;
+}
+
+/* Use a single vertical scrollbar for the creator content. */
+body.app-layout[data-page="creator"]>.app-main {
+	min-height: 0;
+	min-width: 0;
+
+	overflow-y: auto;
+	overflow-x: hidden;
+
+	overscroll-behavior-y: contain;
+	scrollbar-gutter: stable;
+}
+
+/* Style the scrollbar consistently with FantasyRealm. */
+body.app-layout[data-page="creator"]>.app-main {
+	scrollbar-width: thin;
+	scrollbar-color: #8753be #100b24;
+}
+
+/* Chromium, Edge and Safari scrollbar styling. */
+body.app-layout[data-page="creator"]>.app-main::-webkit-scrollbar {
+	width: 9px;
+}
+
+body.app-layout[data-page="creator"]>.app-main::-webkit-scrollbar-track {
+	background: #100b24;
+}
+
+body.app-layout[data-page="creator"]>.app-main::-webkit-scrollbar-thumb {
+	background: #8753be;
+	border-radius: 999px;
+}
+
+body.app-layout[data-page="creator"]>.app-main::-webkit-scrollbar-thumb:hover {
+	background: #b178ee;
+}
+
+
+/*
+ * CHARACTER CREATOR - RESPONSIVE LIVE PREVIEW
+ *
+ * On desktop, the character preview remains visible while
+ * the main content scrolls.
+ *
+ * Its height is calculated from the available viewport,
+ * excluding the fixed application header and footer.
+ *
+ * The original PNG proportions (568 x 1275) are preserved.
+ */
+
+/* Desktop: keep the preview inside the visible workspace. */
+@media (min-width: 1061px) {
+
+	.creator-preview-panel {
+		position: sticky;
+		top: 16px;
+
+		height: calc(100dvh - var(--app-header-height) - var(--app-footer-height) - 32px);
+
+		display: flex;
+		flex-direction: column;
+
+		min-height: 0;
+		overflow: hidden;
+	}
+
+	/* Keep the heading, character name and status visible. */
+	.creator-preview-head,
+	.creator-preview-foot,
+	.creator-preview-status {
+		flex-shrink: 0;
+	}
+
+	/* Use all remaining panel height for the artwork. */
+	.creator-preview-stage {
+		flex: 1 1 auto;
+
+		min-height: 0;
+		max-height: none;
+
+		overflow: hidden;
+	}
+
+	/* Scale the drawing without deforming its proportions. */
+	#character-preview {
+		width: auto;
+		height: 100%;
+
+		min-height: 0;
+		max-height: 100%;
+		max-width: 100%;
+
+		object-fit: contain;
+	}
+}
+
+/*
+ * Tablet and mobile:
+ *
+ * The preview sits above the form instead of remaining sticky.
+ * A smaller preview makes the editor easier to use on touch
+ * devices without introducing a second scrolling area.
+ */
+@media (max-width: 1060px) {
+
+	.creator-preview-panel {
+		position: static;
+		height: auto;
+		overflow: visible;
+	}
+
+	.creator-preview-stage {
+		height: clamp(320px, 55dvh, 540px);
+
+		min-height: 0;
+		max-height: none;
+
+		overflow: hidden;
+	}
+
+	#character-preview {
+		width: auto;
+		height: 100%;
+
+		min-height: 0;
+		max-height: 100%;
+		max-width: 100%;
+
+		object-fit: contain;
+	}
+}

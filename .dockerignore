@@ -1,0 +1,11 @@
+.git
+.gitignore
+.local
+.private
+.env
+**/.env
+**/vendor
+**/node_modules
+docs
+*.zip
+*.log

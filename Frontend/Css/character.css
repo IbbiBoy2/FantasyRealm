@@ -1,0 +1,490 @@
+/*
+ * FANTASYREALM - CHARACTER DETAILS
+ *
+ * Individual character display and approved reviews.
+ * Shared layout, header and footer use their own CSS.
+ */
+
+/* =========================================================
+   PAGE LAYOUT
+========================================================= */
+
+.character-page {
+	color: #f5f0ff;
+	font-family: "Inter", sans-serif;
+}
+
+.character-container {
+	box-sizing: border-box;
+	width: min(1200px, calc(100% - 40px));
+	margin: 0 auto;
+	padding: 46px 0 80px;
+}
+
+.character-page [hidden] {
+	display: none !important;
+}
+
+.character-page .back-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 9px;
+	margin-bottom: 25px;
+	padding: 11px 20px;
+
+	border: 1px solid rgba(216, 180, 254, 0.4);
+	border-radius: 999px;
+
+	background: rgba(124, 58, 237, 0.12);
+	color: #eee3ff;
+
+	font-size: 13px;
+	font-weight: 600;
+	text-decoration: none;
+}
+
+.character-page .back-link:hover {
+	border-color: #d8b4fe;
+	background: rgba(124, 58, 237, 0.28);
+}
+
+.character-message {
+	padding: 30px;
+	border: 1px solid rgba(168, 85, 247, 0.42);
+	border-radius: 16px;
+
+	background: rgba(17, 12, 40, 0.9);
+	color: #c9c0da;
+	text-align: center;
+}
+
+/* =========================================================
+   MAIN CHARACTER CARD
+========================================================= */
+
+.character-content {
+	display: grid;
+	grid-template-columns:
+		minmax(0, 0.9fr) minmax(0, 1.1fr);
+	gap: 36px;
+
+	padding: 34px;
+
+	border: 1px solid rgba(168, 85, 247, 0.42);
+	border-radius: 22px;
+
+	background: linear-gradient(145deg,
+			rgba(23, 14, 49, 0.96),
+			rgba(9, 7, 26, 0.94));
+
+	box-shadow:
+		0 18px 55px rgba(0, 0, 0, 0.3),
+		0 0 35px rgba(124, 58, 237, 0.13);
+}
+
+/* =========================================================
+   CHARACTER VISUAL
+========================================================= */
+
+.character-visual {
+	min-width: 0;
+}
+
+.character-stage {
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	min-height: 480px;
+	height: 100%;
+	overflow: hidden;
+
+	border: 1px solid rgba(196, 131, 255, 0.28);
+	border-radius: 18px;
+
+	background: radial-gradient(circle at center,
+			rgba(168, 85, 247, 0.25),
+			rgba(17, 12, 40, 0.25) 45%,
+			rgba(6, 6, 18, 0.85) 75%);
+}
+
+#character-image {
+	position: relative;
+	z-index: 2;
+
+	max-width: 90%;
+	max-height: 450px;
+	object-fit: contain;
+}
+
+/* =========================================================
+   CHARACTER IDENTITY AND DETAILS
+========================================================= */
+
+.character-details {
+	min-width: 0;
+}
+
+.character-details .eyebrow {
+	margin: 0 0 12px;
+
+	color: #d8b4fe;
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.2em;
+}
+
+.character-details h1 {
+	margin: 0 0 14px;
+
+	color: #faf4ff;
+	font-family: "Cinzel", serif;
+	font-size: clamp(30px, 4vw, 53px);
+	line-height: 1.2;
+	overflow-wrap: anywhere;
+
+	text-shadow: 0 0 22px rgba(168, 85, 247, 0.3);
+}
+
+.character-meta {
+	margin: 0;
+	color: #c9c0da;
+	font-size: 14px;
+}
+
+.character-meta strong {
+	color: #d8b4fe;
+}
+
+.character-date {
+	margin: 9px 0 0;
+	color: #b8adc9;
+	font-size: 12px;
+}
+
+.detail-section {
+	margin-top: 32px;
+	padding-top: 26px;
+	border-top: 1px solid rgba(196, 131, 255, 0.24);
+}
+
+.detail-section h2 {
+	margin: 0 0 20px;
+
+	color: #faf4ff;
+	font-family: "Cinzel", serif;
+	font-size: 22px;
+}
+
+.detail-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 12px;
+}
+
+.detail-item {
+	min-width: 0;
+	padding: 15px;
+
+	border: 1px solid rgba(196, 131, 255, 0.22);
+	border-radius: 11px;
+	background: rgba(6, 6, 18, 0.55);
+}
+
+.detail-item span {
+	display: block;
+	margin-bottom: 7px;
+
+	color: #bbb2cf;
+	font-size: 11px;
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+}
+
+.detail-item strong {
+	color: #fff;
+	font-size: 14px;
+	overflow-wrap: anywhere;
+}
+
+.equipment-list {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+}
+
+.equipment-list p {
+	margin: 0;
+	padding: 11px 15px;
+
+	border: 1px solid rgba(168, 85, 247, 0.32);
+	border-radius: 9px;
+
+	background: rgba(124, 58, 237, 0.13);
+	color: #d8b4fe;
+	font-size: 13px;
+}
+
+/* =========================================================
+   REVIEWS
+========================================================= */
+
+.review-section,
+.reviews-section {
+	padding: 27px 30px 30px;
+
+	border: 1px solid rgba(168, 85, 247, 0.38);
+	border-radius: 18px;
+
+	background: linear-gradient(145deg,
+			rgba(23, 14, 49, 0.93),
+			rgba(9, 7, 26, 0.94));
+}
+
+.review-intro {
+	margin: 0 0 20px;
+
+	color: #c9c0da;
+	font-size: 13px;
+	line-height: 1.7;
+}
+
+.review-intro a {
+	color: #e5c3ff;
+	font-weight: 600;
+	text-decoration: underline;
+	text-underline-offset: 4px;
+}
+
+.review-form {
+	display: grid;
+	gap: 13px;
+}
+
+.review-form label {
+	color: #d8b4fe;
+	font-size: 13px;
+	font-weight: 600;
+}
+
+.review-form select,
+.review-form textarea {
+	box-sizing: border-box;
+
+	width: 100%;
+	min-width: 0;
+	padding: 13px 15px;
+
+	border: 1px solid rgba(196, 131, 255, 0.4);
+	border-radius: 11px;
+
+	background: #0a091c;
+	color: #fff;
+
+	font-family: "Inter", sans-serif;
+	font-size: 14px;
+}
+
+.review-form select {
+	color-scheme: dark;
+}
+
+.review-form textarea {
+	min-height: 130px;
+	resize: vertical;
+	line-height: 1.6;
+}
+
+.review-form textarea::placeholder {
+	color: #aaa0bf;
+}
+
+.review-form select:focus-visible,
+.review-form textarea:focus-visible {
+	outline: 2px solid #d8b4fe;
+	outline-offset: 2px;
+}
+
+#review-submit {
+	justify-self: start;
+	min-height: 46px;
+	margin-top: 6px;
+	padding: 12px 24px;
+
+	border: 1px solid rgba(233, 213, 255, 0.75);
+	border-radius: 999px;
+
+	background: linear-gradient(135deg, #6d28d9, #a855f7);
+	color: #fff;
+
+	font-family: "Inter", sans-serif;
+	font-size: 13px;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+#review-submit:hover:not(:disabled) {
+	box-shadow: 0 0 24px rgba(168, 85, 247, 0.4);
+}
+
+#review-submit:disabled {
+	opacity: 0.6;
+	cursor: wait;
+}
+
+.review-feedback {
+	margin: 18px 0 0;
+	padding: 13px 15px;
+
+	border: 1px solid rgba(196, 131, 255, 0.35);
+	border-radius: 11px;
+
+	background: rgba(124, 58, 237, 0.12);
+	color: #d8b4fe;
+
+	font-size: 13px;
+	line-height: 1.6;
+	overflow-wrap: anywhere;
+}
+
+.review-feedback-error {
+	border-color: rgba(248, 113, 113, 0.45);
+	background: rgba(127, 29, 29, 0.18);
+	color: #fecaca;
+}
+
+/* =========================================================
+   APPROVED REVIEW CARDS
+========================================================= */
+
+.reviews-list {
+	display: grid;
+	gap: 16px;
+}
+
+.review-card {
+	min-width: 0;
+	padding: 20px;
+
+	border: 1px solid rgba(196, 131, 255, 0.28);
+	border-radius: 14px;
+
+	background: rgba(6, 6, 18, 0.55);
+}
+
+.review-card-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: 10px;
+}
+
+.review-author {
+	margin: 0;
+	color: #d8b4fe;
+	font-size: 15px;
+	font-weight: 600;
+}
+
+.review-rating {
+	margin: 0;
+	color: #f5c96a;
+	font-size: 14px;
+	white-space: nowrap;
+}
+
+.review-comment {
+	margin: 14px 0 0;
+
+	color: #f5f0ff;
+	font-size: 14px;
+	line-height: 1.7;
+	white-space: pre-wrap;
+	overflow-wrap: anywhere;
+}
+
+.review-date {
+	margin: 14px 0 0;
+	color: #b8adc9;
+	font-size: 12px;
+}
+
+/* =========================================================
+   ACCESSIBILITY AND RESPONSIVE DESIGN
+========================================================= */
+
+.character-page a:focus-visible,
+.character-page button:focus-visible {
+	outline: 2px solid #edd5a8;
+	outline-offset: 4px;
+}
+
+@media (max-width: 900px) {
+	.character-content {
+		grid-template-columns: 1fr;
+	}
+
+	.character-stage {
+		min-height: 380px;
+	}
+}
+
+@media (max-width: 600px) {
+	.character-container {
+		width: calc(100% - 24px);
+		padding: 30px 0 65px;
+	}
+
+	.character-content {
+		padding: 20px;
+		gap: 24px;
+	}
+
+	.character-stage {
+		min-height: 300px;
+	}
+
+	.detail-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.review-section,
+	.reviews-section {
+		padding: 22px 18px;
+	}
+
+	#review-submit {
+		justify-self: stretch;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+	.character-page *,
+	.character-page *::before,
+	.character-page *::after {
+		scroll-behavior: auto;
+		transition: none;
+	}
+}
+
+
+/*
+ * CHARACTER DETAIL - NEUTRAL DISPLAY STAGE
+ *
+ * A clean dark background keeps the entire character
+ * readable without competing with future equipment,
+ * clothing, weapons or accessories.
+ */
+
+.character-page .character-stage {
+	background:
+		radial-gradient(ellipse at 50% 35%,
+			rgba(119, 64, 182, 0.15),
+			transparent 70%),
+		linear-gradient(180deg,
+			#201630 0%,
+			#0b091a 100%);
+}

@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Login | FantasyRealm</title>
+
+    <meta
+      name="description"
+      content="Sign in to your FantasyRealm account to manage and customize your characters."
+    />
+
+    <!-- FantasyRealm favicon. -->
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+
+    <!-- Shared application typography. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Login-specific and shared application styles. -->
+    <link rel="stylesheet" href="../Css/login.css" />
+    <link rel="stylesheet" href="../Css/header.css" />
+    <link rel="stylesheet" href="../Css/footer.css" />
+    <link rel="stylesheet" href="../Css/accessibility.css" />
+    <link rel="stylesheet" href="../Css/layout.css" />
+
+    <!-- Shared components and login form controller. -->
+    <script src="../js/components/header.js" defer></script>
+    <script src="../js/components/footer.js" defer></script>
+    <script src="../js/login.js" defer></script>
+  </head>
+
+  <body class="app-layout" data-page="login">
+    <!-- Allow keyboard users to bypass the navigation. -->
+    <a class="skip-link" href="#main-content"> Skip to main content </a>
+
+    <!-- Shared application header. -->
+    <header id="site-header" class="app-header"></header>
+
+    <!--
+      LOGIN PAGE
+
+      The form scrolls inside the shared application shell.
+      Authentication is verified by the PHP backend.
+    -->
+    <main id="main-content" class="app-main login-page" tabindex="-1">
+      <section class="login-panel" aria-labelledby="login-heading">
+        <!-- Page introduction. -->
+        <div class="login-introduction">
+          <p class="section-label">WELCOME BACK</p>
+
+          <h1 id="login-heading">Enter Your Realm</h1>
+
+          <p class="login-intro">
+            Sign in to continue your adventure, manage your characters and shape
+            your legend.
+          </p>
+
+          <div class="login-divider" aria-hidden="true">
+            <span></span>
+            <span>✦</span>
+            <span></span>
+          </div>
+        </div>
+
+        <!--
+          LOGIN FORM
+
+          Browser validation improves usability.
+          Final validation and authentication take
+          place in the PHP API.
+        -->
+        <form id="login-form" class="login-form" method="post">
+          <div class="form-field">
+            <label for="email">Email address</label>
+
+            <input
+              id="email"
+              name="email"
+              type="email"
+              maxlength="255"
+              autocomplete="email"
+              placeholder="you@example.com"
+              required
+            />
+          </div>
+
+          <div class="form-field">
+            <label for="password">Password</label>
+
+            <div class="password-field">
+              <input
+                id="password"
+                name="password"
+                type="password"
+                autocomplete="current-password"
+                placeholder="Enter your password"
+                required
+              />
+
+              <button
+                id="toggle-password"
+                class="password-toggle"
+                type="button"
+                aria-label="Show password"
+                aria-pressed="false"
+              >
+                Show
+              </button>
+            </div>
+          </div>
+
+          <!-- Password recovery will be completed separately. -->
+          <div class="login-help">
+            <a href="forgot-password.html"> Forgot your password? </a>
+          </div>
+
+          <!-- Accessible feedback for authentication errors. -->
+          <p
+            id="form-message"
+            class="form-message"
+            role="alert"
+            aria-live="assertive"
+            aria-atomic="true"
+            hidden
+          ></p>
+
+          <button id="login-button" class="login-button" type="submit">
+            Login
+          </button>
+        </form>
+
+        <p class="register-link">
+          New to FantasyRealm?
+          <a href="register.html">Create an account</a>
+        </p>
+
+        <div class="login-actions">
+          <a class="back-link" href="index.html">
+            <span aria-hidden="true">←</span>
+            Back to Home
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <!-- Shared application footer. -->
+    <footer id="site-footer" class="app-footer"></footer>
+  </body>
+</html>

@@ -1,0 +1,26 @@
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# PHP Composer dependencies
+vendor/
+
+# Node.js dependencies
+node_modules/
+
+# Work folder
+/Work/
+
+# FantasyRealm Docker local/production secrets
+.local/
+.private/
+
+# Logs
+*.log
+
+# IDE and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

@@ -1,0 +1,525 @@
+/*
+ * FANTASYREALM - SHARED HEADER
+ *
+ * Shared visual styles for the main navigation and
+ * authenticated account controls.
+ */
+
+.app-header {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0 8%;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  border-bottom: 1px solid rgba(216, 180, 254, 0.18);
+
+  background: rgba(6, 6, 18, 0.65);
+  backdrop-filter: blur(10px);
+}
+
+.app-header .brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  color: #fff;
+  font-family: "Cinzel", serif;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+
+  text-decoration: none;
+}
+
+.app-header .brand-mark {
+  color: #d8b4fe;
+  font-size: 32px;
+
+  text-shadow:
+    0 0 10px #a855f7,
+    0 0 24px #7c3aed;
+}
+
+.app-header .nav-links {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.app-header .nav-links>a {
+  color: #faf7ff;
+  font-size: 16px;
+  text-decoration: none;
+}
+
+.app-header .nav-links>a:hover {
+  color: #d8b4fe;
+}
+
+.app-header .nav-register {
+  padding: 10px 20px;
+
+  border: 1px solid rgba(233, 213, 255, 0.85);
+  border-radius: 999px;
+
+  background: linear-gradient(135deg, #6d28d9, #a855f7);
+}
+
+.app-header .settings-menu {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.app-header .settings-dropdown {
+  position: absolute;
+  top: 52px;
+  right: 0;
+
+  min-width: 220px;
+  padding: 10px;
+
+  border: 1px solid rgba(196, 131, 255, 0.38);
+  border-radius: 14px;
+
+  background: rgba(10, 9, 28, 0.98);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.45);
+
+  z-index: 200;
+}
+
+.app-header .settings-dropdown a,
+.app-header .settings-dropdown button {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 12px 14px;
+
+  display: block;
+
+  border: 0;
+  border-radius: 9px;
+
+  background: transparent;
+  color: #fff;
+
+  font: inherit;
+  font-size: 14px;
+  text-align: left;
+  text-decoration: none;
+
+  cursor: pointer;
+}
+
+.app-header .settings-dropdown a:hover,
+.app-header .settings-dropdown button:hover {
+  background: rgba(124, 58, 237, 0.28);
+}
+
+/*
+ * Explicitly preserve the hidden attribute because display
+ * rules otherwise override the browser's default behavior.
+ */
+.app-header [hidden] {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  .app-header {
+    padding: 0 12px;
+    gap: 8px;
+  }
+
+  .app-header .brand {
+    font-size: 17px;
+    gap: 6px;
+  }
+
+  .app-header .brand-mark {
+    font-size: 22px;
+  }
+
+  .app-header .nav-links {
+    gap: 10px;
+  }
+
+  .app-header .nav-links>a {
+    font-size: 12px;
+  }
+
+  .app-header .nav-register {
+    padding: 7px 10px;
+  }
+}
+
+
+/*
+ * SHARED HEADER - VISUAL REFINEMENTS
+ *
+ * Preserve FantasyRealm's dark fantasy identity while
+ * making navigation clearer and more consistent.
+ */
+
+.app-header {
+  border-bottom: 1px solid rgba(196, 145, 255, 0.32);
+
+  background:
+    linear-gradient(110deg,
+      rgba(12, 8, 29, 0.97),
+      rgba(35, 17, 60, 0.9),
+      rgba(12, 8, 29, 0.97));
+
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.24),
+    0 1px 18px rgba(168, 85, 247, 0.12);
+
+  backdrop-filter: blur(18px);
+}
+
+.app-header .brand {
+  gap: 13px;
+  transition: opacity 180ms ease;
+}
+
+.app-header .brand:hover {
+  opacity: 0.88;
+}
+
+.app-header .brand-mark {
+  color: #edd5a8;
+
+  text-shadow:
+    0 0 12px rgba(237, 213, 168, 0.55),
+    0 0 24px rgba(168, 85, 247, 0.35);
+}
+
+.app-header .nav-links>a:not(.nav-register) {
+  position: relative;
+  padding: 10px 0;
+
+  transition: color 180ms ease;
+}
+
+/*
+ * Highlight the current navigation page.
+ * Standard links use an underline, while
+ * the Register button uses its own active style.
+ */
+.app-header .nav-links>a[aria-current="page"] {
+  color: #f1d9ff;
+}
+
+/* Underline active navigation links, except Register. */
+.app-header .nav-links>a:not(.nav-register)[aria-current="page"]::after {
+  content: "";
+  position: absolute;
+
+  left: 0;
+  right: 0;
+  bottom: 3px;
+
+  height: 2px;
+  border-radius: 2px;
+
+  background: #c084fc;
+  box-shadow: 0 0 12px rgba(192, 132, 252, 0.8);
+}
+
+/*
+ * Give the active Register button a stronger
+ * border and glow instead of an underline.
+ */
+.app-header .nav-register[aria-current="page"] {
+  color: #fff;
+  border-color: #edd5ff;
+
+  box-shadow:
+    0 0 0 2px rgba(216, 180, 254, 0.18),
+    0 0 24px rgba(168, 85, 247, 0.5);
+}
+
+.app-header .nav-register {
+  background: linear-gradient(135deg,
+      #7335b7,
+      #a855f7);
+
+  box-shadow:
+    0 4px 16px rgba(168, 85, 247, 0.18);
+
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.app-header .nav-register:hover {
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 7px 24px rgba(168, 85, 247, 0.38);
+}
+
+/* Respect users who prefer reduced animation. */
+@media (prefers-reduced-motion: reduce) {
+
+  .app-header *,
+  .app-header *::before,
+  .app-header *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/*
+ * BRAND IDENTITY
+ *
+ * Align the application name and its tagline vertically.
+ * The tagline stays decorative and does not replace
+ * the accessible brand link text.
+ */
+
+.app-header .brand-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 3px;
+}
+
+.app-header .brand-name {
+  font-family: "Cinzel", serif;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.app-header .brand-tagline {
+  color: #d8b4fe;
+  font-family: "Inter", sans-serif;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  line-height: 1.2;
+}
+
+@media (max-width: 768px) {
+  .app-header .brand-name {
+    font-size: 17px;
+  }
+
+  .app-header .brand-tagline {
+    font-size: 7px;
+    letter-spacing: 0.12em;
+  }
+}
+
+/*
+ * ACCOUNT DROPDOWN TRIGGER
+ *
+ * The authenticated username opens the account menu.
+ * No separate settings icon is displayed.
+ */
+.app-header .account-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 9px;
+  min-height: 42px;
+  padding: 8px 12px;
+
+  border: 1px solid transparent;
+  border-radius: 10px;
+
+  background: transparent;
+  color: #d8b4fe;
+
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    color 180ms ease,
+    background 180ms ease,
+    border-color 180ms ease;
+}
+
+.app-header .account-trigger:hover,
+.app-header .account-trigger[aria-expanded="true"] {
+  color: #fff;
+
+  background: rgba(124, 58, 237, 0.18);
+  border-color: rgba(216, 180, 254, 0.35);
+}
+
+.app-header .account-trigger .nav-username {
+  color: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+.app-header .account-chevron {
+  color: #edd5a8;
+  font-size: 13px;
+
+  transition: transform 180ms ease;
+}
+
+.app-header .account-trigger[aria-expanded="true"] .account-chevron {
+  transform: rotate(180deg);
+}
+
+/* Keep the account menu aligned with the username. */
+.app-header .settings-dropdown {
+  top: calc(100% + 8px);
+  right: 0;
+}
+
+@media (max-width: 768px) {
+  .app-header .account-trigger {
+    width: 100%;
+    justify-content: space-between;
+
+    padding: 12px;
+    text-align: left;
+  }
+}
+
+/*
+ * MOBILE NAVIGATION
+ *
+ * The menu opens below the fixed header instead of
+ * taking space away from the scrollable page content.
+ */
+
+.app-header .mobile-menu-button {
+  display: none;
+  width: 42px;
+  height: 42px;
+
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid rgba(216, 180, 254, 0.55);
+  border-radius: 12px;
+
+  background: rgba(124, 58, 237, 0.18);
+  color: #f5e8ff;
+
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.app-header .mobile-menu-button:hover {
+  background: rgba(124, 58, 237, 0.35);
+}
+
+/* Make keyboard navigation clearly visible. */
+.app-header a:focus-visible,
+.app-header button:focus-visible {
+  outline: 2px solid #edd5a8;
+  outline-offset: 4px;
+}
+
+@media (max-width: 768px) {
+  .app-header {
+    position: relative;
+    justify-content: space-between;
+    padding: 0 18px;
+  }
+
+  .app-header .mobile-menu-button {
+    display: flex;
+    flex-shrink: 0;
+  }
+
+  /*
+     * Hide navigation by default on narrow screens.
+     * The JavaScript component controls data-mobile-open.
+     */
+  .app-header .nav-links {
+    display: none;
+
+    position: absolute;
+    top: 100%;
+    left: 12px;
+    right: 12px;
+
+    width: auto;
+    max-width: none;
+    padding: 20px;
+
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+
+    border: 1px solid rgba(196, 145, 255, 0.4);
+    border-radius: 0 0 18px 18px;
+
+    background: rgba(13, 8, 30, 0.98);
+    box-shadow: 0 22px 45px rgba(0, 0, 0, 0.55);
+
+    z-index: 200;
+  }
+
+  .app-header .nav-links[data-mobile-open="true"] {
+    display: flex;
+  }
+
+  .app-header .nav-links>a {
+    width: 100%;
+    padding: 11px 12px;
+
+    font-size: 15px;
+    text-align: left;
+  }
+
+  .app-header .nav-links>.nav-register {
+    width: 100%;
+    grid-column: auto;
+    justify-self: auto;
+
+    transform: none;
+    text-align: center;
+  }
+
+  .app-header .settings-menu {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  /*
+     * Keep account actions inside the mobile navigation.
+     * The settings menu does not require another floating panel.
+     */
+  .app-header .settings-dropdown {
+    position: static;
+
+    width: 100%;
+    min-width: 0;
+    margin-top: 8px;
+
+    box-shadow: none;
+  }
+}
+
+/*
+ * SHARED HEADER TYPOGRAPHY
+ *
+ * Keep the same fonts on every page, regardless
+ * of the page-specific stylesheet.
+ */
+.app-header .brand-name {
+  font-family: "Cinzel", serif;
+}
+
+.app-header .brand-tagline,
+.app-header .nav-links,
+.app-header .nav-links a,
+.app-header .account-trigger,
+.app-header .settings-dropdown button {
+  font-family: "Inter", sans-serif;
+}

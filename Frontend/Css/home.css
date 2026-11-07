@@ -1,0 +1,927 @@
+/*
+ * FANTASYREALM - HOME PAGE
+ *
+ * Homepage-only presentation:
+ * - Hero and main actions
+ * - FantasyRealm Online introduction
+ * - PixelVerse Studios introduction
+ * - Character management benefits
+ * - Fictional character showcase
+ * - Closing call to action
+ *
+ * Shared header, footer and application shell styles
+ * are maintained in their own dedicated stylesheets.
+ */
+
+/* =========================================================
+   DESIGN TOKENS
+========================================================= */
+
+:root {
+  --home-bg: #060612;
+  --home-text: #f8f4ff;
+  --home-muted: #c9c0da;
+  --home-purple: #a855f7;
+  --home-purple-soft: #d8b4fe;
+  --home-gold: #edd5a8;
+
+  --home-panel: rgba(13, 9, 34, 0.92);
+  --home-border: rgba(168, 85, 247, 0.4);
+}
+
+/* =========================================================
+   PAGE BASE
+========================================================= */
+
+* {
+  box-sizing: border-box;
+}
+
+body.app-layout[data-page="home"] {
+  color: var(--home-text);
+  font-family: "Inter", sans-serif;
+}
+
+body.app-layout[data-page="home"]>.app-main {
+  scroll-behavior: smooth;
+}
+
+.home-section {
+  width: min(1180px, calc(100% - 48px));
+  margin: 0 auto;
+}
+
+.section-label {
+  margin: 0 0 16px;
+
+  color: var(--home-purple-soft);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.26em;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+.section-heading {
+  max-width: 780px;
+  margin: 0 auto 40px;
+  text-align: center;
+}
+
+.section-heading h2,
+.game-copy h2,
+.studio-content h2,
+.home-cta-panel h2 {
+  margin: 0;
+
+  color: #fbf7ff;
+  font-family: "Cinzel", serif;
+  font-size: clamp(26px, 3.7vw, 40px);
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.section-description {
+  max-width: 680px;
+  margin: 18px auto 0;
+
+  color: var(--home-muted);
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+/* =========================================================
+   SHARED HOMEPAGE BUTTONS
+========================================================= */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 10px;
+  min-height: 48px;
+  padding: 13px 25px;
+
+  border: 1px solid transparent;
+  border-radius: 999px;
+
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
+  text-align: center;
+  text-decoration: none;
+
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    background 180ms ease;
+}
+
+.btn-primary {
+  border-color: rgba(233, 213, 255, 0.82);
+
+  background: linear-gradient(135deg,
+      #6d28d9,
+      #a855f7);
+
+  box-shadow: 0 0 24px rgba(168, 85, 247, 0.3);
+}
+
+.btn-secondary {
+  border-color: rgba(192, 132, 252, 0.8);
+
+  background: rgba(12, 8, 29, 0.82);
+  backdrop-filter: blur(8px);
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 28px rgba(168, 85, 247, 0.42);
+}
+
+.btn:focus-visible,
+.hero-scroll-link:focus-visible {
+  outline: 2px solid var(--home-gold);
+  outline-offset: 4px;
+}
+
+/* =========================================================
+   HERO
+========================================================= */
+
+/*
+ * The castle remains a homepage-specific image.
+ * The application shell provides the fixed galaxy scene.
+ */
+.hero {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: min(790px, 95vh);
+  min-height: min(790px, 95dvh);
+
+  padding: 90px 24px 110px;
+  overflow: hidden;
+
+  text-align: center;
+
+  background:
+    linear-gradient(180deg,
+      rgba(4, 3, 16, 0.36) 0%,
+      rgba(6, 4, 22, 0.48) 48%,
+      rgba(6, 4, 20, 0.96) 100%),
+    url("../assets/backgrounds/home-castle.png") center center / cover no-repeat;
+}
+
+/* Add gentle lighting without interfering with links. */
+.hero::before {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  background:
+    radial-gradient(circle at 50% 35%,
+      rgba(168, 85, 247, 0.22),
+      transparent 50%);
+
+  pointer-events: none;
+}
+
+/* Blend the castle into the shared galaxy backdrop. */
+.hero::after {
+  content: "";
+
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  height: 160px;
+
+  background: linear-gradient(180deg,
+      transparent,
+      rgba(6, 6, 18, 0.95));
+
+  pointer-events: none;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+
+  width: min(850px, 100%);
+}
+
+.hero-kicker {
+  margin: 0 0 10px;
+
+  color: #f1e5ff;
+  font-family: "Cinzel", serif;
+  font-size: clamp(15px, 2.5vw, 23px);
+  letter-spacing: 0.12em;
+}
+
+.hero h1 {
+  margin: 0;
+
+  font-family: "Cinzel", serif;
+  font-size: clamp(45px, 9vw, 112px);
+  font-weight: 600;
+  line-height: 1.08;
+
+  overflow-wrap: anywhere;
+
+  text-shadow:
+    0 0 14px rgba(255, 255, 255, 0.18),
+    0 0 36px rgba(168, 85, 247, 0.75),
+    0 0 70px rgba(124, 58, 237, 0.48);
+}
+
+/* =========================================================
+   HERO DIVIDER AND DESCRIPTION
+========================================================= */
+
+.magic-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 15px;
+  margin: 22px auto 16px;
+
+  color: var(--home-gold);
+}
+
+.magic-divider>span:first-child,
+.magic-divider>span:last-child {
+  width: min(115px, 24vw);
+  height: 1px;
+
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(216, 180, 254, 0.9));
+}
+
+.magic-divider>span:last-child {
+  transform: rotate(180deg);
+}
+
+.divider-star {
+  font-size: 20px;
+}
+
+.hero-subtitle {
+  margin: 0;
+
+  color: #fbf5ff;
+  font-family: "Cinzel", serif;
+  font-size: clamp(19px, 3vw, 27px);
+}
+
+.hero-description {
+  max-width: 580px;
+  margin: 20px auto 0;
+
+  color: #e5ddf0;
+  font-size: 15px;
+  line-height: 1.8;
+
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.75);
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+
+  gap: 16px;
+  margin-top: 34px;
+}
+
+/* Secondary link inviting the user to scroll down. */
+.hero-scroll-link {
+  position: absolute;
+  z-index: 2;
+  bottom: 34px;
+  left: 50%;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 12px;
+
+  color: #e5d7f5;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  white-space: nowrap;
+
+  transform: translateX(-50%);
+}
+
+.hero-scroll-link:hover {
+  color: #fff;
+}
+
+/* =========================================================
+   GAME INTRODUCTION
+========================================================= */
+
+.game-section {
+  position: relative;
+  z-index: 1;
+
+  padding: 76px 0 35px;
+}
+
+.home-panel {
+  border: 1px solid var(--home-border);
+  border-radius: 22px;
+
+  background: var(--home-panel);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+}
+
+.game-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(240px, 0.8fr);
+  align-items: center;
+
+  gap: 48px;
+  padding: 48px;
+
+  background:
+    linear-gradient(110deg,
+      rgba(8, 9, 27, 0.97),
+      rgba(17, 10, 41, 0.9)),
+    url("../assets/backgrounds/home-about.png") right center / cover no-repeat;
+}
+
+.game-copy h2 {
+  margin-bottom: 22px;
+}
+
+.game-copy p:not(.section-label) {
+  margin: 0 0 16px;
+
+  color: var(--home-muted);
+  font-size: 14px;
+  line-height: 1.85;
+}
+
+.game-copy p:last-child {
+  margin-bottom: 0;
+}
+
+.game-highlights {
+  display: grid;
+  gap: 14px;
+}
+
+.highlight-item {
+  display: flex;
+  align-items: center;
+
+  gap: 14px;
+  min-height: 60px;
+  padding: 14px 18px;
+
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  border-radius: 13px;
+
+  background: rgba(13, 9, 35, 0.72);
+
+  color: #f4e9ff;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.highlight-item>span:first-child {
+  color: var(--home-gold);
+  font-size: 23px;
+}
+
+/* =========================================================
+   PIXELVERSE STUDIOS
+========================================================= */
+
+.studio-section {
+  padding: 55px 0 65px;
+}
+
+.studio-content {
+  max-width: 830px;
+  margin: 0 auto;
+
+  text-align: center;
+}
+
+.studio-content h2 {
+  margin-bottom: 25px;
+}
+
+.studio-content p:not(.section-label) {
+  margin: 0 auto 17px;
+
+  color: var(--home-muted);
+  font-size: 14px;
+  line-height: 1.9;
+}
+
+/* =========================================================
+   CHARACTER MANAGEMENT BENEFITS
+========================================================= */
+
+.benefits-section {
+  padding: 45px 0 90px;
+}
+
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+
+  gap: 18px;
+}
+
+.benefit-card {
+  padding: 30px 23px;
+
+  border: 1px solid rgba(168, 85, 247, 0.36);
+  border-radius: 18px;
+
+  background:
+    linear-gradient(145deg,
+      rgba(13, 10, 34, 0.95),
+      rgba(27, 14, 55, 0.87));
+
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.16);
+}
+
+.benefit-icon {
+  display: grid;
+  place-items: center;
+
+  width: 52px;
+  height: 52px;
+  margin-bottom: 22px;
+
+  border: 1px solid rgba(168, 85, 247, 0.7);
+  border-radius: 14px;
+
+  background: rgba(124, 58, 237, 0.14);
+
+  color: var(--home-gold);
+  font-size: 25px;
+}
+
+.benefit-card h3 {
+  margin: 0 0 12px;
+
+  color: #f8efff;
+  font-family: "Cinzel", serif;
+  font-size: 20px;
+}
+
+.benefit-card p {
+  margin: 0;
+
+  color: var(--home-muted);
+  font-size: 13px;
+  line-height: 1.75;
+}
+
+/* =========================================================
+   CHARACTER SHOWCASE
+========================================================= */
+
+.characters-section {
+  padding: 45px 0 95px;
+}
+
+.character-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  gap: 22px;
+}
+
+.character-card {
+  overflow: hidden;
+
+  border: 1px solid rgba(168, 85, 247, 0.5);
+  border-radius: 18px;
+
+  background:
+    linear-gradient(145deg,
+      rgba(12, 10, 33, 0.98),
+      rgba(25, 13, 55, 0.92));
+
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.22);
+}
+
+
+/* =========================================================
+   CHARACTER SHOWCASE - SHARED ARTWORK PRESENTATION
+========================================================= */
+
+.character-art {
+  position: relative;
+
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+
+  height: 420px;
+  overflow: hidden;
+
+  background:
+    radial-gradient(ellipse at 50% 38%,
+      rgba(168, 85, 247, 0.28),
+      transparent 58%),
+    linear-gradient(150deg,
+      #301b4c,
+      #0b091d);
+}
+
+.character-showcase-image {
+  position: relative;
+  z-index: 1;
+
+  display: block;
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain;
+  object-position: center bottom;
+}
+
+.character-art::after {
+  content: "";
+
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+
+  background: linear-gradient(180deg,
+      transparent 65%,
+      rgba(10, 7, 27, 0.35) 100%);
+
+  pointer-events: none;
+}
+
+/* Keep the placeholders centered until their artwork exists. */
+.art-placeholder {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 14px;
+
+  color: #d9c7e9;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  line-height: 1.5;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.art-placeholder-symbol {
+  color: var(--home-gold);
+  font-size: 52px;
+  line-height: 1;
+
+  text-shadow: 0 0 30px rgba(168, 85, 247, 0.7);
+}
+
+@media (max-width: 768px) {
+  .character-art {
+    height: 420px;
+  }
+}
+
+@media (max-width: 480px) {
+  .character-art {
+    height: 380px;
+  }
+}
+
+.art-placeholder {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 14px;
+
+  color: #d9c7e9;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  line-height: 1.5;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.art-placeholder-symbol {
+  color: var(--home-gold);
+  font-size: 52px;
+  line-height: 1;
+
+  text-shadow: 0 0 30px rgba(168, 85, 247, 0.7);
+}
+
+.character-body {
+  padding: 24px;
+}
+
+.character-type {
+  margin: 0 0 10px;
+
+  color: #d5b4ff;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+}
+
+.character-body h3 {
+  margin: 0 0 4px;
+
+  color: #fff;
+  font-family: "Cinzel", serif;
+  font-size: 26px;
+}
+
+.character-title {
+  margin: 0 0 17px;
+  color: #ebe4f7;
+  font-size: 14px;
+}
+
+.character-quote {
+  margin: 0;
+
+  color: #bcb5cc;
+  font-size: 13px;
+  font-style: italic;
+  line-height: 1.7;
+}
+
+.showcase-actions {
+  display: flex;
+  justify-content: center;
+
+  margin-top: 36px;
+}
+
+/* =========================================================
+   CLOSING CALL TO ACTION
+========================================================= */
+
+.home-cta-section {
+  padding: 0 0 100px;
+}
+
+.home-cta-panel {
+  padding: 52px 30px;
+
+  border: 1px solid rgba(168, 85, 247, 0.42);
+  border-radius: 22px;
+
+  background:
+    radial-gradient(circle at 50% 0%,
+      rgba(124, 58, 237, 0.24),
+      transparent 65%),
+    rgba(10, 7, 29, 0.94);
+
+  text-align: center;
+}
+
+.home-cta-panel h2 {
+  margin-bottom: 18px;
+}
+
+.home-cta-panel p:not(.section-label) {
+  max-width: 550px;
+  margin: 0 auto 26px;
+
+  color: var(--home-muted);
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1000px) {
+  .game-panel {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .game-highlights {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .highlight-item {
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .benefits-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .character-grid {
+    gap: 15px;
+  }
+
+  .character-body {
+    padding: 18px;
+  }
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+  .home-section {
+    width: min(100% - 32px, 1180px);
+  }
+
+  .hero {
+    min-height: 620px;
+    padding: 90px 18px 95px;
+  }
+
+  .hero h1 {
+    font-size: clamp(34px, 8vw, 65px);
+  }
+
+  .hero-description {
+    max-width: 420px;
+    font-size: 13px;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 28px;
+  }
+
+  .hero-actions .btn {
+    width: min(100%, 320px);
+  }
+
+  .game-section {
+    padding-top: 45px;
+  }
+
+  .game-panel {
+    padding: 30px 24px;
+    gap: 28px;
+  }
+
+  .game-highlights {
+    grid-template-columns: 1fr;
+  }
+
+  .highlight-item {
+    flex-direction: row;
+    justify-content: flex-start;
+    text-align: left;
+  }
+
+  .studio-section {
+    padding: 46px 0;
+  }
+
+  .benefits-section {
+    padding: 25px 0 70px;
+  }
+
+  .benefits-grid {
+    gap: 14px;
+  }
+
+  .benefit-card {
+    padding: 24px 19px;
+  }
+
+  .characters-section {
+    padding: 30px 0 70px;
+  }
+
+  .character-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .character-body {
+    padding: 22px;
+  }
+
+  .home-cta-section {
+    padding-bottom: 65px;
+  }
+
+  .home-cta-panel {
+    padding: 36px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .home-section {
+    width: calc(100% - 24px);
+  }
+
+  .hero {
+    min-height: 580px;
+    padding-inline: 12px;
+  }
+
+  .hero h1 {
+    font-size: clamp(29px, 8.2vw, 40px);
+    letter-spacing: -0.03em;
+  }
+
+  .hero-kicker {
+    font-size: 15px;
+  }
+
+  .hero-subtitle {
+    font-size: 19px;
+  }
+
+  .hero-description {
+    font-size: 12px;
+    line-height: 1.7;
+  }
+
+  .hero-scroll-link {
+    bottom: 22px;
+  }
+
+  .game-panel {
+    padding: 26px 20px;
+  }
+
+  .game-copy p:not(.section-label),
+  .studio-content p:not(.section-label) {
+    font-size: 13px;
+  }
+
+  .section-heading {
+    margin-bottom: 30px;
+  }
+
+  .section-description {
+    font-size: 13px;
+  }
+
+  .benefits-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .benefit-card {
+    padding: 24px;
+  }
+}
+
+/* =========================================================
+   ACCESSIBILITY AND REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  body.app-layout[data-page="home"]>.app-main {
+    scroll-behavior: auto;
+  }
+
+  .btn {
+    transition: none;
+  }
+
+  .btn:hover {
+    transform: none;
+  }
+}
